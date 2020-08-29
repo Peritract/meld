@@ -4,6 +4,8 @@ This module contains the implementation of the Engine class
 
 import tcod
 from .event_handler import EventHandler
+from ..entities.entity import Entity
+from ..world import World
 
 
 class Engine:
@@ -29,10 +31,11 @@ class Engine:
         self.event_handler = EventHandler()
 
         # Holder for states
-        self.states = {"play": self.play_game}
+        self.states = {"new_game": self.new_game,
+                       "playing": self.play_game}
 
         # Holder for the current state
-        self.state = "play"
+        self.state = "new_game"
 
     def start_main_loop(self):
         """Creates the main window and begins the game loop."""
@@ -47,18 +50,35 @@ class Engine:
                 # Call the current state
                 self.states[self.state]()
 
+    def new_game(self):
+        """
+        Creates a new game world and populates it before
+        changing the state to "play".
+        """
+        self.world = World()
+        self.state = "playing"
+
     def play_game(self):
         """
-            Function for the gameplay;
-           lets entities move and updates the display.
+        Function for the gameplay;
+        lets entities move and updates the display.
         """
-
-        # Temporary behaviour
-        self.console.print(x=1, y=1, string="@")
-
-        # Flush the console to the window
-        self.window.present(self.console)
 
         # Poll and handle events
         for event in tcod.event.wait():
             self.event_handler.dispatch(event)
+
+        # Display the game world as it currently is
+        self.render_world()
+
+        # Flush the console to the window
+        self.window.present(self.console)
+
+    def render_world(self):
+        """Renders the current state of the game world."""
+        # Temporary behaviour
+        for entity in self.world.entities:
+            self.console.print(entity.position.x,
+                               entity.position.y,
+                               entity.character,
+                               entity.colour)

@@ -1,6 +1,6 @@
 """Entry point for the game."""
 
-from components.engine import Engine
+from components.utility.engine import Engine
 
 
 def main():
