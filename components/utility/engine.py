@@ -1,10 +1,10 @@
 """
-This module contains the implementation of the Engine class
+This module contains the implementation of the Engine class;
+this class manages the game state and the window.
 """
 
 import tcod
 from .event_handler import EventHandler
-from ..entities.entity import Entity
 from ..world import World
 
 
@@ -69,16 +69,13 @@ class Engine:
             self.event_handler.dispatch(event)
 
         # Display the game world as it currently is
-        self.render_world()
+        self.world.render(self.console)
 
         # Flush the console to the window
         self.window.present(self.console)
 
-    def render_world(self):
-        """Renders the current state of the game world."""
-        # Temporary behaviour
-        for entity in self.world.entities:
-            self.console.print(entity.position.x,
-                               entity.position.y,
-                               entity.character,
-                               entity.colour)
+        # Clear the console, setting it up for the next turn
+        self.console.clear()
+
+        # Give entities the chance to act
+        self.world.handle_turns()

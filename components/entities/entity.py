@@ -5,6 +5,7 @@
 
 from ..utility.object import Object
 from ..utility.position import Position
+from .minds import Mind
 
 
 class Entity(Object):
@@ -14,3 +15,7 @@ class Entity(Object):
         """Sets internal properties"""
         Object.__init__(self, position)
         self.name = name
+
+        # Set up the entity's turn-taking logic
+        self.mind = Mind()
+        self.mind.owner = self
