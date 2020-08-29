@@ -1,0 +1,64 @@
+"""
+This module contains the implementation of the Engine class
+"""
+
+import tcod
+from .event_handler import EventHandler
+
+
+class Engine:
+    """Runs the game loop and manages the screen and game states"""
+
+    def __init__(self, width, height, tileset, title="Working Title"):
+        """Sets internal engine variables."""
+        self.width = width
+        self.height = height
+
+        # Load the font file
+        self.tileset = tcod.tileset.load_tilesheet("./assets/arial12x12.png",
+                                                   32, 8,
+                                                   tcod.tileset.CHARMAP_TCOD)
+
+        # Create the console for drawing on
+        self.console = tcod.Console(self.width, self.height, order="F")
+        # Order=F flips x and y, for easier drawing
+
+        self.title = title
+
+        # Create an event handler
+        self.event_handler = EventHandler()
+
+        # Holder for states
+        self.states = {"play": self.play_game}
+
+        # Holder for the current state
+        self.state = "play"
+
+    def start_main_loop(self):
+        """Creates the main window and begins the game loop."""
+        with tcod.context.new_terminal(self.width,
+                                       self.height,
+                                       tileset=self.tileset,
+                                       title=self.title) as self.window:
+
+            # Until the game is closed,
+            while True:
+
+                # Call the current state
+                self.states[self.state]()
+
+    def play_game(self):
+        """
+            Function for the gameplay;
+           lets entities move and updates the display.
+        """
+
+        # Temporary behaviour
+        self.console.print(x=1, y=1, string="@")
+
+        # Flush the console to the window
+        self.window.present(self.console)
+
+        # Poll and handle events
+        for event in tcod.event.wait():
+            self.event_handler.dispatch(event)
