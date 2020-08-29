@@ -4,7 +4,6 @@ this class manages the game state and the window.
 """
 
 import tcod
-from .event_handler import EventHandler
 from ..world import World
 
 
@@ -15,6 +14,7 @@ class Engine:
         """Sets internal engine variables."""
         self.width = width
         self.height = height
+        self.title = title
 
         # Load the font file
         self.tileset = tcod.tileset.load_tilesheet("./assets/arial12x12.png",
@@ -24,11 +24,6 @@ class Engine:
         # Create the console for drawing on
         self.console = tcod.Console(self.width, self.height, order="F")
         # Order=F flips x and y, for easier drawing
-
-        self.title = title
-
-        # Create an event handler
-        self.event_handler = EventHandler()
 
         # Holder for states
         self.states = {"new_game": self.new_game,
@@ -63,10 +58,6 @@ class Engine:
         Function for the gameplay;
         lets entities move and updates the display.
         """
-
-        # Poll and handle events
-        for event in tcod.event.wait():
-            self.event_handler.dispatch(event)
 
         # Display the game world as it currently is
         self.world.render(self.console)

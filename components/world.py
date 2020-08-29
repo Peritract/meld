@@ -7,10 +7,14 @@
 from .entities.entity import Entity
 from .utility.position import Position
 
+# Temporary import until proper generation
+from .entities.minds import Player
+
 
 class World:
 
     def __init__(self):
+        self.player = Entity("Miriam", Position(5, 5), Player)
         self.entities = {Entity("Chett"), Entity("Victoria", Position(1, 3))}
 
     def render(self, console):
@@ -23,6 +27,9 @@ class World:
                           entity.colour)
 
     def handle_turns(self):
-        """Allows each non-player entity to take a turn."""
+        """Allows each entity to take a turn."""
+
+        self.player.take_turn()
+
         for entity in self.entities:
-            entity.mind.take_turn()
+            entity.take_turn()
