@@ -6,6 +6,7 @@
 from ..utility.object import Object
 from ..utility.position import Position
 from .minds import Mind
+from ..utility.actions import Movement
 
 
 class Entity(Object):
@@ -20,6 +21,17 @@ class Entity(Object):
         self.mind = mind()
         self.mind.owner = self
 
+    def move(self, dx, dy):
+        """Alters the entity's position by a given amount."""
+        self.position.x += dx
+        self.position.y += dy
+
     def take_turn(self):
         """Takes a turn."""
-        self.mind.take_turn()
+
+        # Ask the player/AI to make a decision
+        decision = self.mind.take_turn()
+
+        # Act on the decision
+        if isinstance(decision, Movement):
+            self.move(decision.dx, decision.dy)

@@ -3,6 +3,7 @@ This module contains the implementation of the EventHandler class.
 """
 
 import tcod.event
+from .actions import Movement
 
 
 class PlayerEventHandler(tcod.event.EventDispatch):
@@ -15,4 +16,16 @@ class PlayerEventHandler(tcod.event.EventDispatch):
     def ev_keydown(self, event):
         """If it's a keydown, handle it."""
         key = event.sym
-        return key
+        action = None
+
+        # Movement keys
+        if key == tcod.event.K_UP:
+            action = Movement(dx=0, dy=-1)
+        elif key == tcod.event.K_DOWN:
+            action = Movement(dx=0, dy=1)
+        elif key == tcod.event.K_LEFT:
+            action = Movement(dx=-1, dy=0)
+        elif key == tcod.event.K_RIGHT:
+            action = Movement(dx=1, dy=0)
+
+        return action

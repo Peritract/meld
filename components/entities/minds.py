@@ -4,6 +4,7 @@ AI "minds" - the logic for how each entity acts & takes turns.
 """
 
 from ..utility.event_handlers import PlayerEventHandler
+from ..utility.actions import Action
 import tcod.event
 
 
@@ -22,9 +23,23 @@ class Player(Mind):
         self.event_handler = PlayerEventHandler()
 
     def take_turn(self):
-        print("TAKIN' A TURN!")
-        # Take user input
-        result = None
-        while not result:
+
+        # Start a loop until a turn-ending action
+        complete = False
+        while not complete:
+
+            # Take user input
             for event in tcod.event.wait():
-                result = self.event_handler.dispatch(event)
+
+                # Check the event against valid actions
+                decision = self.event_handler.dispatch(event)
+
+                # Ignore invalid actions
+                if not decision:
+                    continue
+
+                # Check if the action ends the turn
+                complete = decision.final
+
+        # Now a valid, turn-ending input has been found, return it.
+        return decision

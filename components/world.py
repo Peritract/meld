@@ -15,7 +15,10 @@ class World:
 
     def __init__(self):
         self.player = Entity("Miriam", Position(5, 5), Player)
-        self.entities = {Entity("Chett"), Entity("Victoria", Position(1, 3))}
+        self.entities = [Entity("Chett"),
+                         Entity("Victoria", Position(1, 1)),
+                         Entity("Victoria", Position(2, 2))]
+        self.entities.append(self.player)
 
     def render(self, console):
         """Renders the current state of the game world."""
@@ -28,8 +31,5 @@ class World:
 
     def handle_turns(self):
         """Allows each entity to take a turn."""
-
-        self.player.take_turn()
-
         for entity in self.entities:
             entity.take_turn()
