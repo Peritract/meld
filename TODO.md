@@ -1,0 +1,2 @@
+- Extract checking of passable-ness to a level-specific function
+- Remove position class (put distance_to in level?)?
