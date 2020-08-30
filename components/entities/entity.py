@@ -26,11 +26,11 @@ class Entity(Object):
         self.position.x += dx
         self.position.y += dy
 
-    def take_turn(self):
+    def take_action(self, level):
         """Takes a turn."""
 
         # Ask the player/AI to make a decision
-        decision = self.mind.take_turn()
+        decision = self.mind.take_action(level)
 
         # Act on the decision
         if isinstance(decision, Movement):

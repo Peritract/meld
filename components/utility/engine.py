@@ -4,7 +4,7 @@ this class manages the game state and the window.
 """
 
 import tcod
-from ..world.world import World
+from ..environment.world import World
 
 
 class Engine:
@@ -69,4 +69,4 @@ class Engine:
         self.console.clear()
 
         # Give entities the chance to act
-        self.world.handle_turns()
+        self.world.handle_actions()
