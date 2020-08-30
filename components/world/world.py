@@ -4,11 +4,12 @@
    in the game world.
 """
 
-from .entities.entity import Entity
-from .utility.position import Position
+from ..entities.entity import Entity
+from ..utility.position import Position
 
-# Temporary import until proper generation
-from .entities.minds import Player
+# Temporary imports until proper generation
+from ..entities.minds import Player
+from .level_map import LevelMap
 
 
 class World:
@@ -19,10 +20,15 @@ class World:
                          Entity("Victoria", Position(1, 1)),
                          Entity("Victoria", Position(2, 2))]
         self.entities.append(self.player)
+        self.level = LevelMap(40, 40)
 
     def render(self, console):
         """Renders the current state of the game world."""
 
+        # Draw the tiles
+        self.level.render(console)
+
+        # Display all entities
         for entity in self.entities:
             console.print(entity.position.x,
                           entity.position.y,

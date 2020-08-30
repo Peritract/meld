@@ -4,7 +4,7 @@ this class manages the game state and the window.
 """
 
 import tcod
-from ..world import World
+from ..world.world import World
 
 
 class Engine:
