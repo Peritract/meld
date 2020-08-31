@@ -1,1 +1,0 @@
-- Remove position class (put distance_to in level?)?

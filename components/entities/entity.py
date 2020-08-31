@@ -7,17 +7,21 @@ from ..utility.object import Object
 from .minds import Mind
 from ..utility.actions import Movement
 
+import tcod
+
 
 class Entity(Object):
     """The base class for all animate game objects"""
 
-    def __init__(self, name="entity", position=(0, 0), mind=Mind):
+    def __init__(self,
+                 name="entity",
+                 position=(0, 0),
+                 mind=Mind,
+                 char="&",
+                 colour=tcod.lime,
+                 blocks=True):
         """Sets internal properties"""
-        Object.__init__(self, position)
-        self.name = name
-
-        # Situate the entity in space
-        self.x, self.y = position
+        Object.__init__(self, name, position, char, colour, blocks)
 
         # Set up the entity's turn-taking logic
         self.mind = mind()

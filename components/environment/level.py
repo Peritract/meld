@@ -91,7 +91,7 @@ class Level:
             if self.visible_tiles[entity.x, entity.y]:
                 console.print(entity.x,
                               entity.y,
-                              entity.character,
+                              entity.char,
                               entity.colour)
 
     # Entity management

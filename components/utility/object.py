@@ -5,17 +5,20 @@
 """
 
 import tcod
-from .position import Position
 
 
 class Object:
 
-    # Basic shared setup
-    name = "thing"
-    character = "%"
-    colour = tcod.magenta
-    blocks = True
+    def __init__(self,
+                 name="thing",
+                 position=(0, 0),
+                 char="%",
+                 colour=tcod.magenta,
+                 blocks=True):
 
-    def __init__(self, position=Position(0, 0)):
         """Sets key properties"""
-        self.position = position
+        self.name = name
+        self.x, self.y = position
+        self.char = char
+        self.colour = colour
+        self.blocks = blocks

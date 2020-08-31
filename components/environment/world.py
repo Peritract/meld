@@ -9,7 +9,6 @@
 from ..entities.minds import Player
 from .level import Level
 from ..entities.entity import Entity
-from ..utility.position import Position
 
 
 class World:
