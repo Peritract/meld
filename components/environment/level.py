@@ -32,6 +32,12 @@ class Level:
         """Checks if a given point is inside the map bounds."""
         return 0 <= x < self.width and 0 <= y < self.height
 
+    def is_passable(self, x, y):
+        """Checks if a tile in a given location is passable."""
+        if self.tiles["passable"][x, y]:
+            return True
+        return False
+
     def render(self, console):
         """Displays the game world on a given console."""
         console.tiles_rgb[0:self.width,

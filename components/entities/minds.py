@@ -42,7 +42,7 @@ class Player(Mind):
                 if isinstance(decision, Movement):
                     new_x = self.owner.position.x + decision.dx
                     new_y = self.owner.position.y + decision.dy
-                    if not level.tiles["passable"][new_x, new_y]:
+                    if not level.is_passable(new_x, new_y):
                         continue
 
                 # Check if the action ends the turn
