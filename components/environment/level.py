@@ -96,6 +96,13 @@ class Level:
 
     # Entity management
 
+    def get_blocking_entity(self, x, y):
+        """Returns the blocking entity at a particular position."""
+        for entity in self.entities:
+            if entity.blocks and entity.x == x and entity.y == y:
+                return entity
+        return None
+
     def handle_actions(self):
         """Allow each entity to act."""
         for entity in self.entities:

@@ -5,7 +5,8 @@
 
 from ..utility.object import Object
 from .minds import Mind
-from ..utility.actions import Movement
+from .bodies import Body
+from ..utility.actions import Move, Attack, Wait
 
 import tcod
 
@@ -17,6 +18,7 @@ class Entity(Object):
                  name="entity",
                  position=(0, 0),
                  mind=Mind,
+                 body=Body,
                  char="&",
                  colour=tcod.lime,
                  blocks=True):
@@ -26,6 +28,10 @@ class Entity(Object):
         # Set up the entity's turn-taking logic
         self.mind = mind()
         self.mind.owner = self
+
+        # Set up the entity's physical form
+        self.body = Body()
+        self.body.owner = self
 
     def move(self, dx, dy):
         """Alters the entity's position by a given amount."""
@@ -39,5 +45,11 @@ class Entity(Object):
         decision = self.mind.take_action(level)
 
         # Act on the decision
-        if isinstance(decision, Movement):
+        if isinstance(decision, Move):
             self.move(decision.dx, decision.dy)
+
+        elif isinstance(decision, Attack):
+            print(f"Bash the {decision.other.name}!")
+
+        elif isinstance(decision, Wait):
+            print("Time to rest.")

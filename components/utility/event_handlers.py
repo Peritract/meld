@@ -3,7 +3,7 @@ This module contains the implementation of the EventHandler class.
 """
 
 import tcod.event
-from .actions import Movement
+from .actions import Surge, Wait
 
 
 class PlayerEventHandler(tcod.event.EventDispatch):
@@ -20,12 +20,15 @@ class PlayerEventHandler(tcod.event.EventDispatch):
 
         # Movement keys
         if key == tcod.event.K_UP:
-            action = Movement(dx=0, dy=-1)
+            action = Surge(dx=0, dy=-1)
         elif key == tcod.event.K_DOWN:
-            action = Movement(dx=0, dy=1)
+            action = Surge(dx=0, dy=1)
         elif key == tcod.event.K_LEFT:
-            action = Movement(dx=-1, dy=0)
+            action = Surge(dx=-1, dy=0)
         elif key == tcod.event.K_RIGHT:
-            action = Movement(dx=1, dy=0)
+            action = Surge(dx=1, dy=0)
+
+        elif key == tcod.event.K_PERIOD:
+            action = Wait()
 
         return action
