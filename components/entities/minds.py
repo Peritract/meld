@@ -40,9 +40,10 @@ class Player(Mind):
 
                 # If the action is a movement, check its validity
                 if isinstance(decision, Movement):
-                    new_x = self.owner.position.x + decision.dx
-                    new_y = self.owner.position.y + decision.dy
-                    if not level.is_passable(new_x, new_y):
+                    new_x = self.owner.x + decision.dx
+                    new_y = self.owner.y + decision.dy
+                    if not level.in_bounds(new_x, new_y) or \
+                       not level.is_passable(new_x, new_y):
                         continue
 
                 # Check if the action ends the turn

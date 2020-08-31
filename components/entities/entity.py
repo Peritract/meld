@@ -4,7 +4,6 @@
 """
 
 from ..utility.object import Object
-from ..utility.position import Position
 from .minds import Mind
 from ..utility.actions import Movement
 
@@ -12,10 +11,13 @@ from ..utility.actions import Movement
 class Entity(Object):
     """The base class for all animate game objects"""
 
-    def __init__(self, name="entity", position=Position(0, 0), mind=Mind):
+    def __init__(self, name="entity", position=(0, 0), mind=Mind):
         """Sets internal properties"""
         Object.__init__(self, position)
         self.name = name
+
+        # Situate the entity in space
+        self.x, self.y = position
 
         # Set up the entity's turn-taking logic
         self.mind = mind()
@@ -23,8 +25,8 @@ class Entity(Object):
 
     def move(self, dx, dy):
         """Alters the entity's position by a given amount."""
-        self.position.x += dx
-        self.position.y += dy
+        self.x += dx
+        self.y += dy
 
     def take_action(self, level):
         """Takes a turn."""

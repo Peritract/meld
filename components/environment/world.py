@@ -19,14 +19,16 @@ class World:
         # Hacky setup, one day to be extracted out to generators
         self.level = Level(40, 40)
 
-        self.player = Entity("Miriam", Position(5, 5), Player)
+        self.player = Entity("Miriam", (5, 5), Player)
+        self.player.view_radius = 8
         self.level.entities.append(self.player)
 
     def render(self, console):
         """Renders the current state of the game world."""
 
         # Pass the call down to the level
-        self.level.render(console)
+        # Pass in the player so the fov can be calculated
+        self.level.render(console, self.player)
 
     def handle_actions(self):
         """Allows each entity to take a turn."""
