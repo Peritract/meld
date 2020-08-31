@@ -10,6 +10,8 @@ from tcod.map import compute_fov
 from math import sqrt
 
 import tcod
+from ..entities.minds import Wanderer
+
 
 class Level:
 
@@ -34,7 +36,7 @@ class Level:
         self.tiles[30:33, 22] = basic_wall
 
         # Trash entities, for the exampling
-        self.entities = [Entity("Chett"),
+        self.entities = [Entity("Chett", mind=Wanderer),
                          Entity("Victoria", (1, 1)),
                          Entity("Velma", (2, 2))]
 
@@ -50,11 +52,23 @@ class Level:
             return True
         return False
 
-    def distance_to(a, b):
+    def distance_to(self, a, b):
         """Returns the distance between one point and another"""
         x_dist = a.x - b.x
         y_dist = a.y - b.y
         return sqrt(x_dist ** 2 + y_dist ** 2)
+
+    def get_adjacent_spaces(self, x, y):
+        """Gets adjacent spaces - non-blocked, in-bounds tiles.
+        Returns a list of relative coordinates
+        """
+        directions = {(0, 1), (0, -1), (1, 0), (-1, 0)}
+        spaces = []
+        for dir in directions:
+            space = (x + dir[0], y + dir[1])
+            if self.in_bounds(*space) and self.is_passable(*space):
+                spaces.append(dir)
+        return spaces
 
     # Rendering and FoV methods
 

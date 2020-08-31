@@ -4,8 +4,9 @@ AI "minds" - the logic for how each entity acts & takes turns.
 """
 
 from ..utility.event_handlers import PlayerEventHandler
-from ..utility.actions import Surge, Move, Attack
+from ..utility.actions import Surge, Move, Attack, Wait
 import tcod.event
+from random import choice
 
 
 class Mind():
@@ -14,6 +15,30 @@ class Mind():
     def take_action(self, level):
         # Generic turn-taking function
         print('The ' + self.owner.name + ' moves in mysterious ways.')
+
+
+class Wanderer(Mind):
+    """Moves randomly, with no awareness."""
+    def take_action(self, level):
+
+        # Makes a choice - move or not
+        move = choice([True, False])
+
+        if not move:
+            # Do nothing
+            return Wait()
+        else:
+            # Choose a random possible direction and move in it
+
+            # Get a list of adjacent spaces
+            directions = level.get_adjacent_spaces(self.owner.x, self.owner.y)
+
+            # Filter out occupied spaces
+            directions = [x for x in directions
+                          if not level.get_blocking_entity(self.owner.x + x[0], self.owner.y + x[1])]
+
+            # Return a movement action to a random, unoccupied space
+            return Move(*choice(directions))
 
 
 class Player(Mind):
