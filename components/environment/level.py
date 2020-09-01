@@ -10,7 +10,7 @@ from tcod.map import compute_fov
 from math import sqrt
 
 import tcod
-from ..entities.minds import Wanderer, Hunter
+from ..entities.minds import Hunter
 
 
 class Level:

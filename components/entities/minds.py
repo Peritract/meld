@@ -41,10 +41,15 @@ class Mind():
         cost = self.get_tile_cost(level)
 
         # Convert the map to a graph (disallow diagonal movement)
-        graph = tcod.path.AStar(cost=cost, diagonal=0)
+        graph = tcod.path.SimpleGraph(cost=cost, cardinal=2, diagonal=0)
+
+        # Make a pathfinder
+        finder = tcod.path.Pathfinder(graph)
+        finder.add_root((self.owner.x, self.owner.y))
 
         # Find a path if possible
-        path = graph.get_path(self.owner.x, self.owner.y, other.x, other.y)
+        path = finder.path_to((other.x, other.y)).tolist()
+        # path = graph.get_path(self.owner.x, self.owner.y, other.x, other.y)
 
         # If movement is possible
         if path:
