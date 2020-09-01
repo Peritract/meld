@@ -49,7 +49,6 @@ class Mind():
 
         # Find a path if possible
         path = finder.path_to((other.x, other.y)).tolist()
-        # path = graph.get_path(self.owner.x, self.owner.y, other.x, other.y)
 
         # If movement is possible
         if path:
@@ -191,9 +190,8 @@ class Hunter(Mind):
 
         # If the target is in view
         if self.target:
-            print("Seen!")
             # If it's close enough to attack,
-            if next_step == (self.target.x, self.target.y):
+            if next_step == [self.target.x, self.target.y]:
                 # Attack
                 return Attack(direction[0],
                               direction[1],
