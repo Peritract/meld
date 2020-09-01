@@ -10,7 +10,7 @@ from tcod.map import compute_fov
 from math import sqrt
 
 import tcod
-from ..entities.minds import Wanderer
+from ..entities.minds import Wanderer, Hunter
 
 
 class Level:
@@ -36,9 +36,7 @@ class Level:
         self.tiles[30:33, 22] = basic_wall
 
         # Trash entities, for the exampling
-        self.entities = [Entity("Chett", mind=Wanderer),
-                         Entity("Victoria", (1, 1)),
-                         Entity("Velma", (2, 2))]
+        self.entities = [Entity("Victoria", (1, 1), mind=Hunter)]
 
     # Utility functions - mostly about checking tiles for particular purposes
 
@@ -72,25 +70,33 @@ class Level:
 
     # Rendering and FoV methods
 
-    def update_fov(self, center):
-        """Updates the visible area."""
-        self.visible_tiles[:] = compute_fov(
-            self.tiles["transparent"],
-            (center.x, center.y),
-            radius=center.view_radius,
-            algorithm=tcod.FOV_SHADOW)
+    def get_fov(self, center):
+        """Returns the visible area for a particular entity"""
 
-        # Mark all visible tiles as explored
-        # Set explored to equal explored | visible (preserve any Trues in
-        # either)
-        self.explored_tiles |= self.visible_tiles
+        # Get a map the size of the level
+        visible = np.full((self.width, self.height),
+                          fill_value=False,
+                          order="F")
+
+        # Compute field of view from the center
+        visible[:] = compute_fov(self.tiles["transparent"],
+                                 (center.x, center.y),
+                                 radius=center.body.view_radius,
+                                 algorithm=tcod.FOV_SHADOW)
+
+        # Return the visible map
+        return visible
 
     def render(self, console, player):
         """Displays the game world on a given console."""
 
-        # Update the current field of view
-        # Centered on a specific entity
-        self.update_fov(player)
+        # Update the visible tiles based on the player's FoV
+        self.visible_tiles = self.get_fov(player)
+
+        # Update explored tiles based on the visible ones
+        # Set explored to equal explored | visible (preserve any Trues in
+        # either)
+        self.explored_tiles |= self.visible_tiles
 
         # Fill the map with tiles, choosing the correct appearance for each one
         console.tiles_rgb[0:self.width, 0:self.height] = np.select(

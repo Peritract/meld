@@ -19,6 +19,7 @@ class Entity(Object):
                  position=(0, 0),
                  mind=Mind,
                  body=Body,
+                 faction="neutral",
                  char="&",
                  colour=tcod.lime,
                  blocks=True):
@@ -28,6 +29,9 @@ class Entity(Object):
         # Set up the entity's turn-taking logic
         self.mind = mind()
         self.mind.owner = self
+
+        # Set up the entity's loyalties
+        self.faction = faction
 
         # Set up the entity's physical form
         self.body = Body()

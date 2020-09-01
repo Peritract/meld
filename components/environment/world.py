@@ -18,8 +18,8 @@ class World:
         # Hacky setup, one day to be extracted out to generators
         self.level = Level(40, 40)
 
-        self.player = Entity("Miriam", (5, 5), Player)
-        self.player.view_radius = 8
+        self.player = Entity("Miriam", (5, 5), mind=Player, faction="player")
+        self.player.body.view_radius = 8
         self.level.entities.append(self.player)
 
     def render(self, console):
