@@ -20,7 +20,7 @@ class World:
 
         self.player = Entity("Miriam", (5, 5), mind=Player, faction="player")
         self.player.body.view_radius = 8
-        self.level.entities.append(self.player)
+        self.level.entities.insert(0, self.player)
 
     def render(self, console):
         """Renders the current state of the game world."""
