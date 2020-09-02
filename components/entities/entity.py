@@ -42,6 +42,22 @@ class Entity(Object):
         self.x += dx
         self.y += dy
 
+    def attack(self, other):
+        """Attempts to damage another entity."""
+        damage = self.body.attack - other.body.defence
+        print(f"The {self.name} bashes the {other.name} for {damage} damage.")
+        if damage > 0:
+            other.take_damage(damage)
+
+    def take_damage(self, amount):
+        """Reduces health."""
+        self.body.health -= amount
+        if self.body.health <= 0:
+            self.die()
+
+    def die(self):
+        print(f"The {self.name} dies in agony.")
+
     def take_action(self, level):
         """Takes a turn."""
 
@@ -53,7 +69,7 @@ class Entity(Object):
             self.move(decision.dx, decision.dy)
 
         elif isinstance(decision, Attack):
-            print(f"Bash the {decision.other.name}!")
+            self.attack(decision.other)
 
         elif isinstance(decision, Wait):
             print("Time to rest.")

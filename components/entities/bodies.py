@@ -8,7 +8,7 @@ class Body:
 
     def __init__(self,
                  health=5,
-                 attack=10,
+                 attack=12,
                  defence=10,
                  view_radius=5):
         self.health = health
