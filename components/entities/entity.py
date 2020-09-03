@@ -7,7 +7,7 @@ from ..utility.object import Object
 from .minds import Mind
 from .bodies import Body
 from ..utility.actions import Move, Attack, Wait
-from ..utility.event import Message, Death
+from ..utility.events import Message, Death
 from ..items.items import Corpse
 import tcod
 

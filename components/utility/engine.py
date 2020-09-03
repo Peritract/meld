@@ -5,6 +5,7 @@ this class manages the game state and the window.
 
 import tcod
 from ..environment.world import World
+from .events import GameOver
 
 
 class Engine:
@@ -27,7 +28,8 @@ class Engine:
 
         # Holder for states
         self.states = {"new_game": self.new_game,
-                       "playing": self.play_game}
+                       "playing": self.play_game,
+                       "game_over": self.game_over}
 
         # Holder for the current state
         self.state = "new_game"
@@ -39,7 +41,7 @@ class Engine:
                                        tileset=self.tileset,
                                        title=self.title) as self.window:
 
-            # Until the game is closed,
+            # Flag for the game running
             while True:
 
                 # Call the current state
@@ -69,4 +71,16 @@ class Engine:
         self.console.clear()
 
         # Give entities the chance to act
-        self.world.handle_actions()
+        events = self.world.handle_actions()
+
+        if events:
+            for event in events:
+                if isinstance(event, GameOver):
+                    self.state = "game_over"
+
+    def game_over(self):
+        """Ends the game."""
+
+        print("It's all over.")
+
+        raise SystemExit()

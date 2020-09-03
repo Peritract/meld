@@ -11,6 +11,7 @@ from math import sqrt
 
 import tcod
 from ..entities.minds import Hunter
+from ..utility.events import Message, Death, GameOver
 
 
 class Level:
@@ -137,8 +138,11 @@ class Level:
                 return entity
         return None
 
-    def handle_actions(self):
+    def handle_actions(self, player):
         """Allow each entity to act."""
+
+        # Holder for events (game-changing ones)
+        world_events = []
 
         # Loop through the entities
         for entity in self.entities:
@@ -150,14 +154,19 @@ class Level:
             for event in events:
 
                 # Display messages
-                if event.event_type == "message":
+                if isinstance(event, Message):
                     print(event.text)
 
                 # Handle dead entities
-                elif event.event_type == "death":
+                elif isinstance(event, Death):
 
                     # Call the die method, passing in the level
                     message = event.target.die(self)
 
                     # Display the message
                     print(message.text)
+
+                    # If the dead entity is the player,
+                    world_events.append(GameOver())
+
+        return world_events

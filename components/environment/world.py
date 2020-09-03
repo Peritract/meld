@@ -9,6 +9,7 @@
 from ..entities.minds import Player
 from .level import Level
 from ..entities.entity import Entity
+from ..utility.events import GameOver
 
 
 class World:
@@ -32,5 +33,17 @@ class World:
     def handle_actions(self):
         """Allows each entity to take a turn."""
 
+        # Holder for engine-level events
+        engine_events = []
+
         # Pass the call down to the level
-        self.level.handle_actions()
+        events = self.level.handle_actions(self.player)
+
+        # Deal with any world-level events
+        for event in events:
+
+            # If the game is over, inform the engine
+            if isinstance(event, GameOver):
+                engine_events.append(event)
+
+        return engine_events
