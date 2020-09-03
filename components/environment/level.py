@@ -32,11 +32,15 @@ class Level:
                                       fill_value=False,
                                       order="F")
 
+        # Holders for the creatures and items
+        self.entities = []
+        self.items = []
+
         # Trash wall, for the exampling
         self.tiles[30:33, 22] = basic_wall
 
         # Trash entities, for the exampling
-        self.entities = [Entity("Victoria", (1, 1), mind=Hunter)]
+        self.entities.append(Entity("Victoria", (1, 1), mind=Hunter))
 
     # Utility functions - mostly about checking tiles for particular purposes
 
@@ -104,6 +108,16 @@ class Level:
             choicelist=[self.tiles["in_view"], self.tiles["out_of_view"]],
             default=unknown)
 
+        # Display each item
+        for item in self.items:
+
+            # If it's in view
+            if self.visible_tiles[item.x, item.y]:
+                console.print(item.x,
+                              item.y,
+                              item.char,
+                              item.colour)
+
         # Display each entity
         for entity in self.entities:
 
@@ -125,5 +139,25 @@ class Level:
 
     def handle_actions(self):
         """Allow each entity to act."""
+
+        # Loop through the entities
         for entity in self.entities:
-            entity.take_action(self)
+
+            # Let each one take a turn
+            events = entity.take_action(self)    
+
+            # Handle any events passed back
+            for event in events:
+
+                # Display messages
+                if event.event_type == "message":
+                    print(event.text)
+
+                # Handle dead entities
+                elif event.event_type == "death":
+
+                    # Call the die method, passing in the level
+                    message = event.target.die(self)
+
+                    # Display the message
+                    print(message.text)
