@@ -6,7 +6,7 @@ from components.utility.engine import Engine
 def main():
 
     # Variable set up - to be extracted later
-    width = 50
+    width = 80
     height = 50
     tileset = "./assets/arial12x12.png"
 
