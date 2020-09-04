@@ -148,14 +148,14 @@ class Level:
         for entity in self.entities:
 
             # Let each one take a turn
-            events = entity.take_action(self)    
+            events = entity.take_action(self)
 
             # Handle any events passed back
             for event in events:
 
                 # Display messages
                 if isinstance(event, Message):
-                    print(event.text)
+                    world_events.append(event)
 
                 # Handle dead entities
                 elif isinstance(event, Death):
@@ -163,8 +163,8 @@ class Level:
                     # Call the die method, passing in the level
                     message = event.target.die(self)
 
-                    # Display the message
-                    print(message.text)
+                    # Log the message
+                    world_events.append(message)
 
                     # If the dead entity is the player,
                     world_events.append(GameOver())

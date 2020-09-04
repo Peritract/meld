@@ -5,7 +5,8 @@ this class manages the game state and the window.
 
 import tcod
 from ..environment.world import World
-from .events import GameOver
+from .events import GameOver, Message
+from .message_log import MessageLog
 
 
 class Engine:
@@ -25,6 +26,9 @@ class Engine:
         # Create the console for drawing on
         self.console = tcod.Console(self.width, self.height, order="F")
         # Order=F flips x and y, for easier drawing
+
+        # The message log
+        self.message_log = MessageLog()
 
         # Holder for states
         self.states = {"new_game": self.new_game,
@@ -54,6 +58,8 @@ class Engine:
         """
         self.world = World()
         self.state = "playing"
+        self.message_log.add_message(Message("Begin your quest!",
+                                             colour=tcod.purple))
 
     def play_game(self):
         """
@@ -63,6 +69,8 @@ class Engine:
 
         # Display the game world as it currently is
         self.world.render(self.console)
+        self.message_log.render_messages(self.console,
+                                         21, 45, 40, 5)
 
         # Flush the console to the window
         self.window.present(self.console)
@@ -73,8 +81,11 @@ class Engine:
         # Give entities the chance to act
         events = self.world.handle_actions()
 
+        # Handle engine-level events
         if events:
             for event in events:
+                if isinstance(event, Message):
+                    self.message_log.add_message(event)
                 if isinstance(event, GameOver):
                     self.state = "game_over"
 

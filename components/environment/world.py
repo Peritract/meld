@@ -9,7 +9,7 @@
 from ..entities.minds import Player
 from .level import Level
 from ..entities.entity import Entity
-from ..utility.events import GameOver
+from ..utility.events import GameOver, Message
 
 
 class World:
@@ -44,6 +44,8 @@ class World:
 
             # If the game is over, inform the engine
             if isinstance(event, GameOver):
+                engine_events.append(event)
+            elif isinstance(event, Message):
                 engine_events.append(event)
 
         return engine_events
