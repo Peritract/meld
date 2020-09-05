@@ -10,6 +10,8 @@ from ..entities.minds import Player
 from .level import Level
 from ..entities.entity import Entity
 from ..utility.events import GameOver, Message
+from ..utility.bar import render_bar
+import tcod
 
 
 class World:
@@ -29,6 +31,11 @@ class World:
         # Pass the call down to the level
         # Pass in the player so the fov can be calculated
         self.level.render(console, self.player)
+
+        # Display the player's details
+        render_bar(console, 0, 50, self.player.body.health,
+                   self.player.body.max_health, 20, tcod.dark_green,
+                   tcod.dark_gray, "Health", tcod.white)
 
     def handle_actions(self):
         """Allows each entity to take a turn."""
