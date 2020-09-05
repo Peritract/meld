@@ -12,7 +12,6 @@ class MessageLog:
         self.messages = [Message("Working title Roguelike.")]
 
     def add_message(self, message):
-        print(message)
         # If it's a duplicate
         if self.messages[-1].text == message.text:
             # Increase the previous message's count

@@ -17,7 +17,7 @@ class World:
     def __init__(self):
 
         # Hacky setup, one day to be extracted out to generators
-        self.level = Level(40, 40)
+        self.level = Level(80, 50)
 
         self.player = Entity("Miriam", (5, 5), mind=Player, faction="player")
         self.player.body.view_radius = 8

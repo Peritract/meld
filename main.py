@@ -7,7 +7,7 @@ def main():
 
     # Variable set up - to be extracted later
     width = 80
-    height = 50
+    height = 60
     tileset = "./assets/arial12x12.png"
 
     # Create the game object

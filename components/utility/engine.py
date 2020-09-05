@@ -70,7 +70,7 @@ class Engine:
         # Display the game world as it currently is
         self.world.render(self.console)
         self.message_log.render_messages(self.console,
-                                         21, 45, 40, 5)
+                                         38, 50, 40, 10)
 
         # Flush the console to the window
         self.window.present(self.console)
