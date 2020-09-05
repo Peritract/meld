@@ -16,9 +16,10 @@ from ..utility.events import Message, Death, GameOver
 
 class Level:
 
-    def __init__(self, width, height):
+    def __init__(self, width, height, index):
         self.width = width
         self.height = height
+        self.index = index
 
         # Create a map of floor tiles, with x and y humanised.
         self.tiles = np.full((width, height),

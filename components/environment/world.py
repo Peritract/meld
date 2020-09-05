@@ -10,16 +10,18 @@ from ..entities.minds import Player
 from .level import Level
 from ..entities.entity import Entity
 from ..utility.events import GameOver, Message
-from ..utility.bar import render_bar
-import tcod
+from ..utility.status_panel import StatusPanel
 
 
 class World:
 
     def __init__(self):
 
+        # Create the status panel
+        self.status_panel = StatusPanel(0, 50, 30, 10)
+
         # Hacky setup, one day to be extracted out to generators
-        self.level = Level(80, 50)
+        self.level = Level(80, 50, 0)
 
         self.player = Entity("Miriam", (5, 5), mind=Player, faction="player")
         self.player.body.view_radius = 8
@@ -32,10 +34,8 @@ class World:
         # Pass in the player so the fov can be calculated
         self.level.render(console, self.player)
 
-        # Display the player's details
-        render_bar(console, 0, 50, self.player.body.health,
-                   self.player.body.max_health, 20, tcod.dark_green,
-                   tcod.dark_gray, "Health", tcod.white)
+        # Render the status panel
+        self.status_panel.render(self.player, self.level, console)
 
     def handle_actions(self):
         """Allows each entity to take a turn."""
