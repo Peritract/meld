@@ -51,7 +51,9 @@ class Entity(Object):
         results = []
 
         damage = self.body.attack - other.body.defence
-        results.append(Message(f"The {self.name} bashes the {other.name}!"))
+        colour = tcod.red if other.faction == "player" else tcod.white
+        results.append(Message(f"The {self.name} bashes the {other.name}!",
+                       colour))
         if damage > 0:
             other.take_damage(damage)
             if other.body.health <= 0:
