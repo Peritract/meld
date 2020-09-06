@@ -7,7 +7,8 @@ from ..utility.object import Object
 from .minds import Mind
 from .bodies import Body
 from ..utility.actions import Move, Attack, Wait
-from ..utility.events import Message, Death
+from ..utility.event_log import Event, Death
+from ..utility.message_log import Message
 from ..items.items import Corpse
 import tcod
 
@@ -43,23 +44,20 @@ class Entity(Object):
         self.x += dx
         self.y += dy
 
-        # Return generated events
-        return []
-
     def attack(self, other):
         """Attempts to damage another entity."""
 
-        # Holder for events
-        events = []
+        # Holder for results
+        results = []
+
         damage = self.body.attack - other.body.defence
-        message = Message(f"The {self.name} bashes the {other.name}!")
-        events.append(message)
+        results.append(Message(f"The {self.name} bashes the {other.name}!"))
         if damage > 0:
             other.take_damage(damage)
             if other.body.health <= 0:
-                events.append(Death(other))
+                results.append(Death(other))
 
-        return events
+        return results
 
     def take_damage(self, amount):
         """Reduces health."""
@@ -70,24 +68,26 @@ class Entity(Object):
         level.items.append(Corpse((self.x, self.y), self.name))
         return Message(f"The {self.name} dies in agony.")
 
-    def take_action(self, level):
+    def take_action(self, level, message_log, event_log):
         """Takes a turn."""
-
-        # Holder for turn events
-        events = []
 
         # Ask the player/AI to make a decision
         decision = self.mind.take_action(level)
 
         # Act on the decision
         if isinstance(decision, Move):
-            events.extend(self.move(decision.dx, decision.dy))
+            results = self.move(decision.dx, decision.dy)
 
         elif isinstance(decision, Attack):
-            events.extend(self.attack(decision.other))
+            results = self.attack(decision.other)
 
         elif isinstance(decision, Wait):
-            events.append(Message(f"The {self.name} waits."))
+            results = [Message(f"The {self.name} waits.")]
 
-        # Return the event log, to be handled higher up the chain
-        return events
+        # Send turn results in the right direction
+        if results:
+            for result in results:
+                if isinstance(result, Message):
+                    message_log.add_message(result)
+                elif isinstance(result, Event):
+                    event_log.add_event(result)

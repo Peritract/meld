@@ -1,27 +1,29 @@
 """
    This file conains the implementation of the world class.
-   This class holds information about all the different levels
-   of the game world, and information that needs to exist outside
-   levels.
+   This class manages in-game turns, as well as holding
+   information about all the different levels of the game world,
+   and information that needs to exist outside levels.
 """
 
 # Temporary imports until proper generation
 from ..entities.minds import Player
 from .level import Level
 from ..entities.entity import Entity
-from ..utility.events import GameOver, Message
-from ..utility.status_panel import StatusPanel
 
 
 class World:
 
-    def __init__(self):
+    def __init__(self, engine, width, height):
 
-        # Create the status panel
-        self.status_panel = StatusPanel(0, 50, 30, 10)
+        # Store level size
+        self.width = width
+        self.height = height
+
+        # Link back to the creating engine
+        self.engine = engine
 
         # Hacky setup, one day to be extracted out to generators
-        self.level = Level(80, 50, 0)
+        self.level = Level(self.width, self.height, self, 0)
 
         self.player = Entity("Miriam", (5, 5), mind=Player, faction="player")
         self.player.body.view_radius = 8
@@ -34,25 +36,14 @@ class World:
         # Pass in the player so the fov can be calculated
         self.level.render(console, self.player)
 
-        # Render the status panel
-        self.status_panel.render(self.player, self.level, console)
-
     def handle_actions(self):
         """Allows each entity to take a turn."""
 
-        # Holder for engine-level events
-        engine_events = []
-
         # Pass the call down to the level
-        events = self.level.handle_actions(self.player)
+        self.level.handle_actions(self.player)
 
         # Deal with any world-level events
-        for event in events:
+        for event in self.engine.event_log.get_filtered_events("world"):
 
-            # If the game is over, inform the engine
-            if isinstance(event, GameOver):
-                engine_events.append(event)
-            elif isinstance(event, Message):
-                engine_events.append(event)
-
-        return engine_events
+            # Remove the processed event
+            self.engine.event_log.remove_event(event)

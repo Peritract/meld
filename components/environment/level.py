@@ -8,17 +8,21 @@ from .tiles import unknown, basic_floor, basic_wall
 from ..entities.entity import Entity
 from tcod.map import compute_fov
 from math import sqrt
-
+from ..utility.event_log import Death, GameOver
 import tcod
 from ..entities.minds import Hunter
-from ..utility.events import Message, Death, GameOver
 
 
 class Level:
 
-    def __init__(self, width, height, index):
+    def __init__(self, width, height, world, index):
         self.width = width
         self.height = height
+
+        # Link back to the overworld
+        self.world = world
+
+        # Store the level's index
         self.index = index
 
         # Create a map of floor tiles, with x and y humanised.
@@ -94,7 +98,7 @@ class Level:
         return visible
 
     def render(self, console, player):
-        """Displays the game world on a given console."""
+        """Displays the level on a given console."""
 
         # Update the visible tiles based on the player's FoV
         self.visible_tiles = self.get_fov(player)
@@ -139,35 +143,36 @@ class Level:
                 return entity
         return None
 
+    def handle_events(self, player):
+        """Deal with events caused by entities."""
+
+        # Get relevant events
+        for event in self.world.engine.event_log.get_filtered_events("level"):
+
+            # Handle dead entities
+            if isinstance(event, Death):
+
+                # Call the die method, passing in the level
+                message = event.target.die(self)
+
+                # Log the message
+                self.world.engine.message_log.add_message(message)
+
+                # If the dead entity is the player, inform the engine
+                self.world.engine.event_log.add_event(GameOver())
+
+                # Remove the event from the log
+                self.world.engine.event_log.remove_event(event)
+
     def handle_actions(self, player):
         """Allow each entity to act."""
-
-        # Holder for events (game-changing ones)
-        world_events = []
 
         # Loop through the entities
         for entity in self.entities:
 
             # Let each one take a turn
-            events = entity.take_action(self)
+            entity.take_action(self, self.world.engine.message_log,
+                               self.world.engine.event_log)
 
-            # Handle any events passed back
-            for event in events:
-
-                # Display messages
-                if isinstance(event, Message):
-                    world_events.append(event)
-
-                # Handle dead entities
-                elif isinstance(event, Death):
-
-                    # Call the die method, passing in the level
-                    message = event.target.die(self)
-
-                    # Log the message
-                    world_events.append(message)
-
-                    # If the dead entity is the player,
-                    world_events.append(GameOver())
-
-        return world_events
+        # Handle events
+        self.handle_events(player)

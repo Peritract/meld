@@ -17,8 +17,11 @@ class StatusPanel:
         self.width = width
         self.height = height
 
-    def render(self, player, level, console):
+    def render(self, console, world):
         """Renders player & level information."""
+
+        level = world.level
+        player = world.player
 
         # Show key details
         console.print(self.x, self.y, f"Level {level.index}", tcod.white)

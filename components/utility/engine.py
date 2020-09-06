@@ -5,8 +5,9 @@ this class manages the game state and the window.
 
 import tcod
 from ..environment.world import World
-from .events import GameOver, Message
 from .message_log import MessageLog
+from .status_panel import StatusPanel
+from .event_log import EventLog, GameOver
 
 
 class Engine:
@@ -26,9 +27,6 @@ class Engine:
         # Create the console for drawing on
         self.console = tcod.Console(self.width, self.height, order="F")
         # Order=F flips x and y, for easier drawing
-
-        # The message log
-        self.message_log = MessageLog()
 
         # Holder for states
         self.states = {"new_game": self.new_game,
@@ -56,10 +54,21 @@ class Engine:
         Creates a new game world and populates it before
         changing the state to "play".
         """
-        self.world = World()
+
+        # Create a game world
+        self.world = World(self, 80, 50)
+
+        # Create the event log
+        self.event_log = EventLog()
+
+        # The message log
+        self.message_log = MessageLog(38, 50, 40, 10)
+
+        # The status panel
+        self.status_panel = StatusPanel(0, 50, 30, 10)
+
+        # Change state from new to playing
         self.state = "playing"
-        self.message_log.add_message(Message("Begin your quest!",
-                                             colour=tcod.purple))
 
     def play_game(self):
         """
@@ -67,10 +76,10 @@ class Engine:
         lets entities move and updates the display.
         """
 
-        # Display the game world as it currently is
+        # Display the current state of the game world
         self.world.render(self.console)
-        self.message_log.render_messages(self.console,
-                                         38, 50, 40, 10)
+        self.message_log.render_messages(self.console)
+        self.status_panel.render(self.console, self.world)
 
         # Flush the console to the window
         self.window.present(self.console)
@@ -79,15 +88,15 @@ class Engine:
         self.console.clear()
 
         # Give entities the chance to act
-        events = self.world.handle_actions()
+        self.world.handle_actions()
 
         # Handle engine-level events
-        if events:
-            for event in events:
-                if isinstance(event, Message):
-                    self.message_log.add_message(event)
-                if isinstance(event, GameOver):
-                    self.state = "game_over"
+        for event in self.event_log.get_filtered_events("engine"):
+            if isinstance(event, GameOver):
+                self.state = "game_over"
+
+            # Remove the event from the log
+            self.event_log.remove_event(event)
 
     def game_over(self):
         """Ends the game."""
