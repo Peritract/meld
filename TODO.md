@@ -1,0 +1,4 @@
+- show entities at mouse point
+- get turns working
+- rebuild interface
+- fill back in rest of game
