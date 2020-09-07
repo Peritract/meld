@@ -3,13 +3,7 @@
     An entity is any object more complex than a simple physical item.
 """
 
-from ..utility.object import Object
-from .minds import Mind
-from .bodies import Body
-from ..utility.actions import Move, Attack, Wait
-from ..utility.event_log import Event, Death
-from ..utility.message_log import Message
-from ..items.items import Corpse
+from ..utilities.object import Object
 import tcod
 
 
@@ -18,78 +12,15 @@ class Entity(Object):
 
     def __init__(self,
                  name="entity",
-                 position=(0, 0),
-                 mind=Mind,
-                 body=Body,
+                 x=0,
+                 y=0,
                  faction="neutral",
                  char="&",
                  colour=tcod.lime,
                  blocks=True):
-        """Sets internal properties"""
-        Object.__init__(self, name, position, char, colour, blocks)
-
-        # Set up the entity's turn-taking logic
-        self.mind = mind()
-        self.mind.owner = self
-
-        # Set up the entity's loyalties
+        super().__init__(name, x, y, char, colour, blocks)
         self.faction = faction
 
-        # Set up the entity's physical form
-        self.body = Body()
-        self.body.owner = self
-
-    def move(self, dx, dy):
-        """Alters the entity's position by a given amount."""
-        self.x += dx
-        self.y += dy
-
-    def attack(self, other):
-        """Attempts to damage another entity."""
-
-        # Holder for results
-        results = []
-
-        damage = self.body.attack - other.body.defence
-        colour = tcod.red if other.faction == "player" else tcod.white
-        results.append(Message(f"The {self.name} bashes the {other.name}!",
-                       colour))
-        if damage > 0:
-            other.take_damage(damage)
-            if other.body.health <= 0:
-                results.append(Death(other))
-
-        return results
-
-    def take_damage(self, amount):
-        """Reduces health."""
-        self.body.health -= amount
-
-    def die(self, level):
-        level.entities.remove(self)
-        level.items.append(Corpse((self.x, self.y), self.name))
-        return Message(f"The {self.name} dies in agony.")
-
-    def take_action(self, level, message_log, event_log):
-        """Takes a turn."""
-
-        # Ask the player/AI to make a decision
-        decision = self.mind.take_action(level)
-
-        # Act on the decision
-        if isinstance(decision, Move):
-            results = self.move(decision.dx, decision.dy)
-
-        elif isinstance(decision, Attack):
-            results = self.attack(decision.other)
-
-        elif isinstance(decision, Wait):
-            results = [Message(f"The {self.name} waits.")]
-
-        # Send turn results in the right direction
-        if results:
-            for result in results:
-                if isinstance(result, Message):
-                    message_log.add_message(result)
-                elif isinstance(result, Event):
-                    event_log.add_event(result)
+    def take_action(self):
+        """Acts in the game world."""
+        print("Here!")
