@@ -76,6 +76,9 @@ class Engine:
         lets entities move and updates the display.
         """
 
+        # Clear the console, removing old things
+        self.console.clear()
+
         # Display the current state of the game world
         self.world.render(self.console)
         self.message_log.render_messages(self.console)
@@ -83,9 +86,6 @@ class Engine:
 
         # Flush the console to the window
         self.window.present(self.console)
-
-        # Clear the console, setting it up for the next turn
-        self.console.clear()
 
         # Give entities the chance to act
         self.world.handle_actions()

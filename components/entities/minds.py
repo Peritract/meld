@@ -4,12 +4,13 @@ AI "minds" - the logic for how each entity acts & takes turns.
 """
 
 from ..utility.event_handlers import PlayerEventHandler
-from ..utility.actions import Surge, Move, Attack, Wait
+from ..utility.actions import Surge, Move, Attack, Wait, Inspect
 from ..utility.point import Point
 import tcod.event
 import tcod.path
 from random import choice
 import numpy as np
+from ..utility.event_handlers import InspectEventHandler
 
 
 class Mind():
@@ -92,6 +93,27 @@ class Player(Mind):
     def __init__(self):
         self.event_handler = PlayerEventHandler()
 
+    def inspect(self, level):
+        """Allows the player to mouseover game objects."""
+
+        # Create the event handler
+        handler = InspectEventHandler()
+
+        # Start a loop until a mode-ending action
+        complete = False
+
+        while not complete:
+
+            # Take user input
+            for event in tcod.event.wait():
+
+                # Check the event against valid actions
+                action = handler.dispatch(event)
+
+                # If it's mode ending
+                if isinstance(action, Inspect):
+                    complete = True
+
     def take_action(self, level):
 
         # Start a loop until a turn-ending action
@@ -107,6 +129,10 @@ class Player(Mind):
                 # Ignore invalid actions
                 if not decision:
                     continue
+
+                # If it's an attempt to view things
+                if isinstance(decision, Inspect):
+                    self.inspect(level)
 
                 # If the action has a direction,
                 if isinstance(decision, Surge):

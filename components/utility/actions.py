@@ -39,3 +39,17 @@ class Wait(Action):
 
     # Ends turns
     final = True
+
+
+class Inspect(Action):
+    """Enters inspect mode."""
+    def __init__(self):
+        super().__init__()
+
+
+class MouseOver(Action):
+    """Records mouse movement."""
+    def __init__(self, x, y):
+        super().__init__()
+        self.x = x
+        self.y = y
