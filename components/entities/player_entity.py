@@ -4,7 +4,7 @@ This is the game's player character.
 """
 
 from .entity import Entity
-from .actions import Move, Attack, Wait
+from .actions import Surge, Move, Attack, Wait
 
 from ..entities.body import Body
 
@@ -25,14 +25,40 @@ class Player(Entity):
                  blocks=True):
         super().__init__(name, x, y, faction, body, char, colour, blocks)
 
-    def take_action(self, instruction):
+    def take_action(self, instruction, area):
         """Takes an action based on player input."""
 
-        if isinstance(instruction, Move):
-            self.move(instruction.dx, instruction.dy)
+        # If the instruction has a direction
+        if isinstance(instruction, Surge):
 
-        elif isinstance(instruction, Attack):
-            self.attack(instruction.other)
+            # Intepret the action based on area context
+            action = self.interpret_surge(instruction, area)
+
+            # Act on the interpretation
+            if isinstance(action, Move):
+                self.move(action.dx, action.dy)
+            elif isinstance(action, Attack):
+                self.attack(action.other)
 
         elif isinstance(instruction, Wait):
             self.wait()
+
+    def interpret_surge(self, instruction, area):
+        """Interprets an action with a direction based on context."""
+
+        # Get the target coordinates
+        target_x = self.x + instruction.dx
+        target_y = self.y + instruction.dy
+
+        # If the target is valid
+        if area.in_bounds(target_x, target_y):
+
+            # Check for an entity at the target location
+            occupant = area.get_blocker_at_location(target_x, target_y)
+
+            # If there is an occupant
+            if occupant:
+                return Attack(occupant)
+
+            # Otherwise, it's a move
+            return Move(instruction.dx, instruction.dy)

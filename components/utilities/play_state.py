@@ -55,7 +55,7 @@ class PlayState(State):
                 continue
 
             # Pass the action to the player
-            self.engine.player.take_action(action)
+            self.engine.player.take_action(action, self.engine.world.area)
 
             # Let all other entities take turns
             for entity in self.engine.world.entities - {self.engine.player}:

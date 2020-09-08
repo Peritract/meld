@@ -1,4 +1,5 @@
-- show entities at mouse point
-- get turns working
-- rebuild interface
+- Tiles
+- Passable-ness
+
+
 - fill back in rest of game

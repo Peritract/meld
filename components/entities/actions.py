@@ -31,11 +31,11 @@ class Move(Surge):
         super().__init__(dx, dy)
 
 
-class Attack(Surge):
+class Attack(Action):
     """Melee attack."""
 
-    def __init__(self, dx, dy, other):
-        super().__init__(dx, dy)
+    def __init__(self, other):
+        super().__init__()
         self.other = other
 
 

@@ -27,3 +27,12 @@ class Entity(Object):
     def take_action(self):
         """Acts in the game world."""
         print(f"the {self.name} ponders.")
+
+    def move(self, dx, dy):
+        """Alters the entity's position by a given amount."""
+        self.x += dx
+        self.y += dy
+
+    def attack(self, other):
+        """Attacks another entity."""
+        print(f"The {self.name} savages the {other.name}.")
