@@ -6,6 +6,8 @@ This is the game's player character.
 from .entity import Entity
 from .actions import Move, Attack, Wait
 
+from ..entities.body import Body
+
 import tcod
 
 
@@ -17,10 +19,11 @@ class Player(Entity):
                  x=0,
                  y=0,
                  faction="player",
+                 body=Body,
                  char="@",
                  colour=tcod.white,
                  blocks=True):
-        super().__init__(name, x, y, faction, char, colour, blocks)
+        super().__init__(name, x, y, faction, body, char, colour, blocks)
 
     def take_action(self, instruction):
         """Takes an action based on player input."""

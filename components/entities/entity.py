@@ -4,6 +4,7 @@
 """
 
 from ..utilities.object import Object
+from ..entities.body import Body
 import tcod
 
 
@@ -15,11 +16,13 @@ class Entity(Object):
                  x=0,
                  y=0,
                  faction="neutral",
+                 body=Body,
                  char="&",
                  colour=tcod.lime,
                  blocks=True):
         super().__init__(name, x, y, char, colour, blocks)
         self.faction = faction
+        self.body = body()
 
     def take_action(self):
         """Acts in the game world."""

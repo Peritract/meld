@@ -9,10 +9,11 @@ from ..entities.entity import Entity
 class Area:
     """An in-game location."""
 
-    def __init__(self, width, height, world):
+    def __init__(self, width, height, world, name="area"):
         self.width = width
         self.height = height
         self.world = world
+        self.name = name
 
         # Holders for all internal objects
         self.contents = set()
@@ -33,14 +34,11 @@ class Area:
             return set([thing for thing in self.contents
                         if thing.x == x and thing.y == y])
 
-    def get_blockers_at_location(self, x, y):
+    def get_blocker_at_location(self, x, y):
         """Returns the blocking entity at a particular position."""
 
         # Get all objects on the tile
         present = self.at_location(x, y)
-
-        if not present:
-            return
 
         for thing in present:
             if thing.blocks:
