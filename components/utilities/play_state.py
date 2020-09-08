@@ -48,8 +48,32 @@ class PlayState(State):
             window.convert_event(event)
 
             # Pass the event to handlers
-            self.dispatch(event)
+            action = self.dispatch(event)
+
+            # If no action has been chosen, pass on
+            if not action:
+                continue
+
+            # Pass the action to the player
+            self.engine.player.take_action(action)
+
+            # Let all other entities take turns
+            for entity in self.engine.world.entities - {self.engine.player}:
+                entity.take_action()
 
     def render(self, console):
-        for entity in self.engine.world.current_area.entities:
-            console.print(entity.x, entity.y, entity.char)
+        """Display the current state of the game world."""
+
+        # Show all the entities
+        for entity in self.engine.world.entities:
+            console.print(entity.x, entity.y, entity.char, entity.colour)
+
+        # If the mouse is over a tile
+        if self.engine.world.area.in_bounds(*self.engine.m_loc):
+
+            # Get the tile contents
+            contents = self.engine.world.area.at_location(*self.engine.m_loc)
+
+            if contents:
+                contents_string = " ".join([thing.name for thing in contents])
+                console.print(20, 20, contents_string)

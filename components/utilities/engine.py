@@ -33,7 +33,7 @@ class Engine:
         self.state = "play_game"
 
         # Mouse location
-        self.mouse_loc = (0, 0)
+        self.m_loc = (0, 0)
 
     def run_main_loop(self):
         """Repeatedly calls the current state method."""
@@ -66,11 +66,13 @@ class Engine:
     def hack(self):
         """Short-term values for development that will one day be removed."""
         from ..entities.entity import Entity
+        from ..entities.player_entity import Player
         from ..environments.world import World
         from ..environments.area import Area
 
         self.world = World(self)
-        self.player = Entity("player", 5, 5)
+        self.player = Player("player", 5, 5)
+        other = Entity("other", 10, 10)
         self.world.areas.append(Area(80, 50, self.world))
-        self.world.area = 0
-        self.world.current_area.entities.append(self.player)
+        self.world.current_area = 0
+        self.world.area.contents = self.world.area.contents.union({self.player, other})

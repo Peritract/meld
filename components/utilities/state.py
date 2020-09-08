@@ -33,4 +33,4 @@ class State(tcod.event.EventDispatch):
 
     def ev_mousemotion(self, event):
         """Log mouse movement."""
-        self.engine.mouse_loc = (event.tile.x, event.tile.y)
+        self.engine.m_loc = (event.tile.x, event.tile.y)

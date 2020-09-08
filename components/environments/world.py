@@ -11,10 +11,15 @@ class World:
     def __init__(self, engine):
         self.engine = engine
 
-        self.area = None
+        self.current_area = None
         self.areas = []
 
     @property
-    def current_area(self):
+    def area(self):
         """Returns the currently-occupied area."""
-        return self.areas[self.area]
+        return self.areas[self.current_area]
+
+    @property
+    def entities(self):
+        """Returns the entities in the currently-occupied area."""
+        return self.areas[self.current_area].entities

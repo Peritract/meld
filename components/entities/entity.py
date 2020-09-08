@@ -23,4 +23,4 @@ class Entity(Object):
 
     def take_action(self):
         """Acts in the game world."""
-        print("Here!")
+        print(f"the {self.name} ponders.")
