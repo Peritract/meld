@@ -99,7 +99,7 @@ class PlayState(State):
 
             # If the entity is visible,
             if self.engine.world.area.is_visible(entity.x, entity.y):
-                # Show it
+                # Show the entity
                 console.print(entity.x, entity.y, entity.char, entity.colour)
 
     def render_info_pane(self, console, x, y):

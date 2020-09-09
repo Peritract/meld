@@ -78,4 +78,5 @@ class Engine:
         area.tiles[30:33, 22] = basic_wall
         self.world.areas.append(area)
         self.world.current_area = 0
-        self.world.area.contents = self.world.area.contents.union({self.player, other})
+        self.world.area.contents = self.world.area.contents.union({self.player,
+                                                                   other})
