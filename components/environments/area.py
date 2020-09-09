@@ -99,7 +99,7 @@ class Area:
         """Updates the state of tiles (visible/explored)
            based on a given entity."""
 
-        # Update the visible tiles based on the player's FoV
+        # Update the visible tiles based on the entity's FoV
         self.visible_tiles = self.calculate_fov(entity)
 
         # Update explored tiles based on the visible ones
