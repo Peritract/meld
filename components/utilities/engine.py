@@ -69,10 +69,13 @@ class Engine:
         from ..entities.player_entity import Player
         from ..environments.world import World
         from ..environments.area import Area
+        from ..environments.tile import basic_wall
 
         self.world = World(self)
         self.player = Player("player", 5, 5)
         other = Entity("other", 10, 10)
-        self.world.areas.append(Area(80, 50, self.world))
+        area = Area(80, 50, self.world)
+        area.tiles[30:33, 22] = basic_wall
+        self.world.areas.append(area)
         self.world.current_area = 0
         self.world.area.contents = self.world.area.contents.union({self.player, other})

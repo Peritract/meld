@@ -64,17 +64,43 @@ class PlayState(State):
     def render(self, console):
         """Display the current state of the game world."""
 
-        # Show all the entities
-        for entity in self.engine.world.entities:
-            console.print(entity.x, entity.y, entity.char, entity.colour)
+        # Update tile appearances
+        self.engine.world.area.update_tile_states(self.engine.player)
+
+        # Draw the tiles
+        self.render_tiles(console)
+
+        # Display the area contents
+        self.render_contents(console)
 
         # Display the info bar
-        self.render_info_pane(console, 20, 20)
+        self.render_info_pane(console, 30, 50)
 
         # Display the status pane
-        self.render_status_pane(console, 30, 30)
+        self.render_status_pane(console, 0, 50)
 
     # Utility rendering functions
+
+    def render_tiles(self, console):
+        """Render the tile map."""
+
+        # Get the current appearance for each tile
+        current = self.engine.world.area.get_tile_appearances()
+
+        # Draw the tiles
+        console.tiles_rgb[0:self.engine.world.area.width,
+                          0:self.engine.world.area.height] = current
+
+    def render_contents(self, console):
+        """Render the contents of a specific area."""
+
+        # Loop through all the entities
+        for entity in self.engine.world.area.entities:
+
+            # If the entity is visible,
+            if self.engine.world.area.is_visible(entity.x, entity.y):
+                # Show it
+                console.print(entity.x, entity.y, entity.char, entity.colour)
 
     def render_info_pane(self, console, x, y):
         """Displays information about the tile under the mouse."""
@@ -99,7 +125,7 @@ class PlayState(State):
         console.print(x, y, self.engine.world.area.name, tcod.white)
 
         # Show the health bar
-        self.render_bar(console, x, y + 1, 30,
+        self.render_bar(console, x, y + 2, 30,
                         self.engine.player.body.health,
                         self.engine.player.body.max_health,
                         tcod.dark_gray, tcod.dark_green, "Health",

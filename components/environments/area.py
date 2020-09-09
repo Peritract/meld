@@ -4,6 +4,10 @@ This is a single in-game location.
 """
 
 from ..entities.entity import Entity
+from ..environments.tile import basic_floor, unknown
+import numpy as np
+from tcod.map import compute_fov
+import tcod
 
 
 class Area:
@@ -18,11 +22,33 @@ class Area:
         # Holders for all internal objects
         self.contents = set()
 
+        # ---HACK--- #
+
+        # Create a map of floor tiles, with x and y humanised.
+        self.tiles = np.full((width, height),
+                             fill_value=basic_floor,
+                             order="F")
+
+        # holders for details of visible/known tiles
+        self.visible_tiles = np.full((width, height),
+                                     fill_value=False,
+                                     order="F")
+
+        self.explored_tiles = np.full((width, height),
+                                      fill_value=False,
+                                      order="F")
+
+        # ---/HACK--- #
+
     @property
     def entities(self):
         """Returns a set of entities in the area."""
         return set([thing for thing in self.contents
                     if isinstance(thing, Entity)])
+
+    def is_visible(self, x, y):
+        """Checks if a given point is visible."""
+        return self.visible_tiles[x, y]
 
     def in_bounds(self, x, y):
         """Checks if a given point is inside the area bounds."""
@@ -43,3 +69,40 @@ class Area:
         for thing in present:
             if thing.blocks:
                 return thing
+
+    def calculate_fov(self, entity):
+        """Returns the visible area for a particular entity"""
+
+        # Get a map the size of the level
+        visible = np.full((self.width, self.height),
+                          fill_value=False,
+                          order="F")
+
+        # Compute field of view from the center
+        visible[:] = compute_fov(self.tiles["transparent"],
+                                 (entity.x, entity.y),
+                                 radius=entity.body.view_radius,
+                                 algorithm=tcod.FOV_SHADOW)
+
+        # Return the visible map
+        return visible
+
+    def get_tile_appearances(self):
+        """Get the current appearance of each tile."""
+        return np.select(condlist=[self.visible_tiles,
+                                   self.explored_tiles],
+                         choicelist=[self.tiles["in_view"],
+                                     self.tiles["out_of_view"]],
+                         default=unknown)
+
+    def update_tile_states(self, entity):
+        """Updates the state of tiles (visible/explored)
+           based on a given entity."""
+
+        # Update the visible tiles based on the player's FoV
+        self.visible_tiles = self.calculate_fov(entity)
+
+        # Update explored tiles based on the visible ones
+        # Set explored to equal explored | visible (preserve any Trues in
+        # either)
+        self.explored_tiles |= self.visible_tiles
