@@ -4,7 +4,7 @@ This is a single in-game location.
 """
 
 from ..entities.entity import Entity
-from ..environments.tile import basic_floor, unknown
+from ..environments.tiles import basic_floor, unknown
 import numpy as np
 from tcod.map import compute_fov
 import tcod
@@ -77,7 +77,7 @@ class Area:
                           fill_value=False,
                           order="F")
 
-        # Compute field of view from the center
+        # Compute field of view from the entity's location
         visible[:] = compute_fov(self.tiles["transparent"],
                                  (entity.x, entity.y),
                                  radius=entity.body.view_radius,

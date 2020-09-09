@@ -69,7 +69,7 @@ class Engine:
         from ..entities.player_entity import Player
         from ..environments.world import World
         from ..environments.area import Area
-        from ..environments.tile import basic_wall
+        from ..environments.tiles import basic_wall
 
         self.world = World(self)
         self.player = Player("player", 5, 5)
