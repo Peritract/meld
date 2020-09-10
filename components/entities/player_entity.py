@@ -10,6 +10,8 @@ from ..entities.body import Body
 
 import tcod
 
+from ..utilities.message_log import Message
+
 
 class Player(Entity):
     """The player character."""
@@ -41,6 +43,7 @@ class Player(Entity):
                 self.attack(action.other)
 
         elif isinstance(instruction, Wait):
+            area.post_message(Message(f"The {self.name} idles."))
             self.wait()
 
     def interpret_surge(self, instruction, area):

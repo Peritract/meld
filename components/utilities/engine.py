@@ -6,6 +6,7 @@ game screen and states.
 
 import tcod
 from .play_state import PlayState
+from .message_log import MessageLog, Message
 
 
 class Engine:
@@ -34,6 +35,9 @@ class Engine:
 
         # Mouse location
         self.m_loc = (0, 0)
+
+        # Message storage
+        self.message_log = MessageLog()
 
     def run_main_loop(self):
         """Repeatedly calls the current state method."""
@@ -76,6 +80,7 @@ class Engine:
         other = Entity("other", 10, 10)
         area = Area(80, 50, self.world)
         area.tiles[30:33, 22] = basic_wall
+        self.message_log.add_message(Message("I am alive!"))
         self.world.areas.append(area)
         self.world.current_area = 0
         self.world.area.contents = self.world.area.contents.union({self.player,

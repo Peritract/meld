@@ -4,6 +4,7 @@
 """
 
 from ..utilities.object import Object
+from ..utilities.message_log import Message
 from ..entities.body import Body
 import tcod
 
@@ -24,9 +25,9 @@ class Entity(Object):
         self.faction = faction
         self.body = body()
 
-    def take_action(self):
+    def take_action(self, area):
         """Acts in the game world."""
-        print(f"the {self.name} ponders.")
+        area.post_message(Message(f"The {self.name} ponders."))
 
     def move(self, dx, dy):
         """Alters the entity's position by a given amount."""
@@ -35,4 +36,8 @@ class Entity(Object):
 
     def attack(self, other):
         """Attacks another entity."""
-        print(f"The {self.name} savages the {other.name}.")
+        pass
+
+    def wait(self):
+        """Passes the turn."""
+        pass

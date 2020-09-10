@@ -105,3 +105,9 @@ class Area:
         # Set explored to equal explored | visible (preserve any Trues in
         # either)
         self.explored_tiles |= self.visible_tiles
+
+        # Utility functions
+
+    def post_message(self, message):
+        """Adds a message to the associated message log."""
+        self.world.engine.message_log.add_message(message)

@@ -59,7 +59,7 @@ class PlayState(State):
 
             # Let all other entities take turns
             for entity in self.engine.world.entities - {self.engine.player}:
-                entity.take_action()
+                entity.take_action(self.engine.world.area)
 
     def render(self, console):
         """Display the current state of the game world."""
@@ -73,11 +73,15 @@ class PlayState(State):
         # Display the area contents
         self.render_contents(console)
 
-        # Display the info bar
-        self.render_info_pane(console, 30, 50)
-
         # Display the status pane
-        self.render_status_pane(console, 0, 50)
+        self.render_status_pane(console, 1, 51, 30)
+
+        # Display the message window
+        self.render_message_log(console, 32, 51, 35, 8,
+                                self.engine.message_log)
+
+        # Display the info pane
+        self.render_info_pane(console, 69, 51)
 
     # Utility rendering functions
 
@@ -117,7 +121,7 @@ class PlayState(State):
                 contents_string = " ".join([thing.name for thing in contents])
                 console.print(x, y, contents_string)
 
-    def render_status_pane(self, console, x, y):
+    def render_status_pane(self, console, x, y, width):
         """Displays a status panel with key information about
            the area & player."""
 
@@ -125,7 +129,7 @@ class PlayState(State):
         console.print(x, y, self.engine.world.area.name, tcod.white)
 
         # Show the health bar
-        self.render_bar(console, x, y + 2, 30,
+        self.render_bar(console, x, y + 2, width,
                         self.engine.player.body.health,
                         self.engine.player.body.max_health,
                         tcod.dark_gray, tcod.dark_green, "Health",
@@ -151,3 +155,21 @@ class PlayState(State):
 
         # Put the numbers over the top
         console.print(x, y, f"{caption}: {value}/{max_value}", caption_colour)
+
+    def render_message_log(self, console, x, y, width, height, log):
+        """Render the latest messages from the message log."""
+
+        # Get the message lines
+        messages = log.get_recent_wrapped_message_lines(width=width,
+                                                        max_lines=height)
+
+        offset = height - 1
+
+        # Loop through the messages,
+        for message in messages:
+
+            # Display the message
+            console.print(x, y + offset, message[0], message[1])
+
+            # Up the offset
+            offset -= 1
