@@ -5,7 +5,7 @@ This is the "game" bit - it manages turn-taking and level/unit display.
 
 from ..entities.actions import Surge, Wait
 from .state import State
-
+from .constants import directions
 import tcod
 
 
@@ -26,13 +26,13 @@ class PlayState(State):
 
         # Movement keys
         if key == tcod.event.K_UP:
-            action = Surge(dx=0, dy=-1)
+            action = Surge(*directions["up"])
         elif key == tcod.event.K_DOWN:
-            action = Surge(dx=0, dy=1)
+            action = Surge(*directions["down"])
         elif key == tcod.event.K_LEFT:
-            action = Surge(dx=-1, dy=0)
+            action = Surge(*directions["left"])
         elif key == tcod.event.K_RIGHT:
-            action = Surge(dx=1, dy=0)
+            action = Surge(*directions["right"])
         elif key == tcod.event.K_PERIOD:
             action = Wait()
 

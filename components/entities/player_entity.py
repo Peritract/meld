@@ -10,8 +10,6 @@ from ..entities.body import Body
 
 import tcod
 
-from ..utilities.message_log import Message
-
 
 class Player(Entity):
     """The player character."""
@@ -21,11 +19,12 @@ class Player(Entity):
                  x=0,
                  y=0,
                  faction="player",
+                 mind=None,
                  body=Body,
                  char="@",
                  colour=tcod.white,
                  blocks=True):
-        super().__init__(name, x, y, faction, body, char, colour, blocks)
+        super().__init__(name, x, y, faction, mind, body, char, colour, blocks)
 
     def take_action(self, instruction, area):
         """Takes an action based on player input."""
@@ -36,15 +35,21 @@ class Player(Entity):
             # Intepret the action based on area context
             action = self.interpret_surge(instruction, area)
 
+            # Holder for a potential message
+            message = None
+
             # Act on the interpretation
             if isinstance(action, Move):
-                self.move(action.dx, action.dy)
+                message = self.move(action.dx, action.dy)
             elif isinstance(action, Attack):
-                self.attack(action.other)
+                message = self.attack(action.other)
 
         elif isinstance(instruction, Wait):
-            area.post_message(Message(f"The {self.name} idles."))
-            self.wait()
+            message = self.wait()
+
+        # If a message needs posting
+        if message:
+            area.post_message(message)
 
     def interpret_surge(self, instruction, area):
         """Interprets an action with a direction based on context."""
@@ -63,5 +68,7 @@ class Player(Entity):
             if occupant:
                 return Attack(occupant)
 
-            # Otherwise, it's a move
-            return Move(instruction.dx, instruction.dy)
+            # If it's passable
+            if area.is_passable(target_x, target_y):
+                # Make a move
+                return Move(instruction.dx, instruction.dy)

@@ -45,9 +45,29 @@ class Area:
         return set([thing for thing in self.contents
                     if isinstance(thing, Entity)])
 
+    def is_movable(self, x, y):
+        """Checks if a given tile is inbounds, passable, and unoccupied."""
+        if self.in_bounds(x, y):
+            return self.is_passable(x, y) and self.is_free(x, y)
+        return False
+
     def is_visible(self, x, y):
         """Checks if a given point is visible."""
-        return self.visible_tiles[x, y]
+        if self.in_bounds(x, y):
+            return self.visible_tiles[x, y]
+        return False
+
+    def is_passable(self, x, y):
+        """Checks if a given tile is passable."""
+        if self.in_bounds(x, y):
+            return self.tiles[x, y]["passable"]
+        return False
+
+    def is_free(self, x, y):
+        """Checks if a tile is free from blockers."""
+        if self.in_bounds(x, y):
+            return self.get_blocker_at_location(x, y) is None
+        return False
 
     def in_bounds(self, x, y):
         """Checks if a given point is inside the area bounds."""
@@ -106,7 +126,31 @@ class Area:
         # either)
         self.explored_tiles |= self.visible_tiles
 
-        # Utility functions
+    def get_path_to(self, actor, other):
+        """Finds a route to between two objects."""
+
+        # Get the cost map
+        cost = actor.get_tile_cost(self)
+
+        # Convert the map to a graph (disallow diagonal movement)
+        graph = tcod.path.SimpleGraph(cost=cost, cardinal=2, diagonal=0)
+
+        # Make a pathfinder
+        finder = tcod.path.Pathfinder(graph)
+        finder.add_root((actor.x, actor.owner.y))
+
+        # Find a path if possible
+        path = finder.path_to((other.x, other.y)).tolist()
+
+        # If movement is possible
+        if path:
+            # Return all the path except the starting point
+            return path[1:]
+        else:
+            # No path can be found
+            return None
+
+    # Utility functions
 
     def post_message(self, message):
         """Adds a message to the associated message log."""

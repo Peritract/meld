@@ -5,8 +5,11 @@
 
 from ..utilities.object import Object
 from ..utilities.message_log import Message
-from ..entities.body import Body
+from .body import Body
+from .mind import Mind
+from .actions import Wait, Move
 import tcod
+import numpy as np
 
 
 class Entity(Object):
@@ -17,6 +20,7 @@ class Entity(Object):
                  x=0,
                  y=0,
                  faction="neutral",
+                 mind=Mind,
                  body=Body,
                  char="&",
                  colour=tcod.lime,
@@ -24,10 +28,30 @@ class Entity(Object):
         super().__init__(name, x, y, char, colour, blocks)
         self.faction = faction
         self.body = body()
+        self.body.owner = self
+        if mind:
+            self.mind = mind()
+            self.mind.owner = self
 
     def take_action(self, area):
         """Acts in the game world."""
-        area.post_message(Message(f"The {self.name} ponders."))
+
+        # Pass the request to the AI
+        decision = self.mind.make_decision(area)
+
+        # Holder for a potential message
+        message = None
+
+        # Act on the decisions
+        if isinstance(decision, Wait):
+            message = self.wait()
+        elif isinstance(decision, Move):
+            self.move(decision.dx, decision.dy)
+
+        # If a message was created,
+        if message:
+            # Post it
+            area.post_message(message)
 
     def move(self, dx, dy):
         """Alters the entity's position by a given amount."""
@@ -40,4 +64,20 @@ class Entity(Object):
 
     def wait(self):
         """Passes the turn."""
-        pass
+        return (Message(f"The {self.name} lurks in the shadows."))
+
+    def get_tile_costs(self, level):
+        """Calculate the cost of movement around the level
+        for this specific."""
+
+        # Make a copy of the passable map
+        cost = np.array(level.tiles["passable"], dtype=np.int8)
+
+        # Squares containing entities have a higher cost
+        # - discourage routing through them
+        for entity in level.entities:
+            if entity.blocks and cost[entity.x, entity.y]:
+                cost[entity.x, entity.y] += 10
+
+        # Return the cost map
+        return cost

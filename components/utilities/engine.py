@@ -74,10 +74,11 @@ class Engine:
         from ..environments.world import World
         from ..environments.area import Area
         from ..environments.tiles import basic_wall
+        from ..entities.wanderer_mind import Wanderer
 
         self.world = World(self)
         self.player = Player("player", 5, 5)
-        other = Entity("other", 10, 10)
+        other = Entity("other", 10, 10, mind=Wanderer)
         area = Area(80, 50, self.world)
         area.tiles[30:33, 22] = basic_wall
         self.message_log.add_message(Message("I am alive!"))
