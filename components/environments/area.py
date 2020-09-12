@@ -126,21 +126,21 @@ class Area:
         # either)
         self.explored_tiles |= self.visible_tiles
 
-    def get_path_to(self, actor, other):
-        """Finds a route to between two objects."""
+    def get_path_to(self, actor, x, y):
+        """Finds a route to between an entity and a position."""
 
         # Get the cost map
-        cost = actor.get_tile_cost(self)
+        cost = actor.get_tile_costs(self)
 
         # Convert the map to a graph (disallow diagonal movement)
         graph = tcod.path.SimpleGraph(cost=cost, cardinal=2, diagonal=0)
 
         # Make a pathfinder
         finder = tcod.path.Pathfinder(graph)
-        finder.add_root((actor.x, actor.owner.y))
+        finder.add_root((actor.x, actor.y))
 
         # Find a path if possible
-        path = finder.path_to((other.x, other.y)).tolist()
+        path = finder.path_to((x, y)).tolist()
 
         # If movement is possible
         if path:

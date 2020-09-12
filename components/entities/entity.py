@@ -6,7 +6,7 @@
 from ..utilities.object import Object
 from ..utilities.message_log import Message
 from .body import Body
-from .mind import Mind
+from .minds.mind import Mind
 from .actions import Wait, Move
 import tcod
 import numpy as np

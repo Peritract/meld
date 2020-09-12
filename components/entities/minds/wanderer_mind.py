@@ -3,9 +3,9 @@ This mind chooses passive, random movement.
 """
 
 from .mind import Mind
-from .actions import Move, Wait
+from ..actions import Move, Wait
 from random import choice
-from ..utilities.constants import directions
+from ...utilities.constants import directions
 
 
 class Wanderer(Mind):

@@ -74,15 +74,17 @@ class Engine:
         from ..environments.world import World
         from ..environments.area import Area
         from ..environments.tiles import basic_wall
-        from ..entities.wanderer_mind import Wanderer
+        from ..entities.minds.wanderer_mind import Wanderer
+        from ..entities.minds.brawler_mind import Brawler
 
         self.world = World(self)
         self.player = Player("player", 5, 5)
         other = Entity("other", 10, 10, mind=Wanderer)
+        enemy = Entity('enemy', 15, 15, mind=Brawler)
         area = Area(80, 50, self.world)
         area.tiles[30:33, 22] = basic_wall
         self.message_log.add_message(Message("I am alive!"))
         self.world.areas.append(area)
         self.world.current_area = 0
         self.world.area.contents = self.world.area.contents.union({self.player,
-                                                                   other})
+                                                                   other, enemy})
