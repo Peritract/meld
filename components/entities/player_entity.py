@@ -5,7 +5,8 @@ This is the game's player character.
 
 from .entity import Entity
 from .actions import Surge, Move, Attack, Wait
-
+from ..items.corpse import Corpse
+from ..utilities.message_log import Message
 from ..entities.body import Body
 
 import tcod
@@ -65,3 +66,11 @@ class Player(Entity):
             if area.is_passable(target_x, target_y):
                 # Make a move
                 return Move(instruction.dx, instruction.dy)
+
+    def die(self, area):
+        # Removes the entity from the game, replacing it with a corpse.
+        # As this is the player, also ends the game
+        area.contents.remove(self)
+        area.contents.add(Corpse(self.name, self.x, self.y))
+        area.post_message(Message(f"The {self.name} dies in agony."))
+        area.world.engine.set_state("game_over")
