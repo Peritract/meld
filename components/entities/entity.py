@@ -7,9 +7,10 @@ from ..utilities.object import Object
 from ..utilities.message_log import Message
 from .body import Body
 from .minds.mind import Mind
-from .actions import Wait, Move
+from .actions import Wait, Move, Attack
 import tcod
 import numpy as np
+from ..utilities.constants import colours as C
 
 
 class Entity(Object):
@@ -46,7 +47,9 @@ class Entity(Object):
         if isinstance(decision, Wait):
             message = self.wait()
         elif isinstance(decision, Move):
-            self.move(decision.dx, decision.dy)
+            message = self.move(decision.dx, decision.dy)
+        elif isinstance(decision, Attack):
+            message = self.attack(decision.other)
 
         # If a message was created,
         if message:
@@ -60,11 +63,16 @@ class Entity(Object):
 
     def attack(self, other):
         """Attacks another entity."""
-        pass
+
+        # Subtract health
+        other.body.health -= 1
+
+        # Return a message
+        return Message(f"The {self.name} savages the {other.name}", C["RED"])
 
     def wait(self):
         """Passes the turn."""
-        return (Message(f"The {self.name} lurks in the shadows."))
+        pass
 
     def get_tile_costs(self, level):
         """Calculate the cost of movement around the level
