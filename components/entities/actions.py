@@ -13,11 +13,11 @@ class Action:
 
 
 class Surge(Action):
+    """Base class for any action with a direction."""
 
     # Ends turns
     final = True
 
-    """Stores information about the direction of the action."""
     def __init__(self, dx, dy):
         super().__init__()
         self.dx = dx
@@ -25,31 +25,22 @@ class Surge(Action):
 
 
 class Move(Surge):
+    """Movement to an adjacent tile."""
+
     def __init__(self, dx, dy):
         super().__init__(dx, dy)
 
 
-class Attack(Surge):
-    def __init__(self, dx, dy, other):
-        super().__init__(dx, dy)
+class Attack(Action):
+    """Melee attack."""
+
+    def __init__(self, other):
+        super().__init__()
         self.other = other
 
 
 class Wait(Action):
+    """Do nothing."""
 
     # Ends turns
     final = True
-
-
-class Inspect(Action):
-    """Enters inspect mode."""
-    def __init__(self):
-        super().__init__()
-
-
-class MouseOver(Action):
-    """Records mouse movement."""
-    def __init__(self, x, y):
-        super().__init__()
-        self.x = x
-        self.y = y

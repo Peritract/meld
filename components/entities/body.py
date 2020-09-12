@@ -1,6 +1,6 @@
 """
-This file contains the implementation of the "body"
-class and its children.
+This file contains the implementation of the Body class.
+This class stores physical information about in-game entities.
 """
 
 
