@@ -5,6 +5,7 @@ This is a single in-game location.
 
 from ..entities.entity import Entity
 from ..environments.tiles import basic_floor, unknown
+from ..items.item import Item
 import numpy as np
 from tcod.map import compute_fov
 import tcod
@@ -44,6 +45,12 @@ class Area:
         """Returns a set of entities in the area."""
         return set([thing for thing in self.contents
                     if isinstance(thing, Entity)])
+
+    @property
+    def items(self):
+        """Returns as set of items in the area."""
+        return set([thing for thing in self.contents
+                    if isinstance(thing, Item)])
 
     def is_movable(self, x, y):
         """Checks if a given tile is inbounds, passable, and unoccupied."""

@@ -87,4 +87,5 @@ class Engine:
         self.world.areas.append(area)
         self.world.current_area = 0
         self.world.area.contents = self.world.area.contents.union({self.player,
-                                                                   other, enemy})
+                                                                   other,
+                                                                   enemy})

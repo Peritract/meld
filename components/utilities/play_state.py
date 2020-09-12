@@ -98,6 +98,13 @@ class PlayState(State):
     def render_contents(self, console):
         """Render the contents of a specific area."""
 
+        # Loop through all the items
+        for item in self.engine.world.area.items:
+            # If the item is visible,
+            if self.engine.world.area.is_visible(item.x, item.y):
+                # Show the item
+                console.print(item.x, item.y, item.char, item.colour)
+
         # Loop through all the entities
         for entity in self.engine.world.area.entities:
 

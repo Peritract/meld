@@ -11,5 +11,6 @@ directions = {
 
 colours = {
     "RED": tcod.red,
-    "WHITE": tcod.white
+    "WHITE": tcod.white,
+    "GREY": tcod.grey
 }

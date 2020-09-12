@@ -35,21 +35,14 @@ class Player(Entity):
             # Intepret the action based on area context
             action = self.interpret_surge(instruction, area)
 
-            # Holder for a potential message
-            message = None
-
             # Act on the interpretation
             if isinstance(action, Move):
-                message = self.move(action.dx, action.dy)
+                self.move(action.dx, action.dy)
             elif isinstance(action, Attack):
-                message = self.attack(action.other)
+                self.attack(action.other, area)
 
         elif isinstance(instruction, Wait):
-            message = self.wait()
-
-        # If a message needs posting
-        if message:
-            area.post_message(message)
+            self.wait()
 
     def interpret_surge(self, instruction, area):
         """Interprets an action with a direction based on context."""

@@ -11,6 +11,7 @@ from .actions import Wait, Move, Attack
 import tcod
 import numpy as np
 from ..utilities.constants import colours as C
+from ..items.corpse import Corpse
 
 
 class Entity(Object):
@@ -34,41 +35,48 @@ class Entity(Object):
             self.mind = mind()
             self.mind.owner = self
 
+    @property
+    def dead(self):
+        return self.body.health <= 0
+
     def take_action(self, area):
         """Acts in the game world."""
 
         # Pass the request to the AI
         decision = self.mind.make_decision(area)
 
-        # Holder for a potential message
-        message = None
-
         # Act on the decisions
         if isinstance(decision, Wait):
-            message = self.wait()
+            self.wait()
         elif isinstance(decision, Move):
-            message = self.move(decision.dx, decision.dy)
+            self.move(decision.dx, decision.dy)
         elif isinstance(decision, Attack):
-            message = self.attack(decision.other)
-
-        # If a message was created,
-        if message:
-            # Post it
-            area.post_message(message)
+            self.attack(decision.other, area)
 
     def move(self, dx, dy):
         """Alters the entity's position by a given amount."""
         self.x += dx
         self.y += dy
 
-    def attack(self, other):
+    def attack(self, other, area):
         """Attacks another entity."""
 
         # Subtract health
         other.body.health -= 1
 
-        # Return a message
-        return Message(f"The {self.name} savages the {other.name}", C["RED"])
+        # Post a message
+        report = Message(f"The {self.name} savages the {other.name}", C["RED"])
+        area.post_message(report)
+
+        # If the other should die, make that happen
+        if other.dead:
+            other.die(area)
+
+    def die(self, area):
+        # Removes the entity from the game, replacing it with a corpse.
+        area.contents.remove(self)
+        area.contents.add(Corpse(self.name, self.x, self.y))
+        area.post_message(Message(f"The {self.name} dies in agony."))
 
     def wait(self):
         """Passes the turn."""
