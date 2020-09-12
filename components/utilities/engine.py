@@ -6,6 +6,7 @@ game screen and states.
 
 import tcod
 from .play_state import PlayState
+from .game_over_state import GameOverState
 from .message_log import MessageLog, Message
 
 
@@ -30,7 +31,8 @@ class Engine:
                                     order="F")
 
         # State management
-        self.states = {"play_game": PlayState(self)}
+        self.states = {"play_game": PlayState(self),
+                       "game_over": GameOverState(self)}
         self.state = "play_game"
 
         # Mouse location
@@ -38,6 +40,10 @@ class Engine:
 
         # Message storage
         self.message_log = MessageLog()
+
+    def set_state(self, state):
+        """Changes the engine state."""
+        self.state = state
 
     def run_main_loop(self):
         """Repeatedly calls the current state method."""
