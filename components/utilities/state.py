@@ -3,6 +3,8 @@ This class contains the implementation of the base State class.
 """
 
 import tcod
+import traceback
+from ..utilities.message_log import Message
 
 
 class State(tcod.event.EventDispatch):
@@ -16,16 +18,25 @@ class State(tcod.event.EventDispatch):
         pass
 
     def handle_events(self, window):
-        """Deal with user input."""
+        """Handles in-game input events."""
 
-        # Check for events
-        for event in tcod.event.wait():
+        try:
+            # Check for events
+            for event in tcod.event.wait():
 
-            # Extract mouse location details
-            window.convert_event(event)
+                # Extract mouse location details
+                window.convert_event(event)
 
-            # Pass the event to handlers
-            self.dispatch(event)
+                # Pass the event to handlers
+                self.handle_event(self.dispatch(event))
+
+        except Exception:
+            self.engine.message_log.add_message(Message(traceback.format_exc(),
+                                                        C["YELLOW"]))
+
+    def handle_event(self, action):
+        """React to a valid input."""
+        pass
 
     def ev_quit(self, event):
         """Exit the program."""

@@ -44,8 +44,9 @@ class Player(Entity):
                 self.move(action.dx, action.dy)
             elif isinstance(action, Attack):
                 self.attack(action.other)
-            elif isinstance(action, PickUp):
-                self.pick_up()
+
+        elif isinstance(instruction, PickUp):
+            self.pick_up()
 
         elif isinstance(instruction, Wait):
             self.wait()

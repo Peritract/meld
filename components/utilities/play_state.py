@@ -65,23 +65,6 @@ class PlayState(State):
         for entity in self.engine.world.entities - {self.engine.player}:
             entity.take_action()
 
-    def handle_events(self, window):
-        """Handles in-game input events."""
-
-        try:
-            # Check for events
-            for event in tcod.event.wait():
-
-                # Extract mouse location details
-                window.convert_event(event)
-
-                # Pass the event to handlers
-                self.handle_event(self.dispatch(event))
-
-        except Exception:
-            self.engine.message_log.add_message(Message(traceback.format_exc(),
-                                                        C["YELLOW"]))
-
     def render(self, console):
         """Display the current state of the game world."""
 
