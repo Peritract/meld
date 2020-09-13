@@ -43,7 +43,11 @@ class Menu(State):
         for option in self.options:
             colour = C["GOLD"] if option == self.selected else C["WHITE"]
             text = self.wrapped_text(option.name)
+
+            # Start text one in and two down
             console.print(x_start + 1, offset + 2, text, colour)
+
+            # Leave a gap between each line
             offset += 2
 
     @property
@@ -52,17 +56,20 @@ class Menu(State):
 
         if self.options:
 
+            # longest item + 2 for the border + 2 for the margin
             return max([len(x.name) for x in self.options]) + 4
 
     @property
     def height(self):
         """Returns the max height of the menu."""
 
-        # Two lines per option plus 3 for borders and the final line
-        return len(self.options) * 2 + 3
+        # Two lines per option + 2 for borders + 1 to even out margins
+        return len(self.options) * 2 + 2 + 1
 
     def wrapped_text(self, text):
         """Return a centered string based on the menu width."""
+
+        # Subtract 2 for the margins
         return text.center(self.width - 2)
 
     def change_selection(self, value):
