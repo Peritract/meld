@@ -8,6 +8,7 @@ from .actions import Surge, Move, Attack, Wait
 from ..items.corpse import Corpse
 from ..utilities.message_log import Message
 from ..entities.body import Body
+from ..utilities.exceptions import Impossible
 
 import tcod
 
@@ -66,6 +67,10 @@ class Player(Entity):
             if area.is_passable(target_x, target_y):
                 # Make a move
                 return Move(instruction.dx, instruction.dy)
+        
+        # Invalid surge
+        else:
+            raise Impossible("There is no path that way.")
 
     def die(self, area):
         # Removes the entity from the game, replacing it with a corpse.

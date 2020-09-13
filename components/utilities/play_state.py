@@ -6,7 +6,11 @@ This is the "game" bit - it manages turn-taking and level/unit display.
 from ..entities.actions import Surge, Wait
 from .state import State
 from .constants import directions
+from .constants import colours as C
+from .exceptions import Impossible
+from .message_log import Message
 import tcod
+import traceback
 
 
 class PlayState(State):
@@ -38,28 +42,43 @@ class PlayState(State):
 
         return action
 
-    def handle_events(self, window):
-        """Handles in-game events."""
+    def handle_event(self, action):
+        """Advances the turn if a valid action has been taken."""
 
-        # Check for events
-        for event in tcod.event.wait():
+        # If no action has been chosen, pass on
+        if not action:
+            return
 
-            # Extract mouse location details
-            window.convert_event(event)
-
-            # Pass the event to handlers
-            action = self.dispatch(event)
-
-            # If no action has been chosen, pass on
-            if not action:
-                continue
-
-            # Pass the action to the player
+        # Pass the action to the player
+        try:
             self.engine.player.take_action(action, self.engine.world.area)
 
-            # Let all other entities take turns
-            for entity in self.engine.world.entities - {self.engine.player}:
-                entity.take_action(self.engine.world.area)
+        # Unless the action is meaningless,
+        except Impossible as imp:
+            self.engine.message_log.add_message(Message(imp.args[0],
+                                                        C["YELLOW"]))
+            return
+
+        # Let all other entities take turns
+        for entity in self.engine.world.entities - {self.engine.player}:
+            entity.take_action(self.engine.world.area)
+
+    def handle_events(self, window):
+        """Handles in-game input events."""
+
+        try:
+            # Check for events
+            for event in tcod.event.wait():
+
+                # Extract mouse location details
+                window.convert_event(event)
+
+                # Pass the event to handlers
+                self.handle_event(self.dispatch(event))
+
+        except Exception:
+            self.engine.message_log.add_message(Message(traceback.format_exc(),
+                                                        C["YELLOW"]))
 
     def render(self, console):
         """Display the current state of the game world."""
