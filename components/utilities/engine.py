@@ -33,7 +33,7 @@ class Engine:
         # State management
         self.states = {"play_game": PlayState(self),
                        "game_over": GameOverState(self)}
-        self.state = "play_game"
+        self.state = "game_over"
 
         # Mouse location
         self.m_loc = (0, 0)

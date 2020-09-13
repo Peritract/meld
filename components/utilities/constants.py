@@ -13,5 +13,6 @@ colours = {
     "RED": tcod.red,
     "WHITE": tcod.white,
     "GREY": tcod.grey,
-    "YELLOW": tcod.yellow
+    "YELLOW": tcod.yellow,
+    "GOLD": tcod.gold
 }

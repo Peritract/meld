@@ -10,7 +10,6 @@ from .constants import colours as C
 from .exceptions import Impossible
 from .message_log import Message
 import tcod
-import traceback
 
 
 class PlayState(State):

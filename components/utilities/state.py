@@ -4,7 +4,6 @@ This class contains the implementation of the base State class.
 
 import tcod
 import traceback
-from ..utilities.message_log import Message
 
 
 class State(tcod.event.EventDispatch):
@@ -31,8 +30,7 @@ class State(tcod.event.EventDispatch):
                 self.handle_event(self.dispatch(event))
 
         except Exception:
-            self.engine.message_log.add_message(Message(traceback.format_exc(),
-                                                        C["YELLOW"]))
+            print(traceback.format_exc())
 
     def handle_event(self, action):
         """React to a valid input."""
