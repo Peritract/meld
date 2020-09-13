@@ -135,8 +135,8 @@ class PlayState(State):
     def render_info_pane(self, console, x, y):
         """Displays information about the tile under the mouse."""
 
-        # If the mouse is over a tile
-        if self.engine.world.area.in_bounds(*self.engine.m_loc):
+        # If the mouse is over a visible tile
+        if self.engine.world.area.is_visible(*self.engine.m_loc):
 
             # Get the tile contents
             contents = self.engine.world.area.at_location(*self.engine.m_loc)
