@@ -16,3 +16,4 @@ class Body:
         self.attack = attack
         self.defence = defence
         self.view_radius = view_radius
+        self.carry_capacity = 3

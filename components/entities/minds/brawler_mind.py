@@ -13,7 +13,7 @@ class Brawler(Mind):
         self.target = None
         self.last_known_target = None
 
-    def make_decision(self, area):
+    def make_decision(self):
         """Selects a target and moves towards it."""
 
         # Clear the target
@@ -25,11 +25,11 @@ class Brawler(Mind):
             self.last_known_target = None
 
         # Calculate the entity's field of view
-        visible = area.calculate_fov(self.owner)
+        visible = self.area.calculate_fov(self.owner)
 
         # Search the entity list for a visible & attackable one
         # Currently just attacks the player - further functionality planned
-        for entity in area.entities:
+        for entity in self.area.entities:
             if visible[entity.x, entity.y] and entity.faction == "player":
 
                 # Set the target, and its last known location
@@ -43,7 +43,7 @@ class Brawler(Mind):
         # Calculate the next step towards the goal
         goal = (self.target.x,
                 self.target.y) if self.target else self.last_known_target
-        path = area.get_path_to(self.owner, goal[0], goal[1])
+        path = self.area.get_path_to(self.owner, goal[0], goal[1])
 
         # If there is a path
         if path:
@@ -65,7 +65,7 @@ class Brawler(Mind):
                 return Attack(self.target)
 
         # If possible, move towards the goal
-        if not area.get_blocker_at_location(next_step[0], next_step[1]):
+        if not self.area.get_blocker_at_location(next_step[0], next_step[1]):
             return Move(direction[0], direction[1])
 
         # In all other situations, just wait

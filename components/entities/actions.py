@@ -39,6 +39,10 @@ class Attack(Action):
         self.other = other
 
 
+class PickUp(Action):
+    """Pick up something from the floor."""
+
+
 class Wait(Action):
     """Do nothing."""
 

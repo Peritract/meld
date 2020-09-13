@@ -52,11 +52,10 @@ class Area:
         return set([thing for thing in self.contents
                     if isinstance(thing, Item)])
 
-    def is_movable(self, x, y):
+    def is_free(self, x, y):
         """Checks if a given tile is inbounds, passable, and unoccupied."""
-        if self.in_bounds(x, y):
-            return self.is_passable(x, y) and self.is_free(x, y)
-        return False
+        return self.is_passable(x, y) and not self.get_blocker_at_location(x,
+                                                                           y)
 
     def is_visible(self, x, y):
         """Checks if a given point is visible."""
@@ -68,12 +67,6 @@ class Area:
         """Checks if a given tile is passable."""
         if self.in_bounds(x, y):
             return self.tiles[x, y]["passable"]
-        return False
-
-    def is_free(self, x, y):
-        """Checks if a tile is free from blockers."""
-        if self.in_bounds(x, y):
-            return self.get_blocker_at_location(x, y) is None
         return False
 
     def in_bounds(self, x, y):
@@ -137,7 +130,7 @@ class Area:
         """Finds a route to between an entity and a position."""
 
         # Get the cost map
-        cost = actor.get_tile_costs(self)
+        cost = actor.get_tile_costs()
 
         # Convert the map to a graph (disallow diagonal movement)
         graph = tcod.path.SimpleGraph(cost=cost, cardinal=2, diagonal=0)

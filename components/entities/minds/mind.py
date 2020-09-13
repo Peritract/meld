@@ -9,7 +9,12 @@ from ..actions import Wait
 class Mind():
     """The base mind class."""
 
-    def make_decision(self, area):
+    def make_decision(self):
         """Make a decision about what to do."""
 
         return Wait()
+
+    @property
+    def area(self):
+        """Utility - return the owner's area."""
+        return self.owner.area

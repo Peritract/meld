@@ -11,7 +11,7 @@ from ...utilities.constants import directions
 class Wanderer(Mind):
     """Moves randomly, with no awareness."""
 
-    def make_decision(self, area):
+    def make_decision(self):
 
         # Makes a choice - move or not
         move = choice([True, False])
@@ -20,8 +20,8 @@ class Wanderer(Mind):
         if move:
 
             # Check the four possible options (valid, passable & unoccupied)
-            options = filter(lambda x: area.is_movable(self.owner.x + x[0],
-                                                       self.owner.y + x[1]),
+            options = filter(lambda x: self.area.is_free(self.owner.x + x[0],
+                                                         self.owner.y + x[1]),
                              directions.values())
 
             # Convert to list

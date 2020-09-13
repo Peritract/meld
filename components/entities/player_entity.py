@@ -4,7 +4,7 @@ This is the game's player character.
 """
 
 from .entity import Entity
-from .actions import Surge, Move, Attack, Wait
+from .actions import Surge, Move, Attack, Wait, PickUp
 from ..items.corpse import Corpse
 from ..utilities.message_log import Message
 from ..entities.body import Body
@@ -25,28 +25,32 @@ class Player(Entity):
                  body=Body,
                  char="@",
                  colour=tcod.white,
-                 blocks=True):
-        super().__init__(name, x, y, faction, mind, body, char, colour, blocks)
+                 blocks=True,
+                 area=None):
+        super().__init__(name, x, y, faction, mind, body,
+                         char, colour, blocks, area)
 
-    def take_action(self, instruction, area):
+    def take_action(self, instruction):
         """Takes an action based on player input."""
 
         # If the instruction has a direction
         if isinstance(instruction, Surge):
 
             # Intepret the action based on area context
-            action = self.interpret_surge(instruction, area)
+            action = self.interpret_surge(instruction)
 
             # Act on the interpretation
             if isinstance(action, Move):
                 self.move(action.dx, action.dy)
             elif isinstance(action, Attack):
-                self.attack(action.other, area)
+                self.attack(action.other)
+            elif isinstance(action, PickUp):
+                self.pick_up()
 
         elif isinstance(instruction, Wait):
             self.wait()
 
-    def interpret_surge(self, instruction, area):
+    def interpret_surge(self, instruction):
         """Interprets an action with a direction based on context."""
 
         # Get the target coordinates
@@ -54,27 +58,27 @@ class Player(Entity):
         target_y = self.y + instruction.dy
 
         # If the target is valid
-        if area.in_bounds(target_x, target_y):
+        if self.area.in_bounds(target_x, target_y):
 
             # Check for an entity at the target location
-            occupant = area.get_blocker_at_location(target_x, target_y)
+            occupant = self.area.get_blocker_at_location(target_x, target_y)
 
             # If there is an occupant
             if occupant:
                 return Attack(occupant)
 
-            # If it's passable
-            if area.is_passable(target_x, target_y):
+            # If it's free
+            if self.area.is_free(target_x, target_y):
                 # Make a move
                 return Move(instruction.dx, instruction.dy)
 
         # Invalid surge
         raise Impossible("There is no path that way.")
 
-    def die(self, area):
+    def die(self):
         # Removes the entity from the game, replacing it with a corpse.
         # As this is the player, also ends the game
-        area.contents.remove(self)
-        area.contents.add(Corpse(self.name, self.x, self.y))
-        area.post_message(Message(f"The {self.name} dies in agony."))
-        area.world.engine.set_state("game_over")
+        self.area.contents.remove(self)
+        self.area.contents.add(Corpse(self.name, self.x, self.y))
+        self.area.post_message(Message(f"The {self.name} dies in agony."))
+        self.area.world.engine.set_state("game_over")

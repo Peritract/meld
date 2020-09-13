@@ -84,10 +84,10 @@ class Engine:
         from ..entities.minds.brawler_mind import Brawler
 
         self.world = World(self)
-        self.player = Player("player", 5, 5)
-        other = Entity("other", 10, 10, mind=Wanderer)
-        enemy = Entity('enemy', 15, 15, mind=Brawler)
         area = Area(80, 50, self.world)
+        self.player = Player("player", 5, 5, area=area)
+        other = Entity("other", 10, 10, mind=Wanderer, area=area)
+        enemy = Entity('enemy', 15, 15, mind=Brawler, area=area)
         area.tiles[30:33, 22] = basic_wall
         self.message_log.add_message(Message("I am alive!"))
         self.world.areas.append(area)

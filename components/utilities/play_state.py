@@ -3,7 +3,7 @@ This file contains the implementation of the PlayState class.
 This is the "game" bit - it manages turn-taking and level/unit display.
 """
 
-from ..entities.actions import Surge, Wait
+from ..entities.actions import Surge, Wait, PickUp
 from .state import State
 from .constants import directions
 from .constants import colours as C
@@ -39,6 +39,8 @@ class PlayState(State):
             action = Surge(*directions["right"])
         elif key == tcod.event.K_PERIOD:
             action = Wait()
+        elif key == tcod.event.K_g:
+            action = PickUp()
 
         return action
 
@@ -51,7 +53,7 @@ class PlayState(State):
 
         # Pass the action to the player
         try:
-            self.engine.player.take_action(action, self.engine.world.area)
+            self.engine.player.take_action(action)
 
         # Unless the action is meaningless,
         except Impossible as imp:
@@ -61,7 +63,7 @@ class PlayState(State):
 
         # Let all other entities take turns
         for entity in self.engine.world.entities - {self.engine.player}:
-            entity.take_action(self.engine.world.area)
+            entity.take_action()
 
     def handle_events(self, window):
         """Handles in-game input events."""
