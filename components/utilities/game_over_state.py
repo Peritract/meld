@@ -15,8 +15,7 @@ class GameOverState(Menu):
         # Set the options
         self.options = [MenuOption("Main Menu"),
                         MenuOption("Credits"),
-                        MenuOption("Quit", self.quit)]
-        self.menu = Menu(self.options)
+                        MenuOption("Quit Game", self.quit)]
 
     def quit(self):
         """Quit the game."""

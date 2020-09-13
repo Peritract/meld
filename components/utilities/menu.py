@@ -30,12 +30,40 @@ class Menu(State):
 
     def render(self, console):
 
-        offset = 15
+        # Calculate the starting y
+        # halfway point - half height
+        offset = self.engine.screen_height // 2 - self.height // 2
+
+        # Calculate the starting x
+        # half way point - half width
+        x_start = self.engine.screen_width // 2 - self.width // 2
+
+        console.draw_frame(x_start, offset, self.width, self.height)
 
         for option in self.options:
             colour = C["GOLD"] if option == self.selected else C["WHITE"]
-            console.print(15, offset, option.name, colour)
+            text = self.wrapped_text(option.name)
+            console.print(x_start + 1, offset + 2, text, colour)
             offset += 2
+
+    @property
+    def width(self):
+        """Returns the max width of the menu."""
+
+        if self.options:
+
+            return max([len(x.name) for x in self.options]) + 4
+
+    @property
+    def height(self):
+        """Returns the max height of the menu."""
+
+        # Two lines per option plus 3 for borders and the final line
+        return len(self.options) * 2 + 3
+
+    def wrapped_text(self, text):
+        """Return a centered string based on the menu width."""
+        return text.center(self.width - 2)
 
     def change_selection(self, value):
         """Change the selection"""
