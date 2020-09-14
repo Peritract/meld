@@ -3,12 +3,12 @@ This file contains the implementation of the PlayState class.
 This is the "game" bit - it manages turn-taking and level/unit display.
 """
 
-from ..entities.actions import Surge, Wait, PickUp
+from ...entities.actions import Surge, Wait, PickUp
 from .state import State
-from .constants import directions
-from .constants import colours as C
-from .exceptions import Impossible
-from .message_log import Message
+from ..constants import directions
+from ..constants import colours as C
+from ..exceptions import Impossible
+from ..message_log import Message
 import tcod
 
 

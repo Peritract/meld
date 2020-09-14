@@ -5,9 +5,10 @@ game screen and states.
 """
 
 import tcod
-from .play_state import PlayState
-from .game_over_state import GameOverState
-from .message_log import MessageLog, Message
+from .states.play_state import PlayState
+from .states.game_over_state import GameOverState
+from .states.main_menu_state import MainMenuState
+from .states.new_game_state import NewGameState
 
 
 class Engine:
@@ -31,15 +32,17 @@ class Engine:
                                     order="F")
 
         # State management
-        self.states = {"play_game": PlayState(self),
+        self.states = {"main_menu": MainMenuState(self),
+                       "new_game": NewGameState(self),
+                       "play_game": PlayState(self),
                        "game_over": GameOverState(self)}
-        self.state = "game_over"
+        self.state = "main_menu"
 
         # Mouse location
         self.m_loc = (0, 0)
 
         # Message storage
-        self.message_log = MessageLog()
+        self.message_log = None
 
     def set_state(self, state):
         """Changes the engine state."""
@@ -47,9 +50,6 @@ class Engine:
 
     def run_main_loop(self):
         """Repeatedly calls the current state method."""
-
-        # TEMPORARY, I HOPE I HOPE I HOPE
-        self.hack()
 
         # Make the window
         """Creates the main window and begins the game loop."""
@@ -72,26 +72,3 @@ class Engine:
 
                 # Call the current state's event handler
                 self.states[self.state].handle_events(window)
-
-    def hack(self):
-        """Short-term values for development that will one day be removed."""
-        from ..entities.entity import Entity
-        from ..entities.player_entity import Player
-        from ..environments.world import World
-        from ..environments.area import Area
-        from ..environments.tiles import basic_wall
-        from ..entities.minds.wanderer_mind import Wanderer
-        from ..entities.minds.brawler_mind import Brawler
-
-        self.world = World(self)
-        area = Area(80, 50, self.world)
-        self.player = Player("player", 5, 5, area=area)
-        other = Entity("other", 10, 10, mind=Wanderer, area=area)
-        enemy = Entity('enemy', 15, 15, mind=Brawler, area=area)
-        area.tiles[30:33, 22] = basic_wall
-        self.message_log.add_message(Message("I am alive!"))
-        self.world.areas.append(area)
-        self.world.current_area = 0
-        self.world.area.contents = self.world.area.contents.union({self.player,
-                                                                   other,
-                                                                   enemy})

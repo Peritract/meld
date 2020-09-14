@@ -13,10 +13,14 @@ class GameOverState(Menu):
         super().__init__(engine)
 
         # Set the options
-        self.options = [MenuOption("Main Menu"),
+        self.options = [MenuOption("Main Menu", self.change_state_to_main),
                         MenuOption("Credits"),
                         MenuOption("Quit Game", self.quit)]
 
     def quit(self):
         """Quit the game."""
         raise SystemExit()
+
+    def change_state_to_main(self):
+        """Changes the game state to the main menu."""
+        self.engine.set_state("main_menu")
