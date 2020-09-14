@@ -8,15 +8,9 @@ about entity movement/attacks/other.
 class Action:
     """Base action class."""
 
-    # By default, does not end a turn
-    final = False
-
 
 class Surge(Action):
     """Base class for any action with a direction."""
-
-    # Ends turns
-    final = True
 
     def __init__(self, dx, dy):
         super().__init__()
@@ -46,5 +40,6 @@ class PickUp(Action):
 class Wait(Action):
     """Do nothing."""
 
-    # Ends turns
-    final = True
+
+class OpenMenu(Action):
+    """Open a menu."""

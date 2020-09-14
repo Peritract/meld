@@ -5,6 +5,7 @@ the only valid options.
 """
 
 from .menu import MenuOption, Menu
+from .main_menu_state import MainMenuState
 
 
 class GameOverState(Menu):
@@ -17,10 +18,6 @@ class GameOverState(Menu):
                         MenuOption("Credits"),
                         MenuOption("Quit Game", self.quit)]
 
-    def quit(self):
-        """Quit the game."""
-        raise SystemExit()
-
     def change_state_to_main(self):
         """Changes the game state to the main menu."""
-        self.engine.set_state("main_menu")
+        self.engine.set_state(MainMenuState(self.engine))

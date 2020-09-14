@@ -9,9 +9,10 @@ import tcod
 class MenuOption:
     """A single menu option."""
 
-    def __init__(self, name="Option", method=None):
+    def __init__(self, name="Option", method=None, value=None):
         self.name = name
         self.method = method
+        self.value = value
 
 
 class Menu(State):
@@ -102,3 +103,7 @@ class Menu(State):
 
         elif key == tcod.event.K_RETURN:
             self.select_option()
+
+    def quit(self):
+        """Quit the game."""
+        raise SystemExit()

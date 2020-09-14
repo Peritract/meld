@@ -3,8 +3,9 @@ This file contains the implementation of the PlayState class.
 This is the "game" bit - it manages turn-taking and level/unit display.
 """
 
-from ...entities.actions import Surge, Wait, PickUp
+from ...entities.actions import Surge, Wait, PickUp, OpenMenu
 from .state import State
+from .in_game_menu import InGameMenu
 from ..constants import directions
 from ..constants import colours as C
 from ..exceptions import Impossible
@@ -36,10 +37,18 @@ class PlayState(State):
             action = Surge(*directions["left"])
         elif key == tcod.event.K_RIGHT:
             action = Surge(*directions["right"])
+
+        # Pass the turn
         elif key == tcod.event.K_PERIOD:
             action = Wait()
+
+        # Collect an object
         elif key == tcod.event.K_g:
             action = PickUp()
+
+        # Open a menu
+        elif key == tcod.event.K_ESCAPE:
+            action = OpenMenu()
 
         return action
 
@@ -50,13 +59,22 @@ class PlayState(State):
         if not action:
             return
 
+        # If the action is to open a menu
+        if isinstance(action, OpenMenu):
+
+            # Set the temporary state
+            self.engine.set_state(InGameMenu(self.engine, self))
+
+            # Return so the new state can work
+            return
+
         # Pass the action to the player
         try:
             self.engine.player.take_action(action)
 
         # Unless the action is meaningless,
-        except Impossible as imp:
-            self.engine.message_log.add_message(Message(imp.args[0],
+        except Impossible as ex:
+            self.engine.message_log.add_message(Message(ex.args[0],
                                                         C["YELLOW"]))
             return
 

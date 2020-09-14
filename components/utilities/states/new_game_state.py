@@ -4,6 +4,7 @@ This class creates and populates the game world.
 """
 
 from .state import State
+from .play_state import PlayState
 
 # -- HACK -- #
 
@@ -35,8 +36,8 @@ class NewGameState(State):
         # Create the world
         self.create_world()
 
-        # Change the state
-        self.engine.set_state("play_game")
+        # Change the state to playing
+        self.engine.set_state(PlayState(self.engine))
 
     def clean_up(self):
         """Deals with loose ends from potential previous games."""
@@ -57,4 +58,3 @@ class NewGameState(State):
         world.area.contents = world.area.contents.union({self.engine.player,
                                                          other,
                                                          enemy})
-        

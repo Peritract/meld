@@ -4,6 +4,7 @@ This class begins the game and presents the player with options.
 """
 
 from .menu import MenuOption, Menu
+from .new_game_state import NewGameState
 
 
 class MainMenuState(Menu):
@@ -16,10 +17,6 @@ class MainMenuState(Menu):
                                    self.change_state_to_new),
                         MenuOption("Quit Game", self.quit)]
 
-    def quit(self):
-        """Quit the game."""
-        raise SystemExit()
-
     def change_state_to_new(self):
         """Changes the game state to the main menu."""
-        self.engine.set_state("new_game")
+        self.engine.set_state(NewGameState(self.engine))

@@ -5,10 +5,8 @@ game screen and states.
 """
 
 import tcod
-from .states.play_state import PlayState
-from .states.game_over_state import GameOverState
 from .states.main_menu_state import MainMenuState
-from .states.new_game_state import NewGameState
+from .states.game_over_state import GameOverState
 
 
 class Engine:
@@ -31,12 +29,8 @@ class Engine:
         self.console = tcod.Console(self.screen_width, self.screen_height,
                                     order="F")
 
-        # State management
-        self.states = {"main_menu": MainMenuState(self),
-                       "new_game": NewGameState(self),
-                       "play_game": PlayState(self),
-                       "game_over": GameOverState(self)}
-        self.state = "main_menu"
+        # Starting state
+        self.state = MainMenuState(self)
 
         # Mouse location
         self.m_loc = (0, 0)
@@ -47,6 +41,10 @@ class Engine:
     def set_state(self, state):
         """Changes the engine state."""
         self.state = state
+
+    def game_over(self):
+        """Ends the game."""
+        self.state = GameOverState(self)
 
     def run_main_loop(self):
         """Repeatedly calls the current state method."""
@@ -65,10 +63,10 @@ class Engine:
                 self.console.clear()
 
                 # Render the current state
-                self.states[self.state].render(self.console)
+                self.state.render(self.console)
 
                 # Flush the console to the window
                 window.present(self.console)
 
                 # Call the current state's event handler
-                self.states[self.state].handle_events(window)
+                self.state.handle_events(window)

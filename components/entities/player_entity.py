@@ -82,4 +82,4 @@ class Player(Entity):
         self.area.contents.remove(self)
         self.area.contents.add(Corpse(self.name, self.x, self.y))
         self.area.post_message(Message(f"The {self.name} dies in agony."))
-        self.area.world.engine.set_state("game_over")
+        self.area.world.engine.game_over()
