@@ -8,7 +8,8 @@ from .actions import Surge, Move, Attack, Wait, PickUp
 from ..items.corpse import Corpse
 from ..utilities.message_log import Message
 from ..entities.body import Body
-from ..utilities.exceptions import Impossible
+from ..utilities.exceptions import Impossible, InventoryFull
+from ..utilities.states.item_selection_state import ItemSelectionState
 
 import tcod
 
@@ -46,7 +47,17 @@ class Player(Entity):
                 self.attack(action.other)
 
         elif isinstance(instruction, PickUp):
-            self.pick_up()
+
+            # If there's an item already,
+            if instruction.item:
+
+                # Pick it up
+                self.pick_up(instruction.item)
+
+            # otherwise,
+            else:
+                # Choose one
+                self.select_item_to_pick_up()
 
         elif isinstance(instruction, Wait):
             self.wait()
@@ -83,3 +94,41 @@ class Player(Entity):
         self.area.contents.add(Corpse(self.name, self.x, self.y))
         self.area.post_message(Message(f"The {self.name} dies in agony."))
         self.area.world.engine.game_over()
+
+    def pick_up(self, item):
+        """Adds an item to the inventory."""
+        self.inventory.add(item)
+        self.area.contents.remove(item)
+        text = f"You pick up the {item.name}."
+        self.area.post_message(Message(text))
+
+    def select_item_to_pick_up(self):
+        """Choose an item from the current tile to select."""
+
+        # Get the set of items on the current tile
+        contents = self.area.items_at_location(self.x, self.y)
+
+        # If there are any items and there is inventory space:
+        if contents and not self.inventory_full:
+
+            # If only one item is present,
+            if len(contents) == 1:
+
+                # Grab it
+                item = contents.pop()
+                self.pick_up(item)
+
+            # If there's more than one item,
+            else:
+
+                # Open the selection menu.
+                # REFACTOR TARGET
+                state = ItemSelectionState(self.area.world.engine,
+                                           self.area.world.engine.state,
+                                           contents)
+                self.area.world.engine.set_state(state)
+
+        elif contents:
+            raise InventoryFull("You are carrying too much.")
+        else:
+            raise Impossible("Nothing to pick up.")

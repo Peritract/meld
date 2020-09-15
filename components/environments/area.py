@@ -79,6 +79,19 @@ class Area:
             return set([thing for thing in self.contents
                         if thing.x == x and thing.y == y])
 
+    def items_at_location(self, x, y):
+        """Returns the set of pick-upable items at the location."""
+        contents = self.at_location(x, y)
+        if contents:
+            return {x for x in contents if isinstance(x, Item)}
+
+    def add_contents(self, addition):
+        """Adds new objects to the level."""
+        if not isinstance(addition, list):
+            self.contents.add(addition)
+        else:
+            self.contents = self.contents.union(set(addition))
+
     def get_blocker_at_location(self, x, y):
         """Returns the blocking entity at a particular position."""
 

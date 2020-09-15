@@ -34,7 +34,10 @@ class Attack(Action):
 
 
 class PickUp(Action):
-    """Pick up something from the floor."""
+    """Add an item to the inventory."""
+
+    def __init__(self, item=None):
+        self.item = item
 
 
 class Wait(Action):

@@ -8,7 +8,6 @@ from .state import State
 from .in_game_menu import InGameMenu
 from ..constants import directions
 from ..constants import colours as C
-from ..exceptions import Impossible
 from ..message_log import Message
 import tcod
 
@@ -73,7 +72,7 @@ class PlayState(State):
             self.engine.player.take_action(action)
 
         # Unless the action is meaningless,
-        except Impossible as ex:
+        except Exception as ex:
             self.engine.message_log.add_message(Message(ex.args[0],
                                                         C["YELLOW"]))
             return

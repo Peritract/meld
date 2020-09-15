@@ -38,6 +38,9 @@ class Entity(Object):
         if area:
             self.area = area
 
+        # Empty inventory by default
+        self.inventory = set()
+
     @property
     def dead(self):
         return self.body.health <= 0
@@ -62,9 +65,10 @@ class Entity(Object):
         elif isinstance(decision, PickUp):
             self.pick_up()
 
-    def pick_up(self):
-        """Picks up an item from the ground, if possible."""
-        print("Picking!")
+    def pick_up(self, item):
+        """Adds an item to the inventory."""
+        self.inventory.add(item)
+        self.area.contents.remove(item)
 
     def move(self, dx, dy):
         """Alters the entity's position by a given amount."""

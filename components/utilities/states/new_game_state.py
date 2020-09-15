@@ -15,6 +15,7 @@ from ...environments.area import Area
 from ...environments.tiles import basic_wall
 from ...entities.minds.wanderer_mind import Wanderer
 from ...entities.minds.brawler_mind import Brawler
+from ...items.corpse import Corpse
 
 from ..message_log import MessageLog, Message
 
@@ -51,10 +52,9 @@ class NewGameState(State):
         self.engine.player = Player("player", 5, 5, area=area)
         other = Entity("other", 10, 10, mind=Wanderer, area=area)
         enemy = Entity('enemy', 15, 15, mind=Brawler, area=area)
+        A, B, C = Corpse("A", 1, 1), Corpse("B", 1, 1), Corpse("C", 2, 2)
         area.tiles[30:33, 22] = basic_wall
         self.engine.message_log.add_message(Message("I am alive!"))
         world.areas.append(area)
         world.current_area = 0
-        world.area.contents = world.area.contents.union({self.engine.player,
-                                                         other,
-                                                         enemy})
+        world.area.add_contents([self.engine.player, other, enemy, A, B, C])
