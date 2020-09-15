@@ -4,12 +4,13 @@ This is the game's player character.
 """
 
 from .entity import Entity
-from .actions import Surge, Move, Attack, Wait, PickUp
+from .actions import Surge, Move, Attack, Wait, PickUp, OpenInventory, Drop
 from ..items.corpse import Corpse
 from ..utilities.message_log import Message
 from ..entities.body import Body
-from ..utilities.exceptions import Impossible, InventoryFull
-from ..utilities.states.item_selection_state import ItemSelectionState
+from ..utilities.exceptions import Impossible
+from ..utilities.states.item_selection_menu import ItemSelectionMenu
+from ..utilities.states.inventory_menu import InventoryMenu
 
 import tcod
 
@@ -59,6 +60,15 @@ class Player(Entity):
                 # Choose one
                 self.select_item_to_pick_up()
 
+        elif isinstance(instruction, Drop):
+
+            # Check that an object has been referred to.
+            if instruction.item:
+                self.drop(instruction.item)
+
+        elif isinstance(instruction, OpenInventory):
+            self.open_inventory()
+
         elif isinstance(instruction, Wait):
             self.wait()
 
@@ -102,6 +112,30 @@ class Player(Entity):
         text = f"You pick up the {item.name}."
         self.area.post_message(Message(text))
 
+    def drop(self, item):
+        """Removes an item from the inventory and adds it to the area."""
+        self.inventory.remove(item)
+
+        # Place it in the current tile
+        item.x, item.y = self.x, self.y
+
+        self.area.contents.add(item)
+        text = f"You discard the {item.name}."
+        self.area.post_message(Message(text))
+
+    def open_inventory(self):
+        """Open the inventory."""
+
+        # If the inventory is blank, ignore it
+        if len(self.inventory) <= 0:
+            raise Impossible("You are not carrying anything.")
+
+        # REFACTOR TARGET
+        state = InventoryMenu(self.area.world.engine,
+                              self.area.world.engine.state,
+                              self.inventory)
+        self.area.world.engine.set_state(state)
+
     def select_item_to_pick_up(self):
         """Choose an item from the current tile to select."""
 
@@ -123,12 +157,12 @@ class Player(Entity):
 
                 # Open the selection menu.
                 # REFACTOR TARGET
-                state = ItemSelectionState(self.area.world.engine,
-                                           self.area.world.engine.state,
-                                           contents)
+                state = ItemSelectionMenu(self.area.world.engine,
+                                          self.area.world.engine.state,
+                                          contents)
                 self.area.world.engine.set_state(state)
 
         elif contents:
-            raise InventoryFull("You are carrying too much.")
+            raise Impossible("You are carrying too much.")
         else:
             raise Impossible("Nothing to pick up.")

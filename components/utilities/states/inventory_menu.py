@@ -1,14 +1,15 @@
-"""This file contains the implementation of the ItemSelectionState.
-This state displays a list of items fro the player to choose from."""
+"""This file contains the implementation of the InventoryMenu class;
+This shows the player their current inventory and allows them to manipulate it.
+"""
 
 from .overlay_menu import OverlayMenu
 from .menu import MenuOption
-from ...entities.actions import PickUp
 from ..constants import colours as C
+from ...entities.actions import Drop
 
 
-class ItemSelectionState(OverlayMenu):
-    """Presents the player with a list of items to choose from."""
+class InventoryMenu(OverlayMenu):
+    """Displays the current inventory."""
 
     def __init__(self, engine, parent, items):
         super().__init__(engine, parent)
@@ -17,7 +18,7 @@ class ItemSelectionState(OverlayMenu):
 
     def parse_items(self):
         """Converts a set of items into menu options."""
-        return [MenuOption(x.name, value=PickUp(x)) for x in self.items]
+        return [MenuOption(x.name, value=Drop(x)) for x in self.items]
 
     def render_overlay(self, console):
         """Renders the menu options over the rest of the screen."""

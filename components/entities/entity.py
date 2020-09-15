@@ -69,6 +69,15 @@ class Entity(Object):
         self.inventory.add(item)
         self.area.contents.remove(item)
 
+    def drop(self, item):
+        """Removes an item from the inventory."""
+        self.inventory.remove(item)
+
+        # Place it in the current tile
+        item.x, item.y = self.x, self.y
+        
+        self.area.contents.add(item)
+
     def move(self, dx, dy):
         """Alters the entity's position by a given amount."""
         self.x += dx

@@ -3,12 +3,13 @@ This file contains the implementation of the PlayState class.
 This is the "game" bit - it manages turn-taking and level/unit display.
 """
 
-from ...entities.actions import Surge, Wait, PickUp, OpenMenu
+from ...entities.actions import Surge, Wait, PickUp, OpenMenu, OpenInventory
 from .state import State
 from .in_game_menu import InGameMenu
 from ..constants import directions
 from ..constants import colours as C
 from ..message_log import Message
+from ..exceptions import Impossible
 import tcod
 
 
@@ -45,6 +46,10 @@ class PlayState(State):
         elif key == tcod.event.K_g:
             action = PickUp()
 
+        # Open the inventory
+        elif key == tcod.event.K_i:
+            action = OpenInventory()
+
         # Open a menu
         elif key == tcod.event.K_ESCAPE:
             action = OpenMenu()
@@ -72,9 +77,10 @@ class PlayState(State):
             self.engine.player.take_action(action)
 
         # Unless the action is meaningless,
-        except Exception as ex:
+        except Impossible as ex:
             self.engine.message_log.add_message(Message(ex.args[0],
                                                         C["YELLOW"]))
+
             return
 
         # Let all other entities take turns

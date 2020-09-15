@@ -40,9 +40,20 @@ class PickUp(Action):
         self.item = item
 
 
+class Drop(Action):
+    """Remove an item from the inventory."""
+
+    def __init__(self, item=None):
+        self.item = item
+
+
 class Wait(Action):
     """Do nothing."""
 
 
 class OpenMenu(Action):
-    """Open a menu."""
+    """Open the menu."""
+
+
+class OpenInventory(Action):
+    """Open the inventory."""

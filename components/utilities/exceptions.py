@@ -3,7 +3,3 @@
 
 class Impossible(Exception):
     """Attempted the impossible"""
-
-
-class InventoryFull(Exception):
-    """No more room for items."""
