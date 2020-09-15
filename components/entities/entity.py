@@ -1,6 +1,5 @@
-"""
-    This file contains the implementation of the base Entity class;
-    An entity is any object more complex than a simple physical item.
+"""This file contains the implementation of the base Entity class;
+An entity is any object with a mind.
 """
 
 from ..utilities.object import Object
