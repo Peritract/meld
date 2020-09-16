@@ -22,7 +22,7 @@ class OverlayMenu(Menu):
 
     def render_overlay(self, console):
         """Display a menu over another state."""
-        pass
+        raise NotImplementedError()
 
     def resume(self):
         """Return control to the parent state."""

@@ -8,5 +8,8 @@ from ..utilities.constants import colours as C
 
 class Item(Object):
 
-    def __init__(self, name, x, y, char="€", colour=C["GREY"], blocks=False):
+    def __init__(self, name, x, y, usable=False, equippable=False,
+                 char="€", colour=C["GREY"], blocks=False):
         super().__init__(name, x, y, char, colour, blocks)
+        self.usable = usable
+        self.equippable = equippable

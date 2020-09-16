@@ -4,7 +4,8 @@ This is the game's player character.
 """
 
 from .entity import Entity
-from .actions import Surge, Move, Attack, Wait, PickUp, OpenInventory, Drop
+from .actions import (Surge, Move, Attack, Wait, PickUp, OpenInventory,
+                      Drop, Use)
 from ..items.corpse import Corpse
 from ..utilities.message_log import Message
 from ..entities.body import Body
@@ -65,6 +66,12 @@ class Player(Entity):
             # Check that an object has been referred to.
             if instruction.item:
                 self.drop(instruction.item)
+
+        elif isinstance(instruction, Use):
+
+            # Check that an object has been referred to.
+            if instruction.item:
+                self.use(instruction.item)
 
         elif isinstance(instruction, OpenInventory):
             self.open_inventory()

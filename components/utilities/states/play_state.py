@@ -83,9 +83,11 @@ class PlayState(State):
 
             return
 
-        # Let all other entities take turns
-        for entity in self.engine.world.entities - {self.engine.player}:
-            entity.take_action()
+        # If the state hasn't changed,
+        if self.engine.state == self:
+            # Let all other entities take turns
+            for entity in self.engine.world.entities - {self.engine.player}:
+                entity.take_action()
 
     def render(self, console):
         """Display the current state of the game world."""

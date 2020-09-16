@@ -41,7 +41,14 @@ class PickUp(Action):
 
 
 class Drop(Action):
-    """Remove an item from the inventory."""
+    """Transfer an item from the inventory to the area."""
+
+    def __init__(self, item=None):
+        self.item = item
+
+
+class Use(Action):
+    """Use an item."""
 
     def __init__(self, item=None):
         self.item = item

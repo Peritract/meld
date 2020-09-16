@@ -75,7 +75,7 @@ class Entity(Object):
 
         # Place it in the current tile
         item.x, item.y = self.x, self.y
-        
+
         self.area.contents.add(item)
 
     def move(self, dx, dy):
@@ -106,6 +106,16 @@ class Entity(Object):
     def wait(self):
         """Passes the turn."""
         pass
+
+    def use(self, item):
+        """Uses an item on the entity."""
+
+        # Call the item's use method
+        item.use(self)
+
+        # If the item is used up, remove it
+        if self.item.uses <= 0:
+            self.inventory.remove(item)
 
     def get_tile_costs(self):
         """Calculate the cost of movement around the area

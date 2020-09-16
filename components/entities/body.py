@@ -17,3 +17,7 @@ class Body:
         self.defence = defence
         self.view_radius = view_radius
         self.carry_capacity = 3
+
+    def heal(self, amount):
+        """Replenishes health."""
+        self.health = min(self.max_health, self.health + amount)
