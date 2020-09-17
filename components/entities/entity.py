@@ -11,6 +11,7 @@ import tcod
 import numpy as np
 from ..utilities.constants import colours as C
 from ..items.corpse import Corpse
+from ..items.equippable import Equippable
 
 
 class Entity(Object):
@@ -48,6 +49,18 @@ class Entity(Object):
     def inventory_full(self):
         return self.body.carry_capacity <= len(self.inventory)
 
+    @property
+    def equipment(self):
+        """Returns all the currently-held equipment."""
+        return [x for x in self.inventory if isinstance(x, Equippable)]
+
+    @property
+    def weapon(self):
+        """Returns the currently equipped weapon."""
+        for item in self.equipment:
+            if item.equipped and item.type == "weapon":
+                return item
+
     def take_action(self):
         """Acts in the game world."""
 
@@ -76,7 +89,26 @@ class Entity(Object):
         # Place it in the current tile
         item.x, item.y = self.x, self.y
 
+        # Unequip it, if it was equipped
+        if isinstance(item, Equippable) and item.equipped:
+            item.equipped = False
+
         self.area.contents.add(item)
+
+    def equip(self, item):
+        """Equips an item, unequipping any item of the same type."""
+
+        # Unequip the previous weapon, if item is a weapon
+        if item.type == "weapon" and self.weapon:
+            self.weapon.equipped = False
+
+        # Equip the item
+        item.equipped = True
+
+    def unequip(self, item):
+        """Unequip an item."""
+
+        item.equipped = False
 
     def move(self, dx, dy):
         """Alters the entity's position by a given amount."""
@@ -98,7 +130,8 @@ class Entity(Object):
             other.die()
 
     def die(self):
-        # Removes the entity from the game, replacing it with a corpse.
+        """Removes the entity from the game, replacing it with a corpse."""
+
         self.area.contents.remove(self)
         self.area.contents.add(Corpse(self.name, self.x, self.y))
         self.area.post_message(Message(f"The {self.name} dies in agony."))
@@ -114,7 +147,7 @@ class Entity(Object):
         item.use(self)
 
         # If the item is used up, remove it
-        if self.item.uses <= 0:
+        if item.uses <= 0:
             self.inventory.remove(item)
 
     def get_tile_costs(self):

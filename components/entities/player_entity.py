@@ -5,13 +5,14 @@ This is the game's player character.
 
 from .entity import Entity
 from .actions import (Surge, Move, Attack, Wait, PickUp, OpenInventory,
-                      Drop, Use)
+                      Drop, Use, Equip, Unequip)
 from ..items.corpse import Corpse
 from ..utilities.message_log import Message
 from ..entities.body import Body
 from ..utilities.exceptions import Impossible
 from ..utilities.states.item_selection_menu import ItemSelectionMenu
 from ..utilities.states.inventory_menu import InventoryMenu
+from ..items.equippable import Equippable
 
 import tcod
 
@@ -73,6 +74,18 @@ class Player(Entity):
             if instruction.item:
                 self.use(instruction.item)
 
+        elif isinstance(instruction, Equip):
+
+            # Check that an object has been referred to.
+            if instruction.item:
+                self.equip(instruction.item)
+
+        elif isinstance(instruction, Unequip):
+
+            # Check that an object has been referred to.
+            if instruction.item:
+                self.unequip(instruction.item)
+
         elif isinstance(instruction, OpenInventory):
             self.open_inventory()
 
@@ -126,9 +139,39 @@ class Player(Entity):
         # Place it in the current tile
         item.x, item.y = self.x, self.y
 
+        # Unequip it, if it was equipped
+        if isinstance(item, Equippable) and item.equipped:
+            item.equipped = False
+
         self.area.contents.add(item)
         text = f"You discard the {item.name}."
         self.area.post_message(Message(text))
+
+    def equip(self, item):
+        """Equips an item, unequipping any item of the same type."""
+
+        # Unequip the previous weapon, if item is a weapon
+        if item.type == "weapon" and self.weapon:
+            self.weapon.equipped = False
+
+        # Equip the item
+        self.area.post_message(Message(f"You equip the {item.name}."))
+        item.equipped = True
+
+    def unequip(self, item):
+        """Unequip an item."""
+        self.area.post_message(Message(f"You unequip the {item.name}."))
+        item.equipped = False
+
+    def use(self, item):
+        """Uses an item on the entity."""
+
+        # Call the item's use method
+        item.use(self)
+        self.area.post_message(Message(f"You use the {item.name}."))
+        # If the item is used up, remove it
+        if item.uses <= 0:
+            self.inventory.remove(item)
 
     def open_inventory(self):
         """Open the inventory."""

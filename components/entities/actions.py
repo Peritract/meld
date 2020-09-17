@@ -54,6 +54,19 @@ class Use(Action):
         self.item = item
 
 
+class Equip(Action):
+    """Wield or wear an item."""
+
+    def __init__(self, item=None):
+        self.item = item
+
+
+class Unequip(Action):
+    """Return an item back to the inventory."""
+
+    def __init__(self, item=None):
+        self.item = item
+
 class Wait(Action):
     """Do nothing."""
 

@@ -5,7 +5,7 @@ This shows the player their current inventory and allows them to manipulate it.
 from .overlay_menu import OverlayMenu
 from .menu import MenuOption
 from ..constants import colours as C
-from ...entities.actions import Drop, Use
+from ...entities.actions import Drop, Use, Equip, Unequip
 import tcod
 
 
@@ -19,6 +19,8 @@ class InventoryOption(MenuOption):
         self.name = item.name
         self.drop = Drop(item)
         self.use = Use(item) if item.usable else None
+        self.equip = Equip(item) if item.equippable else None
+        self.unequip = Unequip(item) if item.equippable else None
 
 
 class InventoryMenu(OverlayMenu):
@@ -42,6 +44,21 @@ class InventoryMenu(OverlayMenu):
 
         if self.selected.use:
             self.resume_with_choice(self.selected.use)
+
+    def process_equip(self):
+        """Handle equip commands based on context."""
+        if self.selected.equip and self.selected.item.equipped:
+            self.unequip()
+        elif self.selected.equip and not self.selected.item.equipped:
+            self.equip()
+
+    def equip(self):
+        """Choose to equip an item."""
+        self.resume_with_choice(self.selected.equip)
+
+    def unequip(self):
+        """Choose to unequip an item."""
+        self.resume_with_choice(self.selected.unequip)
 
     def resume_with_choice(self, option):
         """Return control to the parent state, passing back a decision."""
@@ -72,6 +89,9 @@ class InventoryMenu(OverlayMenu):
 
         elif key == tcod.event.K_u:
             self.use()
+
+        elif key == tcod.event.K_e:
+            self.process_equip()
 
     def render_overlay(self, console):
         """Renders the menu options over the rest of the screen."""
