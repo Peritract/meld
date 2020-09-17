@@ -61,6 +61,13 @@ class Entity(Object):
             if item.equipped and item.type == "weapon":
                 return item
 
+    @property
+    def armour(self):
+        """Returns the currently equipped armour."""
+        for item in self.equipment:
+            if item.equipped and item.type == "armour":
+                return item
+
     def take_action(self):
         """Acts in the game world."""
 
@@ -101,6 +108,10 @@ class Entity(Object):
         # Unequip the previous weapon, if item is a weapon
         if item.type == "weapon" and self.weapon:
             self.weapon.equipped = False
+
+        # Unequip the previous armour, if item is armour
+        if item.type == "armour" and self.armour:
+            self.armour.equipped = False
 
         # Equip the item
         item.equipped = True

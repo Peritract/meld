@@ -9,8 +9,8 @@ from ..utilities.constants import colours as C
 class Equippable(Item):
     """An equippable item."""
 
-    def __init__(self, name, type, x, y, char, colour):
+    def __init__(self, name, type, x, y, char="/", colour=C["YELLOW"]):
         super().__init__(name, x, y, False, True,
-                         "/", colour=C["YELLOW"])
+                         char, colour)
         self.type = type
         self.equipped = False

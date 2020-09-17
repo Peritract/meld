@@ -12,3 +12,11 @@ class Cudgel(Equippable):
     def __init__(self, x, y):
         super().__init__("cudgel", "weapon", x, y,
                          "/", C["BROWN"])
+
+
+class Robe(Equippable):
+    """A woollen robe."""
+
+    def __init__(self, x, y):
+        super().__init__("robe", "armour", x, y,
+                         "[", C["BROWN"])
