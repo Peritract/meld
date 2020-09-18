@@ -51,9 +51,9 @@ class NewGameState(State):
         world = World(self.engine)
         self.engine.world = world
         area = Area(80, 50, self.engine.world)
-        self.engine.player = Player("player", 5, 5, area=area)
-        other = Entity("other", 10, 10, mind=Wanderer, area=area)
-        enemy = Entity('enemy', 15, 15, mind=Brawler, area=area)
+        self.engine.player = Player("player", "A person", 5, 5, area=area)
+        other = Entity("other", "Not you.", 10, 10, mind=Wanderer, area=area)
+        enemy = Entity('enemy', "A horror", 15, 15, mind=Brawler, area=area)
         A, B, C = Corpse("A", 1, 1), Corpse("B", 1, 1), Corpse("C", 2, 2)
         D, E, F = Bandage(3, 3), Cudgel(4, 4), Robe(6, 6)
         area.tiles[30:33, 22] = basic_wall

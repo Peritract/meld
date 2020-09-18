@@ -18,6 +18,13 @@ class Surge(Action):
         self.dy = dy
 
 
+class Handle(Action):
+    """Base class for any action with an item."""
+
+    def __init__(self, item=None):
+        self.item = item
+
+
 class Move(Surge):
     """Movement to an adjacent tile."""
 
@@ -33,39 +40,40 @@ class Attack(Action):
         self.other = other
 
 
-class PickUp(Action):
+class PickUp(Handle):
     """Add an item to the inventory."""
 
     def __init__(self, item=None):
-        self.item = item
+        super().__init__(item)
 
 
-class Drop(Action):
+class Drop(Handle):
     """Transfer an item from the inventory to the area."""
 
     def __init__(self, item=None):
-        self.item = item
+        super().__init__(item)
 
 
-class Use(Action):
+class Use(Handle):
     """Use an item."""
 
     def __init__(self, item=None):
-        self.item = item
+        super().__init__(item)
 
 
-class Equip(Action):
+class Equip(Handle):
     """Wield or wear an item."""
 
     def __init__(self, item=None):
-        self.item = item
+        super().__init__(item)
 
 
-class Unequip(Action):
+class Unequip(Handle):
     """Return an item back to the inventory."""
 
     def __init__(self, item=None):
-        self.item = item
+        super().__init__(item)
+
 
 class Wait(Action):
     """Do nothing."""

@@ -11,7 +11,7 @@ import tcod
 import numpy as np
 from ..utilities.constants import colours as C
 from ..items.corpse import Corpse
-from ..items.equippable import Equippable
+from ..items.equippable import Equippable, Weapon, Armour
 
 
 class Entity(Object):
@@ -19,6 +19,7 @@ class Entity(Object):
 
     def __init__(self,
                  name="entity",
+                 description="A living being.",
                  x=0,
                  y=0,
                  faction="neutral",
@@ -28,7 +29,7 @@ class Entity(Object):
                  colour=tcod.lime,
                  blocks=True,
                  area=None):
-        super().__init__(name, x, y, char, colour, blocks)
+        super().__init__(name, description, x, y, char, colour, blocks)
         self.faction = faction
         self.body = body()
         self.body.owner = self
@@ -58,14 +59,14 @@ class Entity(Object):
     def weapon(self):
         """Returns the currently equipped weapon."""
         for item in self.equipment:
-            if item.equipped and item.type == "weapon":
+            if item.equipped and isinstance(item, Weapon):
                 return item
 
     @property
     def armour(self):
         """Returns the currently equipped armour."""
         for item in self.equipment:
-            if item.equipped and item.type == "armour":
+            if item.equipped and isinstance(item, Armour):
                 return item
 
     def take_action(self):

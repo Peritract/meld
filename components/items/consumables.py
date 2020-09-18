@@ -10,7 +10,8 @@ class Bandage(Consumable):
     """A one-use healing item."""
 
     def __init__(self, x, y):
-        super().__init__("bandage", 1, x, y, char="+", colour=C["RED"])
+        super().__init__("Bandage", "A tattered scrap of cloth.",
+                         1, x, y, char="+", colour=C["RED"])
         self.power = 3
 
     def affect(self, target):

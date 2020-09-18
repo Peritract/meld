@@ -2,21 +2,25 @@
 equippable items.
 """
 
-from .equippable import Equippable
+from .equippable import Weapon, Armour
 from ..utilities.constants import colours as C
 
 
-class Cudgel(Equippable):
+class Cudgel(Weapon):
     """A simple wooden club."""
 
     def __init__(self, x, y):
-        super().__init__("cudgel", "weapon", x, y,
+        super().__init__("Cudgel",
+                         "A short, weighty club.",
+                         x, y,
                          "/", C["BROWN"])
 
 
-class Robe(Equippable):
+class Robe(Armour):
     """A woollen robe."""
 
     def __init__(self, x, y):
-        super().__init__("robe", "armour", x, y,
+        super().__init__("Robe",
+                         "A scratchy wool robe.",
+                         x, y,
                          "[", C["BROWN"])

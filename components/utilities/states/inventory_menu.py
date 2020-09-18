@@ -6,7 +6,10 @@ from .overlay_menu import OverlayMenu
 from .menu import MenuOption
 from ..constants import colours as C
 from ...entities.actions import Drop, Use, Equip, Unequip
+from ...items.consumable import Consumable
+from ...items.equippable import Equippable
 import tcod
+from textwrap import wrap
 
 
 class InventoryOption(MenuOption):
@@ -16,11 +19,19 @@ class InventoryOption(MenuOption):
     def __init__(self, item):
         super().__init__(self, item)
         self.item = item
-        self.name = item.name
         self.drop = Drop(item)
-        self.use = Use(item) if item.usable else None
-        self.equip = Equip(item) if item.equippable else None
-        self.unequip = Unequip(item) if item.equippable else None
+        self.use = Use(item) if isinstance(item, Consumable) else None
+        self.equip = Equip(item) if isinstance(item, Equippable) else None
+        self.unequip = Unequip(item) if isinstance(item, Equippable) else None
+
+    @property
+    def display_text(self):
+        """Get the text to display."""
+
+        if isinstance(self.item, Equippable) and self.item.equipped:
+            return self.item.name + " E"
+
+        return self.item.name
 
 
 class InventoryMenu(OverlayMenu):
@@ -28,8 +39,18 @@ class InventoryMenu(OverlayMenu):
 
     def __init__(self, engine, parent, items):
         super().__init__(engine, parent)
-        self.items = items
+        self.items = self.order_items(items)
         self.options = self.parse_items()
+
+    @property
+    def width(self):
+        """Returns the (set) width of the inventory window."""
+        return 33
+
+    @property
+    def height(self):
+        """Returns the (variable) height of the inventory window."""
+        return len(self.items) * 2 + 6
 
     def parse_items(self):
         """Converts a set of items into menu options."""
@@ -41,15 +62,13 @@ class InventoryMenu(OverlayMenu):
 
     def use(self):
         """Choose to use an item."""
-
-        if self.selected.use:
-            self.resume_with_choice(self.selected.use)
+        self.resume_with_choice(self.selected.use)
 
     def process_equip(self):
         """Handle equip commands based on context."""
-        if self.selected.equip and self.selected.item.equipped:
+        if self.selected.item.equipped:
             self.unequip()
-        elif self.selected.equip and not self.selected.item.equipped:
+        else:
             self.equip()
 
     def equip(self):
@@ -88,10 +107,49 @@ class InventoryMenu(OverlayMenu):
             self.drop()
 
         elif key == tcod.event.K_u:
-            self.use()
+            if isinstance(self.selected.item, Consumable):
+                self.use()
 
         elif key == tcod.event.K_e:
-            self.process_equip()
+            if isinstance(self.selected.item, Equippable):
+                self.process_equip()
+
+    def order_items(self, items):
+        """Order the items alphabetically with equipped items first."""
+        return sorted(sorted(items, key=lambda x: x.name),
+                      key=lambda x: isinstance(x, Equippable) and x.equipped,
+                      reverse=True)
+
+    # Rendering methods
+
+    def render_controls(self, x, y, console):
+        """Displays the appropriate controls of the current item."""
+        if self.selected.use:
+            console.print(x, y, "[U]se", C["WHITE"])
+        else:
+            console.print(x, y, "[U]se", C["GREY"])
+        x += 6
+
+        if self.selected.equip and not self.selected.item.equipped:
+            console.print(x, y, "[E]quip", C["WHITE"])
+        else:
+            console.print(x, y, "[E]quip", C["GREY"])
+        x += 8
+
+        if self.selected.equip and self.selected.item.equipped:
+            console.print(x, y, "Un[E]quip", C["WHITE"])
+        else:
+            console.print(x, y, "Un[E]quip", C["GREY"])
+        x += 10
+
+        console.print(x, y, "[D]rop", C["WHITE"])
+
+    def render_description(self, x, y, console):
+        """Render the description of the selected item."""
+        lines = wrap(self.selected.item.description, 16)
+        for line in lines:
+            console.print(x, y, line, C["WHITE"])
+            y += 1
 
     def render_overlay(self, console):
         """Renders the menu options over the rest of the screen."""
@@ -99,19 +157,26 @@ class InventoryMenu(OverlayMenu):
         # Calculate the starting y
         # halfway point - half height
         offset = self.engine.screen_height // 2 - self.height // 2
+        y = offset
 
         # Calculate the starting x
         # half way point - half width
-        x_start = self.engine.screen_width // 2 - self.width // 2
+        x = self.engine.screen_width // 2 - self.width // 2
 
-        console.draw_frame(x_start, offset, self.width, self.height)
+        console.draw_frame(x, y, self.width, self.height)
 
         for option in self.options:
             colour = C["GOLD"] if option == self.selected else C["WHITE"]
-            text = self.wrapped_text(option.name)
+            text = option.display_text
 
             # Start text one in and two down
-            console.print(x_start + 1, offset + 2, text, colour)
+            console.print(x + 1, y + 2, text, colour)
 
             # Leave a gap between each line
-            offset += 2
+            y += 2
+
+        # Display the appropriate option
+        self.render_controls(x + 1, y + 3, console)
+
+        # Render the description of the currently-selected item on the right.
+        self.render_description(x + 16, offset + 2, console)

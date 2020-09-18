@@ -5,14 +5,14 @@ This is the game's player character.
 
 from .entity import Entity
 from .actions import (Surge, Move, Attack, Wait, PickUp, OpenInventory,
-                      Drop, Use, Equip, Unequip)
+                      Drop, Use, Equip, Unequip, Handle)
 from ..items.corpse import Corpse
 from ..utilities.message_log import Message
 from ..entities.body import Body
 from ..utilities.exceptions import Impossible
 from ..utilities.states.item_selection_menu import ItemSelectionMenu
 from ..utilities.states.inventory_menu import InventoryMenu
-from ..items.equippable import Equippable
+from ..items.equippable import Equippable, Weapon, Armour
 
 import tcod
 
@@ -22,6 +22,7 @@ class Player(Entity):
 
     def __init__(self,
                  name="entity",
+                 description="You",
                  x=0,
                  y=0,
                  faction="player",
@@ -31,7 +32,7 @@ class Player(Entity):
                  colour=tcod.white,
                  blocks=True,
                  area=None):
-        super().__init__(name, x, y, faction, mind, body,
+        super().__init__(name, description, x, y, faction, mind, body,
                          char, colour, blocks, area)
 
     def take_action(self, instruction):
@@ -49,42 +50,34 @@ class Player(Entity):
             elif isinstance(action, Attack):
                 self.attack(action.other)
 
-        elif isinstance(instruction, PickUp):
+        # If the instruction concerns an item
+        elif isinstance(instruction, Handle):
 
-            # If there's an item already,
+            # If an item has been specified,
             if instruction.item:
 
-                # Pick it up
-                self.pick_up(instruction.item)
+                if isinstance(instruction, PickUp):
+                    self.pick_up(instruction.item)
 
-            # otherwise,
+                elif isinstance(instruction, Drop):
+                    self.drop(instruction.item)
+
+                elif isinstance(instruction, Use):
+                    self.use(instruction.item)
+
+                elif isinstance(instruction, Equip):
+                    self.equip(instruction.item)
+
+                elif isinstance(instruction, Unequip):
+                    self.unequip(instruction.item)
+
+            # If no item has been named,
             else:
-                # Choose one
-                self.select_item_to_pick_up()
 
-        elif isinstance(instruction, Drop):
+                if isinstance(instruction, PickUp):
 
-            # Check that an object has been referred to.
-            if instruction.item:
-                self.drop(instruction.item)
-
-        elif isinstance(instruction, Use):
-
-            # Check that an object has been referred to.
-            if instruction.item:
-                self.use(instruction.item)
-
-        elif isinstance(instruction, Equip):
-
-            # Check that an object has been referred to.
-            if instruction.item:
-                self.equip(instruction.item)
-
-        elif isinstance(instruction, Unequip):
-
-            # Check that an object has been referred to.
-            if instruction.item:
-                self.unequip(instruction.item)
+                    # Choose an item
+                    self.select_item_to_pick_up()
 
         elif isinstance(instruction, OpenInventory):
             self.open_inventory()
@@ -151,8 +144,10 @@ class Player(Entity):
         """Equips an item, unequipping any item of the same type."""
 
         # Unequip the previous weapon, if item is a weapon
-        if item.type == "weapon" and self.weapon:
+        if isinstance(item, Weapon) and self.weapon:
             self.weapon.equipped = False
+        elif isinstance(item, Armour) and self.armour:
+            self.armour.equipped = False
 
         # Equip the item
         self.area.post_message(Message(f"You equip the {item.name}."))

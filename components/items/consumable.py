@@ -9,8 +9,9 @@ from ..utilities.constants import colours as C
 class Consumable(Item):
     """An item that is consumed on use."""
 
-    def __init__(self, name, uses, x, y, char="!", colour=C["YELLOW"]):
-        super().__init__(name, x, y, True, False, char, colour)
+    def __init__(self, name, description, uses, x, y,
+                 char="!", colour=C["TEMP"]):
+        super().__init__(name, description, x, y, char, colour)
         self.uses = uses
 
     def use(self, target):
