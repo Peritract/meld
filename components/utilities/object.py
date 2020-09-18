@@ -26,3 +26,8 @@ class Object:
         self.char = char
         self.colour = colour
         self.blocks = blocks
+
+    @property
+    def description_text(self):
+        """Returns the description for display."""
+        return self.description

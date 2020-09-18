@@ -51,7 +51,7 @@ class NewGameState(State):
         world = World(self.engine)
         self.engine.world = world
         area = Area(80, 50, self.engine.world)
-        self.engine.player = Player("player", "A person", 5, 5, area=area)
+        self.engine.player = Player("Player", "A person", 5, 5, area=area)
         other = Entity("other", "Not you.", 10, 10, mind=Wanderer, area=area)
         enemy = Entity('enemy', "A horror", 15, 15, mind=Brawler, area=area)
         A, B, C = Corpse("A", 1, 1), Corpse("B", 1, 1), Corpse("C", 2, 2)

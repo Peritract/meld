@@ -146,7 +146,7 @@ class InventoryMenu(OverlayMenu):
 
     def render_description(self, x, y, console):
         """Render the description of the selected item."""
-        lines = wrap(self.selected.item.description, 16)
+        lines = wrap(self.selected.item.description_text, 16)
         for line in lines:
             console.print(x, y, line, C["WHITE"])
             y += 1

@@ -109,7 +109,7 @@ class PlayState(State):
                                 self.engine.message_log)
 
         # Display the info pane
-        self.render_info_pane(console, 69, 51)
+        self.render_info_pane(console, 69, 51, 8)
 
     # Utility rendering functions
 
@@ -141,7 +141,7 @@ class PlayState(State):
                 # Show the entity
                 console.print(entity.x, entity.y, entity.char, entity.colour)
 
-    def render_info_pane(self, console, x, y):
+    def render_info_pane(self, console, x, y, height):
         """Displays information about the tile under the mouse."""
 
         # If the mouse is over a visible tile
@@ -152,9 +152,16 @@ class PlayState(State):
 
             # If there is anything to display
             if contents:
+                rows = 0
                 # Display it
-                contents_string = " ".join([thing.name for thing in contents])
-                console.print(x, y, contents_string)
+                for thing in sorted(contents, key=lambda x: x.name):
+                    console.print(x, y, thing.name)
+                    y += 2
+                    rows += 2
+
+                    # Only display rows up until the height
+                    if rows >= height:
+                        return
 
     def render_status_pane(self, console, x, y, width):
         """Displays a status panel with key information about

@@ -14,6 +14,11 @@ class Consumable(Item):
         super().__init__(name, description, x, y, char, colour)
         self.uses = uses
 
+    @property
+    def description_text(self):
+        uses = f"{self.uses} uses" if self.uses > 1 else "1 use"
+        return self.description + f" {uses} remaining."
+
     def use(self, target):
         """Uses the item"""
         if self.uses > 0:

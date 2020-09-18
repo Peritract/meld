@@ -34,10 +34,10 @@ class ItemSelectionMenu(OverlayMenu):
 
         for option in self.options:
             colour = C["GOLD"] if option == self.selected else C["WHITE"]
-            text = self.wrapped_text(option.name)
+            text = option.name
 
-            # Start text one in and two down
-            console.print(x_start + 1, offset + 2, text, colour)
+            # Start text two in and two down
+            console.print(x_start + 2, offset + 2, text, colour)
 
             # Leave a gap between each line
             offset += 2
