@@ -4,6 +4,7 @@ consumable items.
 
 from .consumable import Consumable
 from ..utilities.constants import colours as C
+from ..utilities.exceptions import Impossible
 
 
 class Bandage(Consumable):
@@ -16,4 +17,7 @@ class Bandage(Consumable):
 
     def affect(self, target):
         """Heals the target."""
-        target.body.heal(self.power)
+        if target.body.health < target.body.max_health:
+            target.body.heal(self.power)
+        else:
+            raise Impossible("You are already at full health.")

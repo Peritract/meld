@@ -22,8 +22,8 @@ class Consumable(Item):
     def use(self, target):
         """Uses the item"""
         if self.uses > 0:
-            self.uses -= 1
             self.affect(target)
+            self.uses -= 1
 
     def affect(self, target):
         """Applies the item's effect to the target."""
