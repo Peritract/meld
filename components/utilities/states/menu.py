@@ -43,7 +43,7 @@ class Menu(State):
 
         for option in self.options:
             colour = C["GOLD"] if option == self.selected else C["WHITE"]
-            text = self.wrapped_text(option.name)
+            text = self.wrap_text(option.name)
 
             # Start text one in and two down
             console.print(x_start + 1, offset + 2, text, colour)
@@ -67,7 +67,7 @@ class Menu(State):
         # Two lines per option + 2 for borders + 1 to even out margins
         return len(self.options) * 2 + 2 + 1
 
-    def wrapped_text(self, text):
+    def wrap_text(self, text):
         """Return a centered string based on the menu width."""
 
         # Subtract 2 for the margins
