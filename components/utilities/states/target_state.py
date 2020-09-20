@@ -26,10 +26,11 @@ class TargetState(State):
         """Change the cursor position."""
         self.engine.m_loc = (x, y)
 
-    def move_cursor(self, direction):
+    def move_cursor(self, direction, mod):
         """Move the cursor in a particular direction."""
         x, y = self.cursor
-        dx, dy = directions[direction]
+        dx = directions[direction][0] * 5 if mod else directions[direction][0]
+        dy = directions[direction][1] * 5 if mod else directions[direction][1]
         nx, ny = x + dx, y + dy
         if self.engine.world.area.in_bounds(nx, ny):
             self.set_cursor(nx, ny)
@@ -71,18 +72,19 @@ class TargetState(State):
 
         # Get event information
         key = event.sym
+        mod = True if event.mod and tcod.event.KMOD_LSHIFT else False
 
         if key == tcod.event.K_UP:
-            self.move_cursor("up")
+            self.move_cursor("up", mod)
 
         elif key == tcod.event.K_DOWN:
-            self.move_cursor("down")
+            self.move_cursor("down", mod)
 
         elif key == tcod.event.K_LEFT:
-            self.move_cursor("left")
+            self.move_cursor("left", mod)
 
         elif key == tcod.event.K_RIGHT:
-            self.move_cursor("right")
+            self.move_cursor("right", mod)
 
         elif key == tcod.event.K_RETURN:
             self.resume_with_selection()
