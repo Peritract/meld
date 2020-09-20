@@ -16,5 +16,6 @@ colours = {
     "YELLOW": tcod.yellow,
     "GOLD": tcod.gold,
     "BROWN": tcod.brass,
+    "BLACK": tcod.black,
     "TEMP": tcod.chartreuse
 }

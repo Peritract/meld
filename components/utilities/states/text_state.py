@@ -4,7 +4,7 @@ is dismissed on input.
 """
 
 from .state import State
-from ..message_log import Message
+from ..messages import Message
 from ..constants import colours as C
 from .main_menu_state import MainMenuState
 

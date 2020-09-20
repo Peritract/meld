@@ -31,7 +31,7 @@ class InGameMenu(OverlayMenu):
 
         for option in self.options:
             colour = C["GOLD"] if option == self.selected else C["WHITE"]
-            text = self.wrapped_text(option.name)
+            text = self.wrap_text(option.name)
 
             # Start text one in and two down
             console.print(x_start + 1, offset + 2, text, colour)

@@ -8,9 +8,9 @@ import tcod
 
 class OverlayMenu(Menu):
 
-    def __init__(self, engine, parent_state):
+    def __init__(self, engine, parent):
         super().__init__(engine)
-        self.parent = parent_state
+        self.parent = parent
 
     def render(self, console):
 

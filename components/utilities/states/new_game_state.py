@@ -19,7 +19,7 @@ from ...items.corpse import Corpse
 from ...items.consumables import Bandage
 from ...items.equippables import Cudgel, Robe
 
-from ..message_log import MessageLog, Message
+from ..messages import MessageLog, Message
 
 # -- /HACK -- #
 

@@ -4,15 +4,17 @@ This is the game's player character.
 """
 
 from .entity import Entity
-from .actions import (Surge, Move, Attack, Wait, PickUp, OpenInventory,
-                      Drop, Use, Equip, Unequip, Handle)
+from .actions import (Surge, Wait, PickUp, OpenInventory,
+                      Drop, Use, Equip, Unequip, Handle, Look, OpenMenu)
 from ..items.corpse import Corpse
-from ..utilities.message_log import Message
+from ..utilities.messages import Message
 from ..entities.body import Body
 from ..utilities.exceptions import Impossible
 from ..utilities.states.item_selection_menu import ItemSelectionMenu
+from ..utilities.states.look_state import LookState
 from ..utilities.states.inventory_menu import InventoryMenu
 from ..items.equippable import Equippable, Weapon, Armour
+from ..utilities.states.in_game_menu import InGameMenu
 
 import tcod
 
@@ -42,45 +44,22 @@ class Player(Entity):
         if isinstance(instruction, Surge):
 
             # Intepret the action based on area context
-            action = self.interpret_surge(instruction)
-
-            # Act on the interpretation
-            if isinstance(action, Move):
-                self.move(action.dx, action.dy)
-            elif isinstance(action, Attack):
-                self.attack(action.other)
+            self.interpret_surge(instruction)
 
         # If the instruction concerns an item
         elif isinstance(instruction, Handle):
 
-            # If an item has been specified,
-            if instruction.item:
-
-                if isinstance(instruction, PickUp):
-                    self.pick_up(instruction.item)
-
-                elif isinstance(instruction, Drop):
-                    self.drop(instruction.item)
-
-                elif isinstance(instruction, Use):
-                    self.use(instruction.item)
-
-                elif isinstance(instruction, Equip):
-                    self.equip(instruction.item)
-
-                elif isinstance(instruction, Unequip):
-                    self.unequip(instruction.item)
-
-            # If no item has been named,
-            else:
-
-                if isinstance(instruction, PickUp):
-
-                    # Choose an item
-                    self.select_item_to_pick_up()
+            # Interpret the action
+            self.interpret_handle(instruction)
 
         elif isinstance(instruction, OpenInventory):
             self.open_inventory()
+
+        elif isinstance(instruction, OpenMenu):
+            self.open_menu()
+
+        elif isinstance(instruction, Look):
+            self.look()
 
         elif isinstance(instruction, Wait):
             self.wait()
@@ -100,15 +79,45 @@ class Player(Entity):
 
             # If there is an occupant
             if occupant:
-                return Attack(occupant)
+                self.attack(occupant)
 
             # If it's free
-            if self.area.is_free(target_x, target_y):
+            elif self.area.is_free(target_x, target_y):
                 # Make a move
-                return Move(instruction.dx, instruction.dy)
+                self.move(instruction.dx, instruction.dy)
 
         # Invalid surge
-        raise Impossible("There is no path that way.")
+        else:
+            raise Impossible("There is no path that way.")
+
+    def interpret_handle(self, instruction):
+        """Choose what to do with an item-related action."""
+
+        # If an item has been specified,
+        if instruction.item:
+
+            if isinstance(instruction, PickUp):
+                self.pick_up(instruction.item)
+
+            elif isinstance(instruction, Drop):
+                self.drop(instruction.item)
+
+            elif isinstance(instruction, Use):
+                self.use(instruction.item)
+
+            elif isinstance(instruction, Equip):
+                self.equip(instruction.item)
+
+            elif isinstance(instruction, Unequip):
+                self.unequip(instruction.item)
+
+        # If no item has been named,
+        else:
+
+            if isinstance(instruction, PickUp):
+
+                # Choose an item
+                self.select_item_to_pick_up()
 
     def die(self):
         # Removes the entity from the game, replacing it with a corpse.
@@ -179,6 +188,19 @@ class Player(Entity):
         state = InventoryMenu(self.area.world.engine,
                               self.area.world.engine.state,
                               self.inventory)
+        self.area.world.engine.set_state(state)
+
+    def look(self):
+        """Look around the area."""
+
+        state = LookState(self.area.world.engine, self.area.world.engine.state)
+        self.area.world.engine.set_state(state)
+
+    def open_menu(self):
+        """View the in-game menu."""
+
+        state = InGameMenu(self.area.world.engine,
+                           self.area.world.engine.state)
         self.area.world.engine.set_state(state)
 
     def select_item_to_pick_up(self):

@@ -3,7 +3,7 @@ An entity is any object with a mind.
 """
 
 from ..utilities.object import Object
-from ..utilities.message_log import Message
+from ..utilities.messages import Message
 from .body import Body
 from .minds.mind import Mind
 from .actions import Wait, Move, Attack, PickUp

@@ -85,3 +85,7 @@ class OpenMenu(Action):
 
 class OpenInventory(Action):
     """Open the inventory."""
+
+
+class Look(Action):
+    """Look around the area."""
