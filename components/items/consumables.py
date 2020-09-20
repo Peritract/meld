@@ -11,7 +11,8 @@ class Bandage(Consumable):
     """A one-use healing item."""
 
     def __init__(self, x, y):
-        super().__init__("Bandage", "A tattered scrap of cloth.",
+        super().__init__("Bandage",
+                         "A tattered scrap of cloth to bind a wound.",
                          1, x, y, char="+", colour=C["RED"])
         self.power = 3
 

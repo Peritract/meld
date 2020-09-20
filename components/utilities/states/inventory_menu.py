@@ -45,7 +45,7 @@ class InventoryMenu(OverlayMenu):
     @property
     def width(self):
         """Returns the (set) width of the inventory window."""
-        return 33
+        return 41
 
     @property
     def height(self):
@@ -59,6 +59,10 @@ class InventoryMenu(OverlayMenu):
     def drop(self):
         """Choose to drop an item."""
         self.resume_with_choice(self.selected.drop)
+
+    def plan_throw(self):
+        """Select where to throw an item."""
+        print("THROW!")
 
     def use(self):
         """Choose to use an item."""
@@ -106,6 +110,9 @@ class InventoryMenu(OverlayMenu):
         elif key == tcod.event.K_d:
             self.drop()
 
+        elif key == tcod.event.K_t:
+            self.plan_throw()
+
         elif key == tcod.event.K_u:
             if isinstance(self.selected.item, Consumable):
                 self.use()
@@ -142,11 +149,17 @@ class InventoryMenu(OverlayMenu):
             console.print(x, y, "Un[E]quip", C["GREY"])
         x += 10
 
+        # Throw and drop are always options
+
+        console.print(x, y, "[T]hrow", C["WHITE"])
+
+        x += 8
+
         console.print(x, y, "[D]rop", C["WHITE"])
 
     def render_description(self, x, y, console):
         """Render the description of the selected item."""
-        lines = wrap(self.selected.item.description_text, 16)
+        lines = wrap(self.selected.item.description_text, 23)
         for line in lines:
             console.print(x, y, line, C["WHITE"])
             y += 1
