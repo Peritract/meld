@@ -4,6 +4,7 @@ This is the "game" bit - it manages turn-taking and level/unit display.
 """
 
 from ...entities.actions import Surge, Wait, PickUp, OpenMenu, OpenInventory
+from ...entities.entity import Entity
 from .state import State
 from .in_game_menu import InGameMenu
 from ..constants import directions
@@ -153,9 +154,10 @@ class PlayState(State):
             # If there is anything to display
             if contents:
                 rows = 0
-                # Display it
-                for thing in sorted(contents, key=lambda x: x.name):
-                    console.print(x, y, thing.name)
+                # Display it (entities first, alphabetical)
+                for thing in sorted(sorted(contents, key=lambda x: x.name),
+                                    key=lambda x: not isinstance(x, Entity)):
+                    console.print(x, y, thing.name, thing.colour)
                     y += 2
                     rows += 2
 
