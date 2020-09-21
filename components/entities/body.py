@@ -10,6 +10,7 @@ class Body:
                  health=5,
                  attack=12,
                  defence=10,
+                 strength=3,
                  view_radius=5):
         self.health = health
         self.max_health = health
@@ -17,6 +18,7 @@ class Body:
         self.defence = defence
         self.view_radius = view_radius
         self.carry_capacity = 3
+        self.strength = 3
 
     def heal(self, amount):
         """Replenishes health."""

@@ -163,6 +163,11 @@ class Area:
             # No path can be found
             return None
 
+    def get_direct_path_to(self, start, end):
+        """Return the direct path from the start to the end."""
+        """Line of sight."""
+        return tcod.los.bresenham(start, end)
+
     # Utility functions
 
     def post_message(self, message):
