@@ -11,3 +11,7 @@ class Item(Object):
     def __init__(self, name, description, x, y,
                  char="€", colour=C["TEMP"], blocks=False, area=None):
         super().__init__(name, description, x, y, char, colour, blocks, area)
+
+    def impact(self):
+        """Landing or being smashed."""
+        pass

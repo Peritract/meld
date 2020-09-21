@@ -12,6 +12,7 @@ class Cudgel(Weapon):
     def __init__(self, x, y, area=None):
         super().__init__("Cudgel",
                          "A short, weighty club.",
+                         1,
                          x, y,
                          "/", C["BROWN"], area)
 

@@ -4,13 +4,13 @@ classes.
 """
 
 from textwrap import wrap
-import tcod
+from .constants import colours as C
 
 
 class Message:
     """A single in-game message."""
 
-    def __init__(self, text, colour=tcod.white,
+    def __init__(self, text, colour=C["WHITE"],
                  message_type="basic"):
         self.text = text
         self.colour = colour

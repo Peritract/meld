@@ -23,3 +23,7 @@ class Body:
     def heal(self, amount):
         """Replenishes health."""
         self.health = min(self.max_health, self.health + amount)
+
+    def take_damage(self, amount):
+        """Takes damage."""
+        self.health = max(0, self.health - amount)
