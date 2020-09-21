@@ -10,8 +10,8 @@ class Consumable(Item):
     """An item that is consumed on use."""
 
     def __init__(self, name, description, uses, x, y,
-                 char="!", colour=C["TEMP"]):
-        super().__init__(name, description, x, y, char, colour)
+                 char="!", colour=C["TEMP"], area=None):
+        super().__init__(name, description, x, y, char, colour, area)
         self.uses = uses
 
     @property

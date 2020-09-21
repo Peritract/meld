@@ -16,7 +16,8 @@ class Object:
                  y=0,
                  char="%",
                  colour=C["TEMP"],
-                 blocks=True):
+                 blocks=True,
+                 area=None):
 
         """Sets key properties"""
         self.name = name
@@ -26,6 +27,7 @@ class Object:
         self.char = char
         self.colour = colour
         self.blocks = blocks
+        self.area = area
 
     @property
     def description_text(self):

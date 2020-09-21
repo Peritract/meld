@@ -9,5 +9,5 @@ from ..utilities.constants import colours as C
 class Item(Object):
 
     def __init__(self, name, description, x, y,
-                 char="€", colour=C["TEMP"], blocks=False):
-        super().__init__(name, description, x, y, char, colour, blocks)
+                 char="€", colour=C["TEMP"], blocks=False, area=None):
+        super().__init__(name, description, x, y, char, colour, blocks, area)

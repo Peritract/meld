@@ -29,15 +29,13 @@ class Entity(Object):
                  colour=tcod.lime,
                  blocks=True,
                  area=None):
-        super().__init__(name, description, x, y, char, colour, blocks)
+        super().__init__(name, description, x, y, char, colour, blocks, area)
         self.faction = faction
         self.body = body()
         self.body.owner = self
         if mind:
             self.mind = mind()
             self.mind.owner = self
-        if area:
-            self.area = area
 
         # Empty inventory by default
         self.inventory = set()
@@ -88,7 +86,7 @@ class Entity(Object):
     def pick_up(self, item):
         """Adds an item to the inventory."""
         self.inventory.add(item)
-        self.area.contents.remove(item)
+        self.area.remove_contents(item)
 
     def drop(self, item):
         """Removes an item from the inventory."""
@@ -101,17 +99,17 @@ class Entity(Object):
         if isinstance(item, Equippable) and item.equipped:
             item.equipped = False
 
-        self.area.contents.add(item)
+        self.area.add_contents(item)
 
     def equip(self, item):
         """Equips an item, unequipping any item of the same type."""
 
         # Unequip the previous weapon, if item is a weapon
-        if item.type == "weapon" and self.weapon:
+        if isinstance(item, Weapon) and self.weapon:
             self.weapon.equipped = False
 
         # Unequip the previous armour, if item is armour
-        if item.type == "armour" and self.armour:
+        if isinstance(item, Armour) and self.armour:
             self.armour.equipped = False
 
         # Equip the item
@@ -187,7 +185,7 @@ class Entity(Object):
         if isinstance(item, Equippable) and item.equipped:
             item.equipped = False
 
-        self.area.contents.add(item)
+        self.area.add_contents(item)
 
         # Get the direct route to the target
         path = self.area.get_direct_path_to((self.x, self.y), target)[1:]
@@ -204,7 +202,12 @@ class Entity(Object):
             # If it's travelled as far as strength or has hit something
             if distance > self.body.strength or \
                 not self.area.is_passable(*curr) or \
-                    self.area.get_blocker_at_location(*curr):
+                    self.area.get_blocker_at_location(*curr) or \
+                    len(path) - 1 <= distance:
                 in_motion = False
             else:
                 distance += 1
+
+        # When the item is at its final destination, impact
+
+        item.impact()

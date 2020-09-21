@@ -9,18 +9,18 @@ from ..utilities.constants import colours as C
 class Cudgel(Weapon):
     """A simple wooden club."""
 
-    def __init__(self, x, y):
+    def __init__(self, x, y, area=None):
         super().__init__("Cudgel",
                          "A short, weighty club.",
                          x, y,
-                         "/", C["BROWN"])
+                         "/", C["BROWN"], area)
 
 
 class Robe(Armour):
     """A woollen robe."""
 
-    def __init__(self, x, y):
+    def __init__(self, x, y, area=None):
         super().__init__("Robe",
                          "A scratchy wool robe.",
                          x, y,
-                         "[", C["BROWN"])
+                         "[", C["BROWN"], area)

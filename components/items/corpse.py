@@ -6,8 +6,8 @@ from ..utilities.constants import colours as C
 
 class Corpse(Item):
 
-    def __init__(self, name, x, y):
+    def __init__(self, name, x, y, area=None):
         super().__init__("Corpse",
                          f"A dead {name}.",
-                         x, y, char="%",
-                         colour=C["GREY"])
+                         x, y, "%",
+                         C["GREY"], area)

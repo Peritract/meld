@@ -10,9 +10,9 @@ class Equippable(Item):
     """An equippable item."""
 
     def __init__(self, name, description, x, y,
-                 char="/", colour=C["TEMP"]):
+                 char="/", colour=C["TEMP"], area=None):
         super().__init__(name, description, x, y,
-                         char, colour)
+                         char, colour, area)
         self.equipped = False
 
 
@@ -20,15 +20,15 @@ class Weapon(Equippable):
     """An equippable weapon."""
 
     def __init__(self, name, description, x, y,
-                 char="/", colour=C["TEMP"]):
+                 char="/", colour=C["TEMP"], area=None):
         super().__init__(name, description, x, y,
-                         char, colour)
+                         char, colour, area)
 
 
 class Armour(Equippable):
     """An equippable clothing item."""
 
     def __init__(self, name, description, x, y,
-                 char="/", colour=C["TEMP"]):
+                 char="/", colour=C["TEMP"], area=None):
         super().__init__(name, description, x, y,
-                         char, colour)
+                         char, colour, area)

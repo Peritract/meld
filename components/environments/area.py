@@ -89,8 +89,21 @@ class Area:
         """Adds new objects to the level."""
         if not isinstance(addition, list):
             self.contents.add(addition)
+            addition.area = self
         else:
             self.contents = self.contents.union(set(addition))
+            for thing in addition:
+                thing.area = self
+
+    def remove_contents(self, contents):
+        """Removes objects from the level."""
+        if not isinstance(contents, list):
+            self.contents.remove(contents)
+            contents.area = None
+        else:
+            self.contents = self.contents.difference(set(contents))
+            for thing in contents:
+                thing.area = None
 
     def get_blocker_at_location(self, x, y):
         """Returns the blocking entity at a particular position."""

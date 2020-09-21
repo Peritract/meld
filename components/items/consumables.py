@@ -10,10 +10,10 @@ from ..utilities.exceptions import Impossible
 class Bandage(Consumable):
     """A one-use healing item."""
 
-    def __init__(self, x, y):
+    def __init__(self, x, y, area=None):
         super().__init__("Bandage",
                          "A tattered scrap of cloth to bind a wound.",
-                         1, x, y, char="+", colour=C["RED"])
+                         1, x, y, "+", C["RED"], area)
         self.power = 3
 
     def affect(self, target):
