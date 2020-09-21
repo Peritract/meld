@@ -75,6 +75,14 @@ class Unequip(Handle):
         super().__init__(item)
 
 
+class Throw(Handle):
+    """Throw an item towards a tile."""
+
+    def __init__(self, item=None, target=None):
+        super().__init__(item)
+        self.target = target
+
+
 class Wait(Action):
     """Do nothing."""
 

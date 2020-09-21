@@ -4,7 +4,7 @@ This is the game's player character.
 """
 
 from .entity import Entity
-from .actions import (Surge, Wait, PickUp, OpenInventory,
+from .actions import (Surge, Wait, PickUp, OpenInventory, Throw,
                       Drop, Use, Equip, Unequip, Handle, Look, OpenMenu)
 from ..items.corpse import Corpse
 from ..utilities.messages import Message
@@ -111,6 +111,9 @@ class Player(Entity):
             elif isinstance(instruction, Unequip):
                 self.unequip(instruction.item)
 
+            elif isinstance(instruction, Throw):
+                self.throw(instruction.item, instruction.target)
+
         # If no item has been named,
         else:
 
@@ -195,6 +198,22 @@ class Player(Entity):
 
         state = LookState(self.area.world.engine, self.area.world.engine.state)
         self.area.world.engine.set_state(state)
+
+    def throw(self, item, target):
+        """Throw an object towards a location."""
+
+        self.inventory.remove(item)
+
+        # Place it on the target tile
+        item.x, item.y = target
+
+        # Unequip it, if it was equipped
+        if isinstance(item, Equippable) and item.equipped:
+            item.equipped = False
+
+        self.area.contents.add(item)
+        text = f"You throw the {item.name}."
+        self.area.post_message(Message(text))
 
     def open_menu(self):
         """View the in-game menu."""

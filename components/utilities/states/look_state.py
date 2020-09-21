@@ -9,6 +9,7 @@ class LookState(TargetState):
     def __init__(self, engine, parent):
         super().__init__(engine, parent)
 
+    @property
     def target(self):
         """On confirmation, return to the game."""
         return None

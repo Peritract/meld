@@ -49,6 +49,7 @@ class TargetState(State):
         console.tiles_rgb["fg"][self.cursor[0],
                                 self.cursor[1]] = C["BLACK"]
 
+    @property
     def target(self):
         """Generate the target object."""
         raise NotImplementedError()

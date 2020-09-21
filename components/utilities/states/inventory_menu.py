@@ -10,6 +10,7 @@ from ...items.consumable import Consumable
 from ...items.equippable import Equippable
 import tcod
 from textwrap import wrap
+from .throw_state import ThrowState
 
 
 class InventoryOption(MenuOption):
@@ -62,7 +63,12 @@ class InventoryMenu(OverlayMenu):
 
     def plan_throw(self):
         """Select where to throw an item."""
-        print("THROW!")
+
+        # Change the state to the targetting one
+        # Pass in the play state underneath - done with this menu
+        self.engine.state = ThrowState(self.engine,
+                                       self.parent,
+                                       self.selected.item)
 
     def use(self):
         """Choose to use an item."""
