@@ -202,35 +202,10 @@ class Player(Entity):
     def throw(self, item, target):
         """Throw an object towards a location."""
 
-        self.inventory.remove(item)
-
-        # Unequip it, if it was equipped
-        if isinstance(item, Equippable) and item.equipped:
-            item.equipped = False
-
-        self.area.contents.add(item)
         text = f"You throw the {item.name}."
         self.area.post_message(Message(text))
 
-        # Get the direct route to the target
-        path = self.area.get_direct_path_to((self.x, self.y), target)[1:]
-
-        # Move the item along the path as far as the thrower's strength
-        # or until it hits something
-        in_motion = True
-        distance = 0
-
-        while in_motion:
-            curr = path[distance]
-            item.x, item.y = curr
-
-            # If it's travelled as far as strength or has hit something
-            if distance > self.body.strength or \
-                not self.area.is_passable(*curr) or \
-                    self.area.get_blocker_at_location(*curr):
-                in_motion = False
-            else:
-                distance += 1
+        super().throw(item, target)
 
     def open_menu(self):
         """View the in-game menu."""
