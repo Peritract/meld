@@ -4,7 +4,7 @@ This is the menu that appears when the player presses ESC in-game.
 
 from .overlay_menu import OverlayMenu
 from .menu import MenuOption
-from ..constants import colours as C
+from ..constants import COLOURS as C
 
 
 class InGameMenu(OverlayMenu):

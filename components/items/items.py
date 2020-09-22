@@ -2,7 +2,7 @@
 item subclasses."""
 
 from ..utilities.object import Object
-from ..utilities.constants import colours as C
+from ..utilities.constants import COLOURS as C
 from ..utilities.messages import Message
 
 

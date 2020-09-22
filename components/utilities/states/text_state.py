@@ -5,7 +5,7 @@ is dismissed on input.
 
 from .state import State
 from ..messages import Message
-from ..constants import colours as C
+from ..constants import COLOURS as C
 from .main_menu_state import MainMenuState
 
 

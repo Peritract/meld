@@ -1,7 +1,7 @@
 """This file contains the implementation of the Corpse class."""
 
 from .items import Item
-from ..utilities.constants import colours as C
+from ..utilities.constants import COLOURS as C
 
 
 class Corpse(Item):

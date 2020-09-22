@@ -3,7 +3,7 @@ this class allows the user to select a given in-game tile.
 """
 
 from .state import State
-from ..constants import directions, colours as C
+from ..constants import DIRECTIONS, COLOURS as C
 import tcod
 
 
@@ -29,8 +29,8 @@ class TargetState(State):
     def move_cursor(self, direction, mod):
         """Move the cursor in a particular direction."""
         x, y = self.cursor
-        dx = directions[direction][0] * 5 if mod else directions[direction][0]
-        dy = directions[direction][1] * 5 if mod else directions[direction][1]
+        dx = DIRECTIONS[direction][0] * 5 if mod else DIRECTIONS[direction][0]
+        dy = DIRECTIONS[direction][1] * 5 if mod else DIRECTIONS[direction][1]
         nx, ny = x + dx, y + dy
         if self.engine.world.area.in_bounds(nx, ny):
             self.set_cursor(nx, ny)
@@ -76,16 +76,16 @@ class TargetState(State):
         mod = True if event.mod and tcod.event.KMOD_LSHIFT else False
 
         if key == tcod.event.K_UP:
-            self.move_cursor("up", mod)
+            self.move_cursor("UP", mod)
 
         elif key == tcod.event.K_DOWN:
-            self.move_cursor("down", mod)
+            self.move_cursor("DOWN", mod)
 
         elif key == tcod.event.K_LEFT:
-            self.move_cursor("left", mod)
+            self.move_cursor("LEFT", mod)
 
         elif key == tcod.event.K_RIGHT:
-            self.move_cursor("right", mod)
+            self.move_cursor("RIGHT", mod)
 
         elif key == tcod.event.K_RETURN:
             self.resume_with_selection()

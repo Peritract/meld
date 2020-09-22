@@ -4,7 +4,7 @@ This file contains the implementation of the basic
 world.
 """
 
-from .constants import colours as C
+from .constants import COLOURS as C
 
 
 class Object:

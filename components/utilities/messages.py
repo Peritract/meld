@@ -4,7 +4,7 @@ classes.
 """
 
 from textwrap import wrap
-from .constants import colours as C
+from .constants import COLOURS as C
 
 
 class Message:

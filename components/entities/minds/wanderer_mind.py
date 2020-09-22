@@ -5,7 +5,7 @@ This mind chooses passive, random movement.
 from .mind import Mind
 from ..actions import Move, Wait
 from random import choice
-from ...utilities.constants import directions
+from ...utilities.constants import DIRECTIONS
 
 
 class Wanderer(Mind):
@@ -22,7 +22,7 @@ class Wanderer(Mind):
             # Check the four possible options (valid, passable & unoccupied)
             options = filter(lambda x: self.area.is_free(self.owner.x + x[0],
                                                          self.owner.y + x[1]),
-                             directions.values())
+                             DIRECTIONS.values())
 
             # Convert to list
             options = list(options)

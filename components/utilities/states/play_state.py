@@ -8,8 +8,8 @@ from ...entities.actions import (Surge, Wait, PickUp,
 from ...entities.entity import Entity
 from .state import State
 from .in_game_menu import InGameMenu
-from ..constants import directions
-from ..constants import colours as C
+from ..constants import DIRECTIONS
+from ..constants import COLOURS as C
 from ..messages import Message
 from ..exceptions import Impossible
 import tcod
@@ -32,13 +32,13 @@ class PlayState(State):
 
         # Movement keys
         if key == tcod.event.K_UP:
-            action = Surge(*directions["up"])
+            action = Surge(*DIRECTIONS["UP"])
         elif key == tcod.event.K_DOWN:
-            action = Surge(*directions["down"])
+            action = Surge(*DIRECTIONS["DOWN"])
         elif key == tcod.event.K_LEFT:
-            action = Surge(*directions["left"])
+            action = Surge(*DIRECTIONS["LEFT"])
         elif key == tcod.event.K_RIGHT:
-            action = Surge(*directions["right"])
+            action = Surge(*DIRECTIONS["RIGHT"])
 
         # Pass the turn
         elif key == tcod.event.K_PERIOD:

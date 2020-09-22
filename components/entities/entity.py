@@ -9,7 +9,7 @@ from .minds.mind import Mind
 from .actions import Wait, Move, Attack, PickUp
 import tcod
 import numpy as np
-from ..utilities.constants import colours as C
+from ..utilities.constants import COLOURS as C
 from ..items.corpse import Corpse
 from ..items.items import Equippable, Weapon, Armour
 

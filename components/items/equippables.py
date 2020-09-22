@@ -3,7 +3,7 @@ equippable items.
 """
 
 from .items import Weapon, Armour
-from ..utilities.constants import colours as C
+from ..utilities.constants import COLOURS as C
 
 
 class Cudgel(Weapon):

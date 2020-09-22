@@ -1,7 +1,7 @@
 """This file contains the necessary classes for creating
 and displaying menus."""
 
-from ..constants import colours as C
+from ..constants import COLOURS as C
 from .state import State
 import tcod
 

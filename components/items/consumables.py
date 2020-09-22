@@ -3,7 +3,7 @@ consumable items.
 """
 
 from .items import Consumable
-from ..utilities.constants import colours as C
+from ..utilities.constants import COLOURS as C
 from ..utilities.exceptions import Impossible
 
 

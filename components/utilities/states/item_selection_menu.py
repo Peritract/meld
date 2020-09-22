@@ -4,7 +4,7 @@ This state displays a list of items fro the player to choose from."""
 from .overlay_menu import OverlayMenu
 from .menu import MenuOption
 from ...entities.actions import PickUp
-from ..constants import colours as C
+from ..constants import COLOURS as C
 
 
 class ItemSelectionMenu(OverlayMenu):
