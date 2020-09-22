@@ -63,6 +63,10 @@ class Engine:
 
     def new_game(self):
         """Creates a new game world and then switches the state to playing."""
+
+        # Clean up after any previous game
+        self.clean_up()
+
         self.create_world()
         self.set_state(Play(self))
 
@@ -85,6 +89,9 @@ class Engine:
 
     def load_game(self):
         """Load a game from a file and then switches the state to playing."""
+
+        # Clean up after any previous game
+        self.clean_up()
 
         # Open the save file
         with open("savefile.sav", "rb") as file:
