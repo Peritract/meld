@@ -42,10 +42,10 @@ class Weapon(Equippable):
 
         entity = self.area.get_blocker_at_location(self.x, self.y)
 
-        if entity:
+        if entity and entity.body:
             text = f"The {self.name} strikes the {entity.name}."
             self.area.post_message(Message(text, C["RED"]))
-            entity.take_damage(self.damage)
+            entity.body.take_damage(self.damage)
 
 
 class Armour(Equippable):

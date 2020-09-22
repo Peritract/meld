@@ -52,7 +52,7 @@ class TextState(State):
         # Display each line
         for line in self.lines:
             console.print(x, y, self.wrap_text(line.text), line.colour)
-            y += 1
+            y += 2
 
 
 class Credits(TextState):
@@ -61,15 +61,10 @@ class Credits(TextState):
     def __init__(self, engine):
 
         lines = [Message("Designed & created by", C["WHITE"]),
-                 Message("", C["TEMP"]),
                  Message("Dan Keefe", C["WHITE"]),
-                 Message("", C["TEMP"]),
                  Message("Special thanks to:", C["WHITE"]),
-                 Message("", C["TEMP"]),
                  Message("Tom Keefe", C["WHITE"]),
                  Message("Tyler Standridge", C["WHITE"]),
-                 Message("", C["TEMP"]),
-                 Message("", C["TEMP"]),
                  Message("Press any key to return to the main menu",
                          C["GOLD"])]
 

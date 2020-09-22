@@ -6,8 +6,6 @@ from .overlay_menu import OverlayMenu
 # from ..states.main_menu_state import MainMenu
 from .menu import MenuOption
 from ..constants import COLOURS as C
-import lzma
-import pickle
 
 
 class InGameMenu(OverlayMenu):
@@ -22,11 +20,7 @@ class InGameMenu(OverlayMenu):
 
     def save(self):
         """Save the game to a file and return to the main menu."""
-        data = lzma.compress(pickle.dumps(self.engine.world))
-        with open("savegame.sav", "wb") as file:
-            file.write(data)
-
-        self.engine.set_state(MainMenu(self.engine))
+        self.engine.save_game()
 
     def render_overlay(self, console):
         """Renders the menu options over the rest of the screen."""

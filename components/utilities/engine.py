@@ -7,7 +7,25 @@ game screen and states.
 import tcod
 from .states.main_menu_state import MainMenu
 from .states.game_over_state import GameOver
-from .messages import MessageLog
+from .messages import Message, MessageLog
+import pickle
+import lzma
+
+# -- HACK -- #
+
+from ..entities.entity import Entity
+from ..entities.player_entity import Player
+from ..environments.world import World
+from ..environments.area import Area
+from ..environments.tiles import basic_wall
+from ..entities.minds.wanderer_mind import Wanderer
+from ..entities.minds.brawler_mind import Brawler
+from ..items.corpse import Corpse
+from ..items.consumables import Bandage
+from ..items.equippables import Cudgel, Robe
+from ..utilities.states.play_state import Play
+
+# -- /HACK -- #
 
 
 class Engine:
@@ -37,11 +55,49 @@ class Engine:
         self.m_loc = (0, 0)
 
         # Message storage
-        self.message_log = None
+        self.message_log = MessageLog()
 
     def set_state(self, state):
         """Changes the engine state."""
         self.state = state
+
+    def new_game(self):
+        """Creates a new game world and then switches the state to playing."""
+        self.create_world()
+        self.set_state(Play(self))
+
+    def save_game(self):
+        """Saves the current state of the game world and
+        then switches to the main menu."""
+
+        # Unhook the world from the engine
+        self.world.engine = None
+
+        # Pickle and compress the data
+        data = lzma.compress(pickle.dumps(self.world))
+
+        # Write the data to the savefile
+        with open("savefile.sav", "wb") as file:
+            file.write(data)
+
+        # Go back to the menu
+        self.set_state(MainMenu(self))
+
+    def load_game(self):
+        """Load a game from a file and then switches the state to playing."""
+
+        # Open the save file
+        with open("savefile.sav", "rb") as file:
+
+            # Load the data
+            data = pickle.loads(lzma.decompress(file.read()))
+
+        # Hook it all back up together
+        self.world = data
+        self.world.engine = self
+
+        # Resume playing
+        self.set_state(Play(self))
 
     def game_over(self):
         """Ends the game."""
@@ -75,3 +131,26 @@ class Engine:
 
                 # Call the current state's event handler
                 self.state.handle_events(window)
+
+# -- HACK -- #
+
+    def create_world(self):
+        """Creates a new game world."""
+        world = World(self)
+        self.world = world
+        area = Area(80, 50, world)
+        player = Player("Player", "A person", 5, 5, area=area)
+        world.player = player
+        other = Entity("other", "Not you.", 10, 10, mind=Wanderer, area=area)
+        enemy = Entity('enemy', "A horror", 15, 15, mind=Brawler, area=area)
+        A, B, C = Corpse("A", 1, 1), Corpse("B", 1, 1), Corpse("C", 2, 2)
+        D, E, F = Bandage(3, 3), Cudgel(4, 4), Robe(6, 6)
+
+        area.tiles[30:33, 22] = basic_wall
+        self.message_log.add_message(Message("I am alive!"))
+        world.areas.append(area)
+        world.area.add_contents([player, other, enemy,
+                                 A, B, C, D, E, F])
+
+
+# -- /HACK -- #
