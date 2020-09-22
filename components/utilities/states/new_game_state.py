@@ -50,7 +50,7 @@ class NewGame(State):
         """Creates a new game world."""
         world = World(self.engine)
         self.engine.world = world
-        area = Area(80, 50, self.engine.world)        
+        area = Area(80, 50, self.engine.world)
         player = Player("Player", "A person", 5, 5, area=area)
         world.player = player
         other = Entity("other", "Not you.", 10, 10, mind=Wanderer, area=area)
