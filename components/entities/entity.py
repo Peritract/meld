@@ -11,7 +11,7 @@ import tcod
 import numpy as np
 from ..utilities.constants import colours as C
 from ..items.corpse import Corpse
-from ..items.equippable import Equippable, Weapon, Armour
+from ..items.items import Equippable, Weapon, Armour
 
 
 class Entity(Object):

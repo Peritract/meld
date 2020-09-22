@@ -2,7 +2,7 @@
 equippable items.
 """
 
-from .equippable import Weapon, Armour
+from .items import Weapon, Armour
 from ..utilities.constants import colours as C
 
 

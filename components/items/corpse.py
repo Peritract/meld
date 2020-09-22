@@ -1,6 +1,6 @@
 """This file contains the implementation of the Corpse class."""
 
-from .item import Item
+from .items import Item
 from ..utilities.constants import colours as C
 
 

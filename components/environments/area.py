@@ -5,7 +5,7 @@ This is a single in-game location.
 
 from ..entities.entity import Entity
 from ..environments.tiles import basic_floor, unknown
-from ..items.item import Item
+from ..items.items import Item
 import numpy as np
 from tcod.map import compute_fov
 import tcod

@@ -6,8 +6,7 @@ from .overlay_menu import OverlayMenu
 from .menu import MenuOption
 from ..constants import colours as C
 from ...entities.actions import Drop, Use, Equip, Unequip
-from ...items.consumable import Consumable
-from ...items.equippable import Equippable
+from ...items.items import Consumable, Equippable
 import tcod
 from textwrap import wrap
 from .throw_state import ThrowState
