@@ -7,6 +7,7 @@ game screen and states.
 import tcod
 from .states.main_menu_state import MainMenu
 from .states.game_over_state import GameOver
+from .messages import MessageLog
 
 
 class Engine:
@@ -45,6 +46,10 @@ class Engine:
     def game_over(self):
         """Ends the game."""
         self.state = GameOver(self)
+
+    def clean_up(self):
+        """Clears things that would otherwise persist in between games."""
+        self.message_log = MessageLog()
 
     def run_main_loop(self):
         """Repeatedly calls the current state method."""

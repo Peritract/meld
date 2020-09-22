@@ -1,9 +1,11 @@
-"""This file contains the implementation of the TargetState class;
-this class allows the user to select a given in-game tile.
+"""This file contains the implementation of the TargetState class
+and its subclasses; these classes allow the user to select a given
+in-game tile.
 """
 
 from .state import State
 from ..constants import DIRECTIONS, COLOURS as C
+from ...entities.actions import Throw
 import tcod
 
 
@@ -97,3 +99,26 @@ class TargetState(State):
         """Selects on mouse click."""
         if self.engine.world.area.in_bounds(*self.cursor):
             self.resume_with_selection()
+
+
+class LookState(TargetState):
+
+    def __init__(self, engine, parent):
+        super().__init__(engine, parent)
+
+    @property
+    def target(self):
+        """On confirmation, return to the game."""
+        return None
+
+
+class ThrowState(TargetState):
+
+    def __init__(self, engine, parent, item):
+        super().__init__(engine, parent)
+        self.item = item
+
+    @property
+    def target(self):
+        """On confirmation, return to the game."""
+        return Throw(self.item, self.cursor)

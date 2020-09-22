@@ -10,7 +10,7 @@ from ..utilities.messages import Message
 from ..entities.body import Body
 from ..utilities.exceptions import Impossible
 from ..utilities.states.item_selection_menu import ItemSelectionMenu
-from ..utilities.states.look_state import LookState
+from ..utilities.states.target_state import LookState
 from ..utilities.states.inventory_menu import InventoryMenu
 from ..utilities.states.in_game_menu import InGameMenu
 

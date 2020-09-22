@@ -9,7 +9,7 @@ from ...entities.actions import Drop, Use, Equip, Unequip
 from ...items.items import Consumable, Equippable
 import tcod
 from textwrap import wrap
-from .throw_state import ThrowState
+from .target_state import ThrowState
 
 
 class InventoryOption(MenuOption):

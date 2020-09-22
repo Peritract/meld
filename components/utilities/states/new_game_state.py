@@ -4,7 +4,6 @@ This class creates and populates the game world.
 """
 
 from .state import State
-from .play_state import Play
 
 # -- HACK -- #
 
@@ -18,8 +17,8 @@ from ...entities.minds.brawler_mind import Brawler
 from ...items.corpse import Corpse
 from ...items.consumables import Bandage
 from ...items.equippables import Cudgel, Robe
-
-from ..messages import MessageLog, Message
+from ..messages import Message
+from ..states.play_state import Play
 
 # -- /HACK -- #
 
@@ -34,17 +33,13 @@ class NewGame(State):
         """Doesn't actually handle events; calls the creation scripts."""
 
         # Clean up from previous games
-        self.clean_up()
+        self.engine.clean_up()
 
         # Create the world
         self.create_world()
 
         # Change the state to playing
         self.engine.set_state(Play(self.engine))
-
-    def clean_up(self):
-        """Deals with loose ends from potential previous games."""
-        self.engine.message_log = MessageLog()
 
     def create_world(self):
         """Creates a new game world."""
@@ -60,6 +55,5 @@ class NewGame(State):
         area.tiles[30:33, 22] = basic_wall
         self.engine.message_log.add_message(Message("I am alive!"))
         world.areas.append(area)
-        world.current_area = 0
         world.area.add_contents([player, other, enemy,
                                  A, B, C, D, E, F])

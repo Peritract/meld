@@ -12,7 +12,7 @@ class World:
         self.engine = engine
 
         self.player = player
-        self.current_area = None
+        self.current_area = 0
         self.areas = []
 
     @property
