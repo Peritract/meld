@@ -6,7 +6,7 @@ is dismissed on input.
 from .state import State
 from ..messages import Message
 from ..constants import COLOURS as C
-from .main_menu_state import MainMenuState
+from .main_menu_state import MainMenu
 
 
 class TextState(State):
@@ -73,4 +73,4 @@ class Credits(TextState):
                  Message("Press any key to return to the main menu",
                          C["GOLD"])]
 
-        super().__init__(engine, MainMenuState(engine), lines)
+        super().__init__(engine, MainMenu(engine), lines)

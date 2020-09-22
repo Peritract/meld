@@ -15,7 +15,7 @@ from ..exceptions import Impossible
 import tcod
 
 
-class PlayState(State):
+class Play(State):
     """Manages game turns and display."""
 
     def __init__(self, engine):
@@ -80,7 +80,7 @@ class PlayState(State):
 
         # Pass the action to the player
         try:
-            self.engine.player.take_action(action)
+            self.engine.world.player.take_action(action)
 
         # Unless the action is meaningless,
         except Impossible as ex:
@@ -91,14 +91,15 @@ class PlayState(State):
         # If the state hasn't changed,
         if self.engine.state == self:
             # Let all other entities take turns
-            for entity in self.engine.world.entities - {self.engine.player}:
+            for entity in self.engine.world.entities - \
+                    {self.engine.world.player}:
                 entity.take_action()
 
     def render(self, console):
         """Display the current state of the game world."""
 
         # Update tile appearances
-        self.engine.world.area.update_tile_states(self.engine.player)
+        self.engine.world.area.update_tile_states(self.engine.world.player)
 
         # Draw the tiles
         self.render_tiles(console)
@@ -178,8 +179,8 @@ class PlayState(State):
 
         # Show the health bar
         self.render_bar(console, x, y + 2, width,
-                        self.engine.player.body.health,
-                        self.engine.player.body.max_health,
+                        self.engine.world.player.body.health,
+                        self.engine.world.player.body.max_health,
                         tcod.dark_gray, tcod.dark_green, "Health",
                         tcod.white)
 

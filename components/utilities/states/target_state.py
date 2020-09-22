@@ -15,8 +15,8 @@ class TargetState(State):
         self.parent = parent
 
         # Start at the player's position
-        self.set_cursor(self.engine.player.x,
-                        self.engine.player.y)
+        self.set_cursor(self.engine.world.player.x,
+                        self.engine.world.player.y)
 
     @property
     def cursor(self):

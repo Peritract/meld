@@ -5,8 +5,8 @@ game screen and states.
 """
 
 import tcod
-from .states.main_menu_state import MainMenuState
-from .states.game_over_state import GameOverState
+from .states.main_menu_state import MainMenu
+from .states.game_over_state import GameOver
 
 
 class Engine:
@@ -30,7 +30,7 @@ class Engine:
                                     order="F")
 
         # Starting state
-        self.state = MainMenuState(self)
+        self.state = MainMenu(self)
 
         # Mouse location
         self.m_loc = (0, 0)
@@ -44,7 +44,7 @@ class Engine:
 
     def game_over(self):
         """Ends the game."""
-        self.state = GameOverState(self)
+        self.state = GameOver(self)
 
     def run_main_loop(self):
         """Repeatedly calls the current state method."""

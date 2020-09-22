@@ -4,7 +4,7 @@ This class creates and populates the game world.
 """
 
 from .state import State
-from .play_state import PlayState
+from .play_state import Play
 
 # -- HACK -- #
 
@@ -24,7 +24,7 @@ from ..messages import MessageLog, Message
 # -- /HACK -- #
 
 
-class NewGameState(State):
+class NewGame(State):
     """Creates and populates the game world."""
 
     def __init__(self, engine):
@@ -40,7 +40,7 @@ class NewGameState(State):
         self.create_world()
 
         # Change the state to playing
-        self.engine.set_state(PlayState(self.engine))
+        self.engine.set_state(Play(self.engine))
 
     def clean_up(self):
         """Deals with loose ends from potential previous games."""
@@ -50,8 +50,9 @@ class NewGameState(State):
         """Creates a new game world."""
         world = World(self.engine)
         self.engine.world = world
-        area = Area(80, 50, self.engine.world)
-        self.engine.player = Player("Player", "A person", 5, 5, area=area)
+        area = Area(80, 50, self.engine.world)        
+        player = Player("Player", "A person", 5, 5, area=area)
+        world.player = player
         other = Entity("other", "Not you.", 10, 10, mind=Wanderer, area=area)
         enemy = Entity('enemy', "A horror", 15, 15, mind=Brawler, area=area)
         A, B, C = Corpse("A", 1, 1), Corpse("B", 1, 1), Corpse("C", 2, 2)
@@ -60,5 +61,5 @@ class NewGameState(State):
         self.engine.message_log.add_message(Message("I am alive!"))
         world.areas.append(area)
         world.current_area = 0
-        world.area.add_contents([self.engine.player, other, enemy,
+        world.area.add_contents([player, other, enemy,
                                  A, B, C, D, E, F])

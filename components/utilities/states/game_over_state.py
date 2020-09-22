@@ -5,11 +5,11 @@ the only valid options.
 """
 
 from .menu import MenuOption, Menu
-from .main_menu_state import MainMenuState
+from .main_menu_state import MainMenu
 from .text_state import Credits
 
 
-class GameOverState(Menu):
+class GameOver(Menu):
 
     def __init__(self, engine):
         super().__init__(engine)
@@ -21,7 +21,7 @@ class GameOverState(Menu):
 
     def show_main_menu(self):
         """Changes the game state to the main menu."""
-        self.engine.set_state(MainMenuState(self.engine))
+        self.engine.set_state(MainMenu(self.engine))
 
     def show_credits(self):
         """Change the game state to show the credits."""

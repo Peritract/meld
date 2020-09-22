@@ -8,9 +8,10 @@ connections between them.
 class World:
     """Manages the in-game environments."""
 
-    def __init__(self, engine):
+    def __init__(self, engine=None, player=None):
         self.engine = engine
 
+        self.player = player
         self.current_area = None
         self.areas = []
 
