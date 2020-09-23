@@ -185,29 +185,10 @@ class Entity(Object):
         if isinstance(item, Equippable) and item.equipped:
             item.equipped = False
 
+        # Add it to the area
         self.area.add_contents(item)
 
-        # Get the direct route to the target
-        path = self.area.get_direct_path_to(self.loc, target)[1:]
-
-        # Move the item along the path as far as the thrower's strength
-        # or until it hits something
-        in_motion = True
-        distance = 0
-
-        while in_motion:
-            curr = path[distance]
-            item.x, item.y = curr
-
-            # If it's travelled as far as strength or has hit something
-            if distance > self.body.strength or \
-                not self.area.is_passable(*curr) or \
-                    self.area.get_blocker_at_location(*curr) or \
-                    len(path) - 1 <= distance:
-                in_motion = False
-            else:
-                distance += 1
-
-        # When the item is at its final destination, impact
+        # Move it to the right tile
+        item.x, item.y = target
 
         item.impact()

@@ -123,7 +123,7 @@ class ThrowState(TargetState):
     @property
     def target(self):
         """On confirmation, return to the game."""
-        return Throw(self.item, self.cursor)
+        return Throw(self.item, self.impact)
 
     def move_cursor(self, direction, mod):
         """Move the cursor in a particular direction;
@@ -150,39 +150,39 @@ class ThrowState(TargetState):
         # Move the item along the path as far as the thrower's strength
         # or until it hits something
         in_motion = True
-        distance = 0
         impact_point = self.thrower.loc
+        step = 0
 
         while in_motion:
-            curr = path[distance]
-            impact_point = tuple(curr)
-
+            curr = tuple(path[step])
+            impact_point = curr
+            dist = self.thrower.area.distance_between(self.thrower.loc,
+                                                      curr)
             # If it's travelled as far as strength or has hit something
-            if distance > self.thrower.body.strength or \
+            if dist >= self.thrower.body.strength or \
                 not self.thrower.area.is_passable(*curr) or \
                     self.thrower.area.get_blocker_at_location(*curr) or \
-                    len(path) - 1 <= distance:
+                    len(path) - 1 <= step:
                 in_motion = False
                 # If it has hit a wall, go back one to avoid weird edge cases
                 if not self.thrower.area.is_passable(*curr):
-                    impact_point = tuple(path[distance - 1])
+                    impact_point = tuple(path[step - 1])
             else:
-                distance += 1
+                step += 1
 
         # Return the impact point
         return impact_point
 
-    def render_impact_radius(self, impact, console):
+    def render_impact_radius(self, console):
         """Highlight the tiles that would be affected by the impact."""
 
         # Get the tiles in the area
-        tiles = self.thrower.area.get_tiles_in_range(impact[0],
-                                                     impact[1],
+        tiles = self.thrower.area.get_tiles_in_range(self.impact[0],
+                                                     self.impact[1],
                                                      self.item.impact_radius)
 
-        # Remove the impact tile
-        print("impact:", impact)
-        tiles.remove(impact)
+        # Remove the impact tile from the highlighting
+        tiles.remove(self.impact)
 
         # Highlight each tile
         for tile in tiles:
@@ -192,11 +192,16 @@ class ThrowState(TargetState):
                                     tile[1]] = C["BLACK"]
 
     def render_cursor(self, console):
-        impact = self.calculate_impact_point()
-        console.tiles_rgb["bg"][impact[0],
-                                impact[1]] = C["WHITE"]
-        console.tiles_rgb["fg"][impact[0],
-                                impact[1]] = C["BLACK"]
 
+        # Work out where the item will hit
+        self.impact = self.calculate_impact_point()
+
+        # Highlight that tile
+        console.tiles_rgb["bg"][self.impact[0],
+                                self.impact[1]] = C["WHITE"]
+        console.tiles_rgb["fg"][self.impact[0],
+                                self.impact[1]] = C["BLACK"]
+
+        # If necessary, highlight the area around it
         if hasattr(self.item, "impact_radius"):
-            self.render_impact_radius(impact, console)
+            self.render_impact_radius(console)
