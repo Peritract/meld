@@ -20,6 +20,11 @@ class Body:
         self.carry_capacity = 3
         self.strength = strength
 
+    @property
+    def dead(self):
+        if self.health <= 0:
+            return True
+
     def heal(self, amount):
         """Replenishes health."""
         self.health = min(self.max_health, self.health + amount)
@@ -27,3 +32,7 @@ class Body:
     def take_damage(self, amount):
         """Takes damage."""
         self.health = max(0, self.health - amount)
+
+        # Check for permanent consequences
+        if self.dead:
+            self.owner.die()
