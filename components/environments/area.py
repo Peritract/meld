@@ -111,7 +111,7 @@ class Area:
         # Tiles to explore
         edge = self.get_directly_adjacent_tiles(x, y)
 
-        # BFS for tiles
+        # BFS for tiles in range
         while edge:
             curr = edge.pop()
             tiles.append(curr)

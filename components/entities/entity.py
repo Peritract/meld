@@ -188,7 +188,7 @@ class Entity(Object):
         self.area.add_contents(item)
 
         # Get the direct route to the target
-        path = self.area.get_direct_path_to((self.x, self.y), target)[1:]
+        path = self.area.get_direct_path_to(self.loc, target)[1:]
 
         # Move the item along the path as far as the thrower's strength
         # or until it hits something
