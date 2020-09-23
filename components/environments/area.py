@@ -8,6 +8,7 @@ from ..environments.tiles import basic_floor, unknown
 from ..items.items import Item
 import numpy as np
 from tcod.map import compute_fov
+from ..utilities.constants import DIRECTIONS
 import tcod
 
 
@@ -78,6 +79,50 @@ class Area:
         if self.in_bounds(x, y):
             return set([thing for thing in self.contents
                         if thing.x == x and thing.y == y])
+
+    def distance_between(self, a, b):
+        """Gets the absolute difference between two tile locations."""
+        return abs(a[0] - b[0]) + abs(a[1] - b[1])
+
+    def get_directly_adjacent_tiles(self, x, y, passable=True):
+        """Gets the adjacent tiles to a tile."""
+
+        # Get a list of direct neighbours
+        neighbours = [(x + dir[0], y + dir[1]) for dir in DIRECTIONS.values()]
+
+        # If passable=True, filter the list for passable locations
+        if passable:
+            neighbours = filter(lambda x: self.is_passable(*x), neighbours)
+
+        # otherwise, just check that the neighbours are in bounds
+        else:
+            neighbours = filter(lambda x: self.in_bounds(*x), neighbours)
+
+        # return the list of locations
+        return list(neighbours)
+
+    def get_tiles_in_range(self, x, y, range):
+        """Returns the location of passable tiles that can be reached from a starting
+           tile within a particular radius."""
+
+        # Holder for valid tiles
+        tiles = [(x, y)]
+
+        # Tiles to explore
+        edge = self.get_directly_adjacent_tiles(x, y)
+
+        # BFS for tiles
+        while edge:
+            curr = edge.pop()
+            tiles.append(curr)
+            potentials = self.get_directly_adjacent_tiles(curr[0],
+                                                          curr[1])
+            for tile in potentials:
+                if tile not in edge and tile not in tiles:
+                    if self.distance_between((x, y), tile) < range:
+                        edge.append(tile)
+
+        return tiles
 
     def items_at_location(self, x, y):
         """Returns the set of pick-upable items at the location."""

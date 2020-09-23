@@ -22,3 +22,24 @@ class Bandage(Consumable):
             target.body.heal(self.power)
         else:
             raise Impossible("You are already at full health.")
+
+
+class AcidFlask(Consumable):
+    """A container of strong acid."""
+
+    def __init__(self, x, y, area=None):
+        super().__init__("Acid flask",
+                         "A stoppered flask of powerful acid.",
+                         1, x, y, "!", C["GREEN"], area)
+        self.impact_radius = 3
+
+    def affect(self, target):
+        """Burns the consumer's insides."""
+        target.body.health -= 10
+
+    def impact(self):
+        """When thrown, splashes acid over the nearby area."""
+
+        # Find all the tiles in range
+
+        pass

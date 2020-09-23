@@ -30,6 +30,11 @@ class Object:
         self.area = area
 
     @property
+    def loc(self):
+        """Return's the objects x and y as a tuple)."""
+        return (self.x, self.y)
+
+    @property
     def description_text(self):
         """Returns the description for display."""
         return self.description

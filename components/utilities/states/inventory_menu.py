@@ -67,6 +67,7 @@ class InventoryMenu(OverlayMenu):
         # Pass in the play state underneath - done with this menu
         self.engine.state = ThrowState(self.engine,
                                        self.parent,
+                                       self.engine.world.player,
                                        self.selected.item)
 
     def use(self):

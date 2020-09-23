@@ -46,6 +46,7 @@ class TargetState(State):
         self.render_cursor(console)
 
     def render_cursor(self, console):
+        """Highlight the currently-selected tile."""
         console.tiles_rgb["bg"][self.cursor[0],
                                 self.cursor[1]] = C["WHITE"]
         console.tiles_rgb["fg"][self.cursor[0],
@@ -114,11 +115,58 @@ class LookState(TargetState):
 
 class ThrowState(TargetState):
 
-    def __init__(self, engine, parent, item):
+    def __init__(self, engine, parent, thrower, item):
         super().__init__(engine, parent)
+        self.thrower = thrower
         self.item = item
 
     @property
     def target(self):
         """On confirmation, return to the game."""
         return Throw(self.item, self.cursor)
+
+    def move_cursor(self, direction, mod):
+        """Move the cursor in a particular direction;
+        bound by the map and the thrower's strength"""
+        x, y = self.cursor
+        dx = DIRECTIONS[direction][0] * 5 if mod else DIRECTIONS[direction][0]
+        dy = DIRECTIONS[direction][1] * 5 if mod else DIRECTIONS[direction][1]
+        nx, ny = x + dx, y + dy
+
+        # If the tile is valid
+        if self.engine.world.area.in_bounds(nx, ny):
+
+            # And not further than the thrower can throw
+            dist = self.engine.world.area.distance_between((nx, ny),
+                                                           self.thrower.loc)
+
+            # Highlight it
+            if dist <= self.thrower.body.strength:
+                self.set_cursor(nx, ny)
+
+    def render_impact_radius(self, console):
+        """Highlight the tiles that would be affected by the impact."""
+
+        # Get the tiles in the area
+        tiles = self.thrower.area.get_tiles_in_range(self.cursor[0],
+                                                     self.cursor[1],
+                                                     self.item.impact_radius)
+
+        # Remove the impact tile
+        tiles.remove(self.cursor)
+
+        # Highlight each tile
+        for tile in tiles:
+            console.tiles_rgb["bg"][tile[0],
+                                    tile[1]] = C["WHITE"]
+            console.tiles_rgb["fg"][tile[0],
+                                    tile[1]] = C["BLACK"]
+
+    def render_cursor(self, console):
+        console.tiles_rgb["bg"][self.cursor[0],
+                                self.cursor[1]] = C["WHITE"]
+        console.tiles_rgb["fg"][self.cursor[0],
+                                self.cursor[1]] = C["BLACK"]
+
+        if hasattr(self.item, "impact_radius"):
+            self.render_impact_radius(console)

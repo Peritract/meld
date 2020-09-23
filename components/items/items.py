@@ -38,7 +38,7 @@ class Weapon(Equippable):
         self.damage = damage
 
     def impact(self):
-        """When hit, damages blocking entities on the same tile."""
+        """When thrown, damages blocking entities on the same tile."""
 
         entity = self.area.get_blocker_at_location(self.x, self.y)
 
