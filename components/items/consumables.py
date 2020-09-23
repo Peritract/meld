@@ -5,6 +5,7 @@ consumable items.
 from .items import Consumable
 from ..utilities.constants import COLOURS as C
 from ..utilities.exceptions import Impossible
+from ..utilities.messages import Message
 
 
 class Bandage(Consumable):
@@ -40,6 +41,22 @@ class AcidFlask(Consumable):
     def impact(self):
         """When thrown, splashes acid over the nearby area."""
 
-        # Find all the tiles in range
+        self.area.post_message(Message(f"The {self.name} shatters on impact!",
+                                       C["YELLOW"]))
 
-        pass
+        # Get the affected tiles
+        tiles = self.area.get_tiles_in_range(self.x,
+                                             self.y,
+                                             self.impact_radius)
+
+        # For each tile
+        for tile in tiles:
+            entity = self.area.get_blocker_at_location(*tile)
+            if entity:
+                report = Message(f"Acid splashes over the {entity.name}!",
+                                 C["RED"])
+                self.area.post_message(report)
+                entity.body.take_damage(2)
+
+        # Destroy the flask
+        self.destroy()

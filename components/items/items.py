@@ -17,6 +17,12 @@ class Item(Object):
         """Landing or being smashed."""
         pass
 
+    def destroy(self):
+        """Remove from the game."""
+        if self.area:
+            self.area.remove_contents(self)
+            self.area = None
+
 
 class Equippable(Item):
     """An equippable item."""
