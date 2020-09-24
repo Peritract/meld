@@ -53,6 +53,13 @@ class Weapon(Equippable):
             self.area.post_message(Message(text, C["RED"]))
             entity.body.take_damage(self.damage)
 
+    def attack(self, attacker, target):
+        """Make an attack."""
+
+        report = f"The {attacker.name} strikes at the {target.name}!"
+        attacker.area.post_message(Message(report, C["RED"]))
+        target.body.take_damage(self.damage)
+
 
 class Armour(Equippable):
     """An equippable clothing item."""

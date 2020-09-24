@@ -128,12 +128,15 @@ class Entity(Object):
     def attack(self, other):
         """Attacks another entity."""
 
-        # Post a message
-        report = Message(f"The {self.name} savages the {other.name}", C["RED"])
-        self.area.post_message(report)
+        # Make the attack
+        if self.weapon:
 
-        # Subtract health
-        other.body.take_damage(1)
+            # Attack with the weapon
+            self.weapon.attack(self, other)
+        else:
+
+            # Attack unarmed
+            self.body.attack(other)
 
     def die(self):
         """Removes the entity from the game, replacing it with a corpse."""
