@@ -108,7 +108,7 @@ class Engine:
 
     def game_over(self):
         """Ends the game."""
-        self.state = GameOver(self)
+        self.state = GameOver(self, self.state)
 
     def clean_up(self):
         """Clears things that would otherwise persist in between games."""

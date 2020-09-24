@@ -33,7 +33,8 @@ class InGameMenu(OverlayMenu):
         # half way point - half width
         x_start = self.engine.screen_width // 2 - self.width // 2
 
-        console.draw_frame(x_start, offset, self.width, self.height)
+        console.draw_frame(x_start, offset, self.width, self.height,
+                           bg=C["BLACK"])
 
         for option in self.options:
             colour = C["GOLD"] if option == self.selected else C["WHITE"]
