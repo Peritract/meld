@@ -9,7 +9,6 @@ from .minds.mind import Mind
 from .actions import Wait, Move, Attack, PickUp
 import tcod
 import numpy as np
-from ..utilities.constants import COLOURS as C
 from ..items.corpse import Corpse
 from ..items.items import Equippable, Weapon, Armour
 
@@ -39,10 +38,6 @@ class Entity(Object):
 
         # Empty inventory by default
         self.inventory = set()
-
-    @property
-    def dead(self):
-        return self.body.health <= 0
 
     @property
     def inventory_full(self):
@@ -86,7 +81,10 @@ class Entity(Object):
     def pick_up(self, item):
         """Adds an item to the inventory."""
         self.inventory.add(item)
-        self.area.remove_contents(item)
+
+        # If the item was present in the area, remove it from there:
+        if item in self.area.contents:
+            self.area.remove_contents(item)
 
     def drop(self, item):
         """Removes an item from the inventory."""
@@ -141,8 +139,15 @@ class Entity(Object):
     def die(self):
         """Removes the entity from the game, replacing it with a corpse."""
 
+        # Replace the entity with a corpse
         self.area.contents.remove(self)
         self.area.contents.add(Corpse(self.name, self.x, self.y))
+
+        # Drop the entity's inventory
+        for item in list(self.inventory):
+            self.drop(item)
+
+        # Log the death
         self.area.post_message(Message(f"The {self.name} dies in agony."))
 
     def wait(self):

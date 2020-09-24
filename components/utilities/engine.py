@@ -153,11 +153,13 @@ class Engine:
         A, B, C = Corpse("A", 1, 1), Corpse("B", 1, 1), Corpse("C", 2, 2)
         D, E, F = Bandage(3, 3), Cudgel(4, 4), Robe(6, 6)
         G = AcidFlask(7, 7)
+        other.pick_up(G)
+        enemy.pick_up(F)
         area.tiles[30:33, 22] = basic_wall
         self.message_log.add_message(Message("I am alive!"))
         world.areas.append(area)
         world.area.add_contents([player, other, enemy,
-                                 A, B, C, D, E, F, G])
+                                 A, B, C, D, E])
 
 
 # -- /HACK -- #
