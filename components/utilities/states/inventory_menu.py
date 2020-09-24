@@ -2,8 +2,7 @@
 This shows the player their current inventory and allows them to manipulate it.
 """
 
-from .overlay_menu import OverlayMenu
-from .menu import MenuOption
+from .menus import OverlayMenu, MenuOption
 from ..constants import COLOURS as C
 from ...entities.actions import Drop, Use, Equip, Unequip
 from ...items.items import Consumable, Equippable

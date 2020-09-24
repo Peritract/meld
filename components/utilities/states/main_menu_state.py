@@ -3,7 +3,7 @@ This file contains the implementation of the MainMenu class.
 This class begins the game and presents the player with options.
 """
 
-from .menu import MenuOption, Menu
+from .menus import MenuOption, Menu
 
 
 class MainMenu(Menu):
