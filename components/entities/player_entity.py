@@ -6,7 +6,7 @@ This is the game's player character.
 from .entity import Entity
 from .actions import (Surge, Wait, PickUp, OpenInventory, Throw,
                       Drop, Use, Equip, Unequip, Handle, Look, OpenMenu)
-from ..utilities.messages import Message
+from ..utilities.messages import ItemMessage
 from ..entities.body import Body
 from ..utilities.exceptions import Impossible
 from ..utilities.states.item_selection_menu import ItemSelectionMenu
@@ -132,7 +132,7 @@ class Player(Entity):
         """Adds an item to the inventory."""
 
         text = f"You pick up the {item.name}."
-        self.area.post_message(Message(text))
+        self.area.post_message(ItemMessage(text))
 
         super().pick_up(item)
 
@@ -140,26 +140,26 @@ class Player(Entity):
         """Removes an item from the inventory and adds it to the area."""
 
         text = f"You discard the {item.name}."
-        self.area.post_message(Message(text))
+        self.area.post_message(ItemMessage(text))
 
         super().drop(item)
 
     def equip(self, item):
         """Equips an item, unequipping any item of the same type."""
 
-        self.area.post_message(Message(f"You equip the {item.name}."))
+        self.area.post_message(ItemMessage(f"You equip the {item.name}."))
 
         super().equip(item)
 
     def unequip(self, item):
         """Unequip an item."""
-        self.area.post_message(Message(f"You unequip the {item.name}."))
+        self.area.post_message(ItemMessage(f"You unequip the {item.name}."))
 
         super().unequip(item)
 
     def use(self, item):
         """Uses an item on the entity."""
-        self.area.post_message(Message(f"You use the {item.name}."))
+        self.area.post_message(ItemMessage(f"You use the {item.name}."))
 
         super().use(item)
 
@@ -186,7 +186,7 @@ class Player(Entity):
         """Throw an object towards a location."""
 
         text = f"You throw the {item.name}."
-        self.area.post_message(Message(text))
+        self.area.post_message(ItemMessage(text))
 
         super().throw(item, target)
 

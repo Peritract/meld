@@ -7,7 +7,7 @@ game screen and states.
 import tcod
 from .states.main_menu_state import MainMenu
 from .states.game_over_state import GameOver
-from .messages import Message, MessageLog
+from .messages import WorldMessage, MessageLog
 import pickle
 import lzma
 
@@ -156,7 +156,8 @@ class Engine:
         other.pick_up(G)
         enemy.pick_up(F)
         area.tiles[30:33, 22] = basic_wall
-        self.message_log.add_message(Message("I am alive!"))
+        self.message_log.add(WorldMessage("Your journey begins."
+                                          "You are unlikely to survive"))
         world.areas.append(area)
         world.area.add_contents([player, other, enemy,
                                  A, B, C, D, E])

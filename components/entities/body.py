@@ -3,8 +3,7 @@ This file contains the implementation of the Body class.
 This class stores physical information about in-game entities.
 """
 
-from ..utilities.messages import Message
-from ..utilities.constants import COLOURS as C
+from ..utilities.messages import CombatMessage
 
 
 class Body:
@@ -40,6 +39,6 @@ class Body:
         """Attack another entity physically."""
 
         report = f"The {self.owner.name} flails at the {other.name}!"
-        self.owner.area.post_message(Message(report, C["RED"]))
+        self.owner.area.post_message(CombatMessage(report))
 
         other.body.take_damage(1)

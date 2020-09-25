@@ -230,4 +230,4 @@ class Area:
 
     def post_message(self, message):
         """Adds a message to the associated message log."""
-        self.world.engine.message_log.add_message(message)
+        self.world.engine.message_log.add(message)

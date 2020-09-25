@@ -1,5 +1,5 @@
 """
-This file contains the implementation of the message log class and related
+This file contains the implementation of the Message class and related
 classes.
 """
 
@@ -10,8 +10,7 @@ from .constants import COLOURS as C
 class Message:
     """A single in-game message."""
 
-    def __init__(self, text, colour=C["WHITE"],
-                 message_type="basic"):
+    def __init__(self, text, colour=C["WHITE"]):
         self.text = text
         self.colour = colour
         self.count = 1
@@ -24,6 +23,44 @@ class Message:
             return f"{self.text} (x{self.count})"
         return self.text
 
+# Different message types
+
+
+class CombatMessage(Message):
+    """A violent act."""
+    def __init__(self, text):
+        super().__init__(text, C["RED"])
+
+
+class SystemMessage(Message):
+    """An error or exception."""
+    def __init__(self, text):
+        super().__init__(text, C["YELLOW"])
+
+
+class WorldMessage(Message):
+    """A global event."""
+    def __init__(self, text):
+        super().__init__(text, C["PURPLE"])
+
+
+class ItemMessage(Message):
+    """An item changes hands or state."""
+    def __init__(self, text):
+        super().__init__(text, C["BROWN"])
+
+
+class AlertMessage(Message):
+    """A sudden and shocking change."""
+    def __init__(self, text):
+        super().__init__(text, C["GREEN"])
+
+
+class DeathMessage(Message):
+    """The brutal end of a short life."""
+    def __init__(self, text):
+        super().__init__(text, C["GREY"])
+
 
 class MessageLog:
     """Holder and manager for in-game messages."""
@@ -31,9 +68,10 @@ class MessageLog:
     def __init__(self):
         self.messages = []
 
-    def add_message(self, message):
+    def add(self, message):
         """Log a message."""
 
+        print(message.text)
         # If it's a duplicate
         if self.messages and self.messages[-1].text == message.text:
             # Increase the previous message's count

@@ -3,7 +3,7 @@ An entity is any object with a mind.
 """
 
 from ..utilities.object import Object
-from ..utilities.messages import Message
+from ..utilities.messages import DeathMessage
 from .body import Body
 from .minds.mind import Mind
 from .actions import Wait, Move, Attack, PickUp
@@ -148,7 +148,7 @@ class Entity(Object):
             self.drop(item)
 
         # Log the death
-        self.area.post_message(Message(f"The {self.name} dies in agony."))
+        self.area.post_message(DeathMessage(f"The {self.name} dies in agony."))
 
     def wait(self):
         """Passes the turn."""

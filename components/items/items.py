@@ -3,7 +3,7 @@ item subclasses."""
 
 from ..utilities.object import Object
 from ..utilities.constants import COLOURS as C
-from ..utilities.messages import Message
+from ..utilities.messages import CombatMessage
 
 
 class Item(Object):
@@ -50,14 +50,14 @@ class Weapon(Equippable):
 
         if entity and entity.body:
             text = f"The {self.name} strikes the {entity.name}."
-            self.area.post_message(Message(text, C["RED"]))
+            self.area.post_message(CombatMessage(text))
             entity.body.take_damage(self.damage)
 
     def attack(self, attacker, target):
         """Make an attack."""
 
         report = f"The {attacker.name} strikes at the {target.name}!"
-        attacker.area.post_message(Message(report, C["RED"]))
+        attacker.area.post_message(CombatMessage(report))
         target.body.take_damage(self.damage)
 
 

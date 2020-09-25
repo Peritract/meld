@@ -18,5 +18,6 @@ COLOURS = {
     "BROWN": tcod.brass,
     "BLACK": tcod.black,
     "GREEN": tcod.green,
+    "PURPLE": tcod.purple,
     "TEMP": tcod.chartreuse
 }

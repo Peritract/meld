@@ -60,11 +60,11 @@ class Credits(TextState):
 
     def __init__(self, engine):
 
-        lines = [Message("Designed & created by", C["WHITE"]),
-                 Message("Dan Keefe", C["WHITE"]),
-                 Message("Special thanks to:", C["WHITE"]),
-                 Message("Tom Keefe", C["WHITE"]),
-                 Message("Tyler Standridge", C["WHITE"]),
+        lines = [Message("Designed & created by"),
+                 Message("Dan Keefe"),
+                 Message("Special thanks to:"),
+                 Message("Tom Keefe"),
+                 Message("Tyler Standridge"),
                  Message("Press any key to return to the main menu",
                          C["GOLD"])]
 
