@@ -38,10 +38,11 @@ class Weapon(Equippable):
     """An equippable weapon."""
 
     def __init__(self, name, description, damage, x, y,
-                 char="/", colour=C["TEMP"], area=None):
+                 char="/", colour=C["TEMP"], verb="strike", area=None):
         super().__init__(name, description, x, y,
                          char, colour, area)
         self.damage = damage
+        self.verb = verb
 
     def impact(self):
         """When thrown, damages blocking entities on the same tile."""
@@ -49,16 +50,17 @@ class Weapon(Equippable):
         entity = self.area.get_blocker_at_location(self.x, self.y)
 
         if entity and entity.body:
-            text = f"The {self.name} strikes the {entity.name}."
+            text = f"The {self.name} {self.verb} the {entity.name}."
             self.area.post_message(CombatMessage(text))
             entity.body.take_damage(self.damage)
 
-    def attack(self, attacker, target):
+    def attack(self, agg, vic):
         """Make an attack."""
 
-        report = f"The {attacker.name} strikes at the {target.name}!"
-        attacker.area.post_message(CombatMessage(report))
-        target.body.take_damage(self.damage)
+        verb = self.verb if agg.faction != "player" else self.verb[:-1]
+        report = f"The {agg.phrase} {verb} strikes at the {vic.phrase}!"
+        agg.area.post_message(CombatMessage(report))
+        vic.body.take_damage(self.damage)
 
 
 class Armour(Equippable):

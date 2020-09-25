@@ -14,7 +14,7 @@ class Cudgel(Weapon):
                          "A short, weighty club.",
                          2,
                          x, y,
-                         "/", C["BROWN"], area)
+                         "/", C["BROWN"], "strike", area)
 
 
 class Robe(Armour):

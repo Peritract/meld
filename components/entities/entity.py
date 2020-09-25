@@ -40,6 +40,10 @@ class Entity(Object):
         self.inventory = set()
 
     @property
+    def phrase(self):
+        return f"the {self.name}"
+
+    @property
     def inventory_full(self):
         return self.body.carry_capacity <= len(self.inventory)
 
@@ -148,7 +152,8 @@ class Entity(Object):
             self.drop(item)
 
         # Log the death
-        self.area.post_message(DeathMessage(f"The {self.name} dies in agony."))
+        text = f"{self.phrase} dies in agony.".capitalize()
+        self.area.post_message(DeathMessage(text))
 
     def wait(self):
         """Passes the turn."""

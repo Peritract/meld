@@ -38,7 +38,9 @@ class Body:
     def attack(self, other):
         """Attack another entity physically."""
 
-        report = f"The {self.owner.name} flails at the {other.name}!"
+        verb = "flails" if self.owner.faction != "player" else "flail"
+        report = f"{self.owner.phrase} {verb} at {other.phrase}!"
+        report = report.capitalize()
         self.owner.area.post_message(CombatMessage(report))
 
         other.body.take_damage(1)

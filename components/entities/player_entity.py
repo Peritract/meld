@@ -6,7 +6,8 @@ This is the game's player character.
 from .entity import Entity
 from .actions import (Surge, Wait, PickUp, OpenInventory, Throw,
                       Drop, Use, Equip, Unequip, Handle, Look, OpenMenu)
-from ..utilities.messages import ItemMessage
+from ..utilities.messages import ItemMessage, WorldMessage, DeathMessage
+from ..items.corpse import Corpse
 from ..entities.body import Body
 from ..utilities.exceptions import Impossible
 from ..utilities.states.item_selection_menu import ItemSelectionMenu
@@ -34,6 +35,10 @@ class Player(Entity):
                  area=None):
         super().__init__(name, description, x, y, faction, mind, body,
                          char, colour, blocks, area)
+
+    @property
+    def phrase(self):
+        return "you"
 
     def take_action(self, instruction):
         """Takes an action based on player input."""
@@ -121,11 +126,18 @@ class Player(Entity):
                 self.select_item_to_pick_up()
 
     def die(self):
-        # Removes the entity from the game, replacing it with a corpse.
-        # As this is the player, also ends the game
+        """Removes the entity from the game, replacing it with a corpse.
+        As this is the player, also ends the game."""
 
-        super().die()
+        # Replace the entity with a corpse
+        self.area.contents.remove(self)
+        self.area.contents.add(Corpse(self.name, self.x, self.y))
 
+        # Log the death
+        text = f"{self.phrase} die in agony.".capitalize()
+        self.area.post_message(DeathMessage(text))
+
+        self.area.post_message(WorldMessage("You have failed in your quest."))
         self.area.world.engine.game_over()
 
     def pick_up(self, item):
