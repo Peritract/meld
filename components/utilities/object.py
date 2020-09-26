@@ -34,6 +34,12 @@ class Object:
         """Return's the objects x and y as a tuple)."""
         return (self.x, self.y)
 
+    def set_loc(self, x, y):
+        """Sets the object location."""
+        if self.area.in_bounds(x, y):
+            self.x = x
+            self.y = y
+
     @property
     def description_text(self):
         """Returns the description for display."""

@@ -10,6 +10,7 @@ from .actions import Wait, Move, Attack, PickUp
 import tcod
 import numpy as np
 from ..items.corpse import Corpse
+from ..environments.features import Stairs
 from ..items.items import Equippable, Weapon, Armour
 
 
@@ -205,9 +206,20 @@ class Entity(Object):
     def change_area(self, target):
         """Move from one area to another."""
 
+        # Log the old id for location matching
+        old_id = self.area.area_id
+
+        # Remove self from current area
         self.area.remove_contents(self)
-        self.area = target
-        self.area.add_contents(self)
+
+        # Add self to the new area
+        target.add_contents(self)
+
+        # Switch to the correct location
+        for feature in self.area.features:
+            if isinstance(feature, Stairs) \
+                    and feature.target.area_id == old_id:
+                self.set_loc(feature.x, feature.y)
 
     def interact(self):
         """Interact with a feature."""

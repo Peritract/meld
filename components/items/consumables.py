@@ -36,7 +36,7 @@ class AcidFlask(Consumable):
 
     def affect(self, target):
         """Burns the consumer's insides."""
-        target.body.health -= 10
+        target.body.take_damage(10)
 
     def impact(self):
         """When thrown, splashes acid over the nearby area."""

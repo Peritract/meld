@@ -157,6 +157,7 @@ class Engine:
         G = AcidFlask(7, 7)
         other.pick_up(G)
         enemy.pick_up(F)
+        player.pick_up(AcidFlask(0, 0))
         area.tiles[30:33, 22] = basic_wall
         self.message_log.add(WorldMessage("Your journey begins."
                                           "You are unlikely to survive"))
