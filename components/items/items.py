@@ -9,7 +9,7 @@ from ..utilities.messages import CombatMessage
 class Item(Object):
     """A basic item."""
 
-    def __init__(self, name, description, x, y,
+    def __init__(self, name, description, x=0, y=0,
                  char="€", colour=C["TEMP"], blocks=False, area=None):
         super().__init__(name, description, x, y, char, colour, blocks, area)
 
@@ -27,7 +27,7 @@ class Item(Object):
 class Equippable(Item):
     """An equippable item."""
 
-    def __init__(self, name, description, x, y,
+    def __init__(self, name, description, x=0, y=0,
                  char="/", colour=C["TEMP"], area=None):
         super().__init__(name, description, x, y,
                          char, colour, area)
@@ -37,7 +37,7 @@ class Equippable(Item):
 class Weapon(Equippable):
     """An equippable weapon."""
 
-    def __init__(self, name, description, damage, x, y,
+    def __init__(self, name, description, damage, x=0, y=0,
                  char="/", colour=C["TEMP"], verb="strike", area=None):
         super().__init__(name, description, x, y,
                          char, colour, area)
@@ -66,7 +66,7 @@ class Weapon(Equippable):
 class Armour(Equippable):
     """An equippable clothing item."""
 
-    def __init__(self, name, description, x, y,
+    def __init__(self, name, description, x=0, y=0,
                  char="/", colour=C["TEMP"], area=None):
         super().__init__(name, description, x, y,
                          char, colour, area)
@@ -75,7 +75,7 @@ class Armour(Equippable):
 class Consumable(Item):
     """An item that is consumed on use."""
 
-    def __init__(self, name, description, uses, x, y,
+    def __init__(self, name, description, uses=1, x=0, y=0,
                  char="!", colour=C["TEMP"], area=None):
         super().__init__(name, description, x, y, char, colour, area)
         self.uses = uses

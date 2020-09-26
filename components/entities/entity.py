@@ -3,11 +3,11 @@ An entity is any object with a mind.
 """
 
 from ..utilities.object import Object
+from ..utilities.constants import COLOURS as C
 from ..utilities.messages import DeathMessage
 from .body import Body
 from .minds.mind import Mind
 from .actions import Wait, Move, Attack, PickUp
-import tcod
 import numpy as np
 from ..items.corpse import Corpse
 from ..environments.features import Stairs
@@ -26,7 +26,7 @@ class Entity(Object):
                  mind=Mind,
                  body=Body,
                  char="&",
-                 colour=tcod.lime,
+                 colour=C["TEMP"],
                  blocks=True,
                  area=None):
         super().__init__(name, description, x, y, char, colour, blocks, area)

@@ -11,7 +11,7 @@ from ..utilities.messages import CombatMessage, AlertMessage
 class Bandage(Consumable):
     """A one-use healing item."""
 
-    def __init__(self, x, y, area=None):
+    def __init__(self, x=0, y=0, area=None):
         super().__init__("Bandage",
                          "A tattered scrap of cloth to bind a wound.",
                          1, x, y, "+", C["RED"], area)
@@ -28,7 +28,7 @@ class Bandage(Consumable):
 class AcidFlask(Consumable):
     """A container of strong acid."""
 
-    def __init__(self, x, y, area=None):
+    def __init__(self, x=0, y=0, area=None):
         super().__init__("Acid flask",
                          "A stoppered flask of powerful acid.",
                          1, x, y, "!", C["GREEN"], area)

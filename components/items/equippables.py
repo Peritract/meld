@@ -9,7 +9,7 @@ from ..utilities.constants import COLOURS as C
 class Cudgel(Weapon):
     """A simple wooden club."""
 
-    def __init__(self, x, y, area=None):
+    def __init__(self, x=0, y=0, area=None):
         super().__init__("Cudgel",
                          "A short, weighty club.",
                          2,
@@ -20,7 +20,7 @@ class Cudgel(Weapon):
 class Robe(Armour):
     """A woollen robe."""
 
-    def __init__(self, x, y, area=None):
+    def __init__(self, x=0, y=0, area=None):
         super().__init__("Robe",
                          "A scratchy wool robe.",
                          x, y,

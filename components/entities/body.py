@@ -14,9 +14,12 @@ class Body:
                  view_radius=8):
         self.health = health
         self.max_health = health
-        self.view_radius = view_radius
-        self.carry_capacity = 3
         self.strength = strength
+        self.view_radius = view_radius
+
+    @property
+    def carry_capacity(self):
+        return 2 + self.strength // 2
 
     @property
     def dead(self):
