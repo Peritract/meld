@@ -174,7 +174,8 @@ class Player(Entity):
 
     def use(self, item):
         """Uses an item on the entity."""
-        self.area.post_message(ItemMessage(f"You use the {item.name}."))
+        text = f"You {item.verb} the {item.name}."
+        self.area.post_message(ItemMessage(text))
 
         super().use(item)
 

@@ -14,6 +14,7 @@ class Bandage(Consumable):
     def __init__(self, x=0, y=0, area=None):
         super().__init__("Bandage",
                          "A tattered scrap of cloth to bind a wound.",
+                         "use",
                          1, x, y, "+", C["RED"], area)
         self.power = 3
 
@@ -30,7 +31,7 @@ class AcidFlask(Consumable):
 
     def __init__(self, x=0, y=0, area=None):
         super().__init__("Acid flask",
-                         "A stoppered flask of powerful acid.",
+                         "A stoppered flask of powerful acid.", "drink",
                          1, x, y, "!", C["GREEN"], area)
         self.impact_radius = 3
 

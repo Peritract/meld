@@ -75,10 +75,11 @@ class Armour(Equippable):
 class Consumable(Item):
     """An item that is consumed on use."""
 
-    def __init__(self, name, description, uses=1, x=0, y=0,
+    def __init__(self, name, description, verb="use", uses=1, x=0, y=0,
                  char="!", colour=C["TEMP"], area=None):
         super().__init__(name, description, x, y, char, colour, area)
         self.uses = uses
+        self.verb = verb
 
     @property
     def description_text(self):
