@@ -24,3 +24,7 @@ class World:
     def entities(self):
         """Returns the entities in the currently-occupied area."""
         return self.areas[self.current_area].entities
+
+    def change_area(self, area_id):
+        """Changes the current active area."""
+        self.current_area = area_id

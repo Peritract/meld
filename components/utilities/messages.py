@@ -71,7 +71,6 @@ class MessageLog:
     def add(self, message):
         """Log a message."""
 
-        print(message.text)
         # If it's a duplicate
         if self.messages and self.messages[-1].text == message.text:
             # Increase the previous message's count

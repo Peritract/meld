@@ -5,6 +5,7 @@ This is a single in-game location.
 
 from ..entities.entity import Entity
 from ..environments.tiles import basic_floor, unknown
+from .features import Feature
 from ..items.items import Item
 import numpy as np
 from tcod.map import compute_fov
@@ -15,11 +16,12 @@ import tcod
 class Area:
     """An in-game location."""
 
-    def __init__(self, width, height, world, name="area"):
+    def __init__(self, width, height, world, name="area", area_id=0):
         self.width = width
         self.height = height
         self.world = world
         self.name = name
+        self.area_id = area_id
 
         # Holders for all internal objects
         self.contents = set()
@@ -49,9 +51,15 @@ class Area:
 
     @property
     def items(self):
-        """Returns as set of items in the area."""
+        """Returns a set of items in the area."""
         return set([thing for thing in self.contents
                     if isinstance(thing, Item)])
+
+    @property
+    def features(self):
+        """Returns a set of features in the area."""
+        return set([thing for thing in self.contents
+                    if isinstance(thing, Feature)])
 
     def is_free(self, x, y):
         """Checks if a given tile is inbounds, passable, and unoccupied."""
@@ -158,6 +166,16 @@ class Area:
 
         for thing in present:
             if thing.blocks:
+                return thing
+
+    def get_feature_at_location(self, x, y):
+        """Returns the feature in a particular tile."""
+
+        # Get all objects on the tile
+        present = self.at_location(x, y)
+
+        for thing in present:
+            if isinstance(thing, Feature):
                 return thing
 
     def calculate_fov(self, entity):

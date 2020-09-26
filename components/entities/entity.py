@@ -201,3 +201,18 @@ class Entity(Object):
         item.x, item.y = target
 
         item.impact()
+
+    def change_area(self, target):
+        """Move from one area to another."""
+
+        self.area.remove_contents(self)
+        self.area = target
+        self.area.add_contents(self)
+
+    def interact(self):
+        """Interact with a feature."""
+
+        # If a feature is present
+        feature = self.area.get_feature_at_location(*self.loc)
+        if feature:
+            feature.interact(self)

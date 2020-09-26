@@ -83,6 +83,10 @@ class Throw(Handle):
         self.target = target
 
 
+class Interact(Action):
+    """Interact with a feature."""
+
+
 class Wait(Action):
     """Do nothing."""
 

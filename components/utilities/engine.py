@@ -24,6 +24,7 @@ from ..items.corpse import Corpse
 from ..items.consumables import Bandage, AcidFlask
 from ..items.equippables import Cudgel, Robe
 from ..utilities.states.play_state import Play
+from ..environments.features import Stairs
 
 # -- /HACK -- #
 
@@ -145,7 +146,8 @@ class Engine:
         """Creates a new game world."""
         world = World(self)
         self.world = world
-        area = Area(80, 50, world)
+        area = Area(80, 50, world, "surface")
+        area2 = Area(80, 50, world, "caverns", 1)
         player = Player("Player", "A person", 5, 5, area=area)
         world.player = player
         other = Entity("other", "Not you.", 10, 10, mind=Wanderer, area=area)
@@ -159,8 +161,11 @@ class Engine:
         self.message_log.add(WorldMessage("Your journey begins."
                                           "You are unlikely to survive"))
         world.areas.append(area)
+        world.areas.append(area2)
         world.area.add_contents([player, other, enemy,
                                  A, B, C, D, E])
+        area2.add_contents(Stairs(6, 6, area2, area))
+        area.add_contents(Stairs(10, 10, area, area2))
 
 
 # -- /HACK -- #

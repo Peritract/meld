@@ -4,7 +4,7 @@ This is the game's player character.
 """
 
 from .entity import Entity
-from .actions import (Surge, Wait, PickUp, OpenInventory, Throw,
+from .actions import (Surge, Wait, PickUp, OpenInventory, Throw, Interact,
                       Drop, Use, Equip, Unequip, Handle, Look, OpenMenu)
 from ..utilities.messages import ItemMessage, WorldMessage, DeathMessage
 from ..items.corpse import Corpse
@@ -63,6 +63,9 @@ class Player(Entity):
 
         elif isinstance(instruction, Look):
             self.look()
+
+        elif isinstance(instruction, Interact):
+            self.interact()
 
         elif isinstance(instruction, Wait):
             self.wait()
@@ -239,3 +242,30 @@ class Player(Entity):
             raise Impossible("You are carrying too much.")
         else:
             raise Impossible("Nothing to pick up.")
+
+    def change_area(self, target):
+        """Move from one area to another."""
+
+        # Log the movement
+
+        text = f"{self.phrase.capitalize()} ascend." \
+               if target.area_id < self.area.area_id \
+               else f"{self.phrase.capitalize()} descend."
+
+        self.area.post_message(WorldMessage(text))
+
+        # Call the superclass method
+        super().change_area(target)
+
+        # Change the currently active area
+        self.area.world.change_area(target.area_id)
+
+    def interact(self):
+        """Interact with a feature."""
+
+        # If there is no feature, do nothing.
+        if not self.area.get_feature_at_location(*self.loc):
+            raise Impossible("There is nothing to interact with here.")
+
+        # Otherwise,
+        super().interact()

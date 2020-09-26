@@ -3,7 +3,7 @@ This file contains the implementation of the PlayState class.
 This is the "game" bit - it manages turn-taking and level/unit display.
 """
 
-from ...entities.actions import (Surge, Wait, PickUp,
+from ...entities.actions import (Surge, Wait, PickUp, Interact,
                                  OpenMenu, OpenInventory, Look)
 from ...entities.entity import Entity
 from .state import State
@@ -58,6 +58,10 @@ class Play(State):
         # Look around
         elif key == tcod.event.K_l:
             action = Look()
+
+        # Interact with objects
+        elif key == tcod.event.K_RETURN or key == tcod.event.K_u:
+            action = Interact()
 
         return action
 
@@ -129,6 +133,12 @@ class Play(State):
 
     def render_contents(self, console):
         """Render the contents of a specific area."""
+
+        for feature in self.engine.world.area.features:
+            if self.engine.world.area.is_visible(feature.x, feature.y):
+                # Show the entity
+                console.print(feature.x, feature.y, feature.char,
+                              feature.colour)
 
         # Loop through all the items
         for item in self.engine.world.area.items:
