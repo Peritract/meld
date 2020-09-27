@@ -20,12 +20,12 @@ class Cudgel(Weapon):
                          "/", C["BROWN"], "strikes", area)
 
 
-class PoisonDagger(Weapon):
+class VenomDagger(Weapon):
     """A curved dagger dipped in strange oils."""
 
     def __init__(self, x=0, y=0, area=None):
-        super().__init__("Poisoned dagger",
-                         "A curved dagger dipped in strange oils",
+        super().__init__("Venom dagger",
+                         "A curved dagger dipped in venom",
                          1, x, y, "/", C["GREEN"], "stabs", area)
         self.poison_chance = 0.3
         self.poison_damage = 1
