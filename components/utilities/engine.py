@@ -22,7 +22,7 @@ from ..entities.minds.wanderer_mind import Wanderer
 from ..entities.minds.brawler_mind import Brawler
 from ..items.corpse import Corpse
 from ..items.consumables import Bandage, AcidFlask
-from ..items.equippables import Cudgel, Robe
+from ..items.equippables import Cudgel, Robe, PoisonDagger
 from ..utilities.states.play_state import Play
 from ..environments.features import Stairs
 
@@ -157,7 +157,8 @@ class Engine:
         G = AcidFlask(7, 7)
         other.pick_up(G)
         enemy.pick_up(F)
-        player.pick_up(AcidFlask(0, 0))
+        player.pick_up(AcidFlask())
+        player.pick_up(PoisonDagger())
         area.tiles[30:33, 22] = basic_wall
         self.message_log.add(WorldMessage("Your journey begins."
                                           "You are unlikely to survive"))

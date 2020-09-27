@@ -59,7 +59,7 @@ class Weapon(Equippable):
         """Make an attack."""
 
         verb = self.verb if agg.faction != "player" else self.verb[:-1]
-        report = f"The {agg.phrase} {verb} strikes at the {vic.phrase}!"
+        report = f"{agg.phrase} {verb} at the {vic.phrase}!"
         agg.area.post_message(CombatMessage(report))
         vic.body.take_damage(self.damage)
 

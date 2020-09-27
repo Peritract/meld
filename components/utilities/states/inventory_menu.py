@@ -197,4 +197,4 @@ class InventoryMenu(OverlayMenu):
         self.render_controls(x + 1, y + 3, console)
 
         # Render the description of the currently-selected item on the right.
-        self.render_description(x + 16, offset + 2, console)
+        self.render_description(x + 17, offset + 2, console)

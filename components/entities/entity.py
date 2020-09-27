@@ -41,6 +41,9 @@ class Entity(Object):
         # Empty inventory by default
         self.inventory = set()
 
+        # Empty conditions by default
+        self.conditions = set()
+
     @property
     def phrase(self):
         return f"the {self.name}"
@@ -83,6 +86,9 @@ class Entity(Object):
             self.attack(decision.other)
         elif isinstance(decision, PickUp):
             self.pick_up()
+
+        # Deal with status conditions
+        self.process_conditions()
 
     def pick_up(self, item):
         """Adds an item to the inventory."""
@@ -229,3 +235,14 @@ class Entity(Object):
         feature = self.area.get_feature_at_location(*self.loc)
         if feature:
             feature.interact(self)
+
+    def add_condition(self, condition):
+        """Add a condition to the entity."""
+
+        self.conditions.add(condition)
+        condition.attach(self)
+
+    def process_conditions(self):
+        """Allow each condition a chance to act."""
+        for condition in self.conditions:
+            condition.apply()

@@ -70,6 +70,9 @@ class Player(Entity):
         elif isinstance(instruction, Wait):
             self.wait()
 
+        # trigger conditions
+        self.process_conditions()
+
     def interpret_surge(self, instruction):
         """Interprets an action with a direction based on context."""
 
