@@ -3,7 +3,7 @@ subclasses. Features are non-item, non-entity objects in the world, such
 as stairs or monster spawners."""
 
 from ..utilities.object import Object
-from ..utilities.constants import COLOURS as C
+from ..utilities.constants import COLOURS as C, RenderOrder
 
 
 class Feature(Object):
@@ -13,7 +13,7 @@ class Feature(Object):
                  x=0, y=0, char="£", colour=C["TEMP"], blocks=False,
                  area=None):
         super().__init__(name, description, x, y, char, colour, blocks,
-                         area)
+                         area, RenderOrder.FEATURE)
 
     def interact(self, entity):
         """Respond to an entity's action."""

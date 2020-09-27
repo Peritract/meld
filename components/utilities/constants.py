@@ -1,6 +1,7 @@
 """This file contains the various necessary constants for the game."""
 
 import tcod
+from enum import auto, Enum
 
 DIRECTIONS = {
     "LEFT": (-1, 0),
@@ -21,3 +22,9 @@ COLOURS = {
     "PURPLE": tcod.purple,
     "TEMP": tcod.chartreuse
 }
+
+
+class RenderOrder(Enum):
+    FEATURE = auto()
+    ITEM = auto()
+    ENTITY = auto()

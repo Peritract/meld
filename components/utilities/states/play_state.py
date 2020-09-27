@@ -134,26 +134,14 @@ class Play(State):
     def render_contents(self, console):
         """Render the contents of a specific area."""
 
-        for feature in self.engine.world.area.features:
-            if self.engine.world.area.is_visible(feature.x, feature.y):
+        contents = sorted(self.engine.world.area.contents,
+                          key=lambda x: x.render_order.value)
+
+        for thing in contents:
+            if self.engine.world.area.is_visible(thing.x, thing.y):
                 # Show the entity
-                console.print(feature.x, feature.y, feature.char,
-                              feature.colour)
-
-        # Loop through all the items
-        for item in self.engine.world.area.items:
-            # If the item is visible,
-            if self.engine.world.area.is_visible(item.x, item.y):
-                # Show the item
-                console.print(item.x, item.y, item.char, item.colour)
-
-        # Loop through all the entities
-        for entity in self.engine.world.area.entities:
-
-            # If the entity is visible,
-            if self.engine.world.area.is_visible(entity.x, entity.y):
-                # Show the entity
-                console.print(entity.x, entity.y, entity.char, entity.colour)
+                console.print(thing.x, thing.y, thing.char,
+                              thing.colour)
 
     def render_info_pane(self, console, x, y, height):
         """Displays information about the tile under the mouse."""

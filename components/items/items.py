@@ -2,7 +2,7 @@
 item subclasses."""
 
 from ..utilities.object import Object
-from ..utilities.constants import COLOURS as C
+from ..utilities.constants import COLOURS as C, RenderOrder
 from ..utilities.messages import CombatMessage
 
 
@@ -11,7 +11,8 @@ class Item(Object):
 
     def __init__(self, name, description, x=0, y=0,
                  char="€", colour=C["TEMP"], blocks=False, area=None):
-        super().__init__(name, description, x, y, char, colour, blocks, area)
+        super().__init__(name, description, x, y, char, colour, blocks,
+                         area, RenderOrder.ITEM)
 
     def impact(self):
         """Landing or being smashed."""

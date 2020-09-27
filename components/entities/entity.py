@@ -3,7 +3,7 @@ An entity is any object with a mind.
 """
 
 from ..utilities.object import Object
-from ..utilities.constants import COLOURS as C
+from ..utilities.constants import COLOURS as C, RenderOrder
 from ..utilities.messages import DeathMessage
 from .body import Body
 from .minds.mind import Mind
@@ -29,7 +29,8 @@ class Entity(Object):
                  colour=C["TEMP"],
                  blocks=True,
                  area=None):
-        super().__init__(name, description, x, y, char, colour, blocks, area)
+        super().__init__(name, description, x, y, char, colour,
+                         blocks, area, RenderOrder.ENTITY)
         self.faction = faction
         self.body = body()
         self.body.owner = self

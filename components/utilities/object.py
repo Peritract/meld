@@ -4,7 +4,7 @@ This file contains the implementation of the basic
 world.
 """
 
-from .constants import COLOURS as C
+from .constants import COLOURS as C, RenderOrder
 
 
 class Object:
@@ -17,7 +17,8 @@ class Object:
                  char="%",
                  colour=C["TEMP"],
                  blocks=True,
-                 area=None):
+                 area=None,
+                 render_order=RenderOrder.FEATURE):
 
         """Sets key properties"""
         self.name = name
@@ -28,6 +29,7 @@ class Object:
         self.colour = colour
         self.blocks = blocks
         self.area = area
+        self.render_order = render_order
 
     @property
     def loc(self):
