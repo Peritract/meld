@@ -5,7 +5,7 @@ in-game tile.
 
 from .state import State
 from ..constants import DIRECTIONS, COLOURS as C
-from ...entities.actions import Throw
+from ...entities.actions import Throw, Fire
 import tcod
 
 
@@ -219,6 +219,7 @@ class RangeState(TargetState):
 
 
 class ThrowState(RangeState):
+    """Throw an object."""
 
     def __init__(self, engine, parent, actor, item):
         super().__init__(engine, parent, actor, item,
@@ -228,3 +229,15 @@ class ThrowState(RangeState):
     def target(self):
         """The selected choice."""
         return Throw(self.projectile, self.impact)
+
+
+class FireState(RangeState):
+    """Fire a projectile."""
+
+    def __init__(self, engine, parent, actor, projectile, fire_range):
+        super().__init__(engine, parent, actor, projectile, fire_range)
+
+    @property
+    def target(self):
+        """The selected choice."""
+        return Fire(self.projectile, self.impact)

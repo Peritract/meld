@@ -6,7 +6,7 @@ This is the game's player character.
 from .entity import Entity
 from .actions import (Surge, Wait, PickUp, OpenInventory, Throw, Interact,
                       Drop, Use, Equip, Unequip, Handle, Look, OpenMenu,
-                      Activate)
+                      Activate, Fire)
 from ..utilities.messages import ItemMessage, WorldMessage, DeathMessage
 from ..items.corpse import Corpse
 from ..entities.body import Body
@@ -16,7 +16,8 @@ from ..utilities.states.selection_menus import (ItemSelectionMenu,
 from ..utilities.states.target_state import LookState
 from ..utilities.states.inventory_menu import InventoryMenu
 from ..utilities.states.in_game_menu import InGameMenu
-
+from ..entities.abilities import TargetAbility
+from ..utilities.states.target_state import FireState
 import tcod
 
 
@@ -78,6 +79,9 @@ class Player(Entity):
             else:
                 self.select_ability()
 
+        elif isinstance(instruction, Fire):
+            self.fire(instruction.projectile, instruction.target)
+
         # trigger conditions
         self.process_conditions()
 
@@ -130,6 +134,9 @@ class Player(Entity):
 
             elif isinstance(instruction, Throw):
                 self.throw(instruction.item, instruction.target)
+
+            elif isinstance(instruction, Fire):
+                self.fire(instruction.projectile, instruction.target)
 
         # If no item has been named,
         else:
@@ -225,7 +232,7 @@ class Player(Entity):
         self.area.world.engine.set_state(state)
 
     def select_item_to_pick_up(self):
-        """Choose an item from the current tile to select."""
+        """Choose an item from the current tile to grab."""
 
         # Get the set of items on the current tile
         contents = self.area.items_at_location(self.x, self.y)
@@ -297,4 +304,10 @@ class Player(Entity):
         super().interact()
 
     def activate_ability(self, ability):
-        print(ability.name)
+        """Use a special ability."""
+
+        if isinstance(ability, TargetAbility):
+            state = FireState(self.area.world.engine,
+                              self.area.world.engine.state,
+                              self, ability.projectile, ability.range)
+            self.area.world.engine.set_state(state)

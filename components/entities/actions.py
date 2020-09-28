@@ -109,3 +109,12 @@ class Activate(Action):
     def __init__(self, ability=None):
         super().__init__()
         self.ability = ability
+
+
+class Fire(Action):
+    """Fire a projectile."""
+
+    def __init__(self, projectile=None, target=None):
+        super().__init__()
+        self.projectile = projectile
+        self.target = target

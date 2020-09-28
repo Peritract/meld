@@ -46,3 +46,9 @@ class Object:
     def description_text(self):
         """Returns the description for display."""
         return self.description
+
+    def destroy(self):
+        """Remove from the game."""
+        if self.area:
+            self.area.remove_contents(self)
+            self.area = None

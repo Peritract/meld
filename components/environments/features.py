@@ -1,9 +1,10 @@
 """This file contains the implementation of the Features class and related
 subclasses. Features are non-item, non-entity objects in the world, such
-as stairs or monster spawners."""
+as stairs or monster spawners. They cannot be picked up."""
 
 from ..utilities.object import Object
 from ..utilities.constants import COLOURS as C, RenderOrder
+from ..utilities.messages import CombatMessage
 
 
 class Feature(Object):
@@ -24,6 +25,18 @@ class Feature(Object):
         pass
 
 
+class TemporaryFeature(Feature):
+    """A feature with an expiry date."""
+
+    def __init__(self, name="temporary feature",
+                 description="A temporary object in the world.",
+                 x=0, y=0, char="_",
+                 colour=C["WHITE"], area=None, duration=0):
+        super().__init__(name, description, x, y, char, colour,
+                         blocks=False, area=area)
+        self.duration = duration
+
+
 class Stairs(Feature):
     """A path between areas of the dungeon."""
 
@@ -42,3 +55,33 @@ class Stairs(Feature):
     def interact(self, entity):
         """Move an entity between areas."""
         entity.change_area(self.target)
+
+
+class AcidBlob(TemporaryFeature):
+    """A blob of corrosive acid."""
+
+    def __init__(self, x=0, y=0, damage=5, duration=3, area=None):
+        super().__init__("acid blob", "a blob of corrosive acid",
+                         x, y, "_", C["GREEN"], area,
+                         duration)
+        self.damage = damage
+
+    def act(self):
+        """Harm an entity in the same location."""
+
+        # If there is an entity in the location
+        entity = self.area.get_blocker_at_location(*self.loc)
+
+        if entity:
+            report = f"Acid burns the {entity.name}!"
+            self.area.post_message(CombatMessage(report))
+            entity.body.take_damage(self.damage)
+
+            # Destroy self
+            self.destroy()
+
+    def impact(self):
+        """Landing in a new location."""
+
+        # Check for an entity to damage
+        self.act()
