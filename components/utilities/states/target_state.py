@@ -128,11 +128,12 @@ class RangeState(TargetState):
         """The selected choice."""
         raise NotImplementedError()
 
-    def calculate_impact_point(self):
+    def calculate_projectile_path(self):
         """Identify the point of impact, based on the range."""
 
         if self.actor.loc == self.cursor:
-            return self.cursor
+            # Return the actor's location and an empty path
+            return self.cursor, []
 
         # Get the direct route to the target
         path = self.actor.area.get_direct_path_to(self.actor.loc,
@@ -143,6 +144,9 @@ class RangeState(TargetState):
         in_motion = True
         impact_point = self.actor.loc
         step = 0
+
+        # Holder for the path travelled
+        line = []
 
         while in_motion:
             curr = tuple(path[step])
@@ -158,10 +162,11 @@ class RangeState(TargetState):
                 if not self.engine.world.area.is_passable(*curr):
                     impact_point = tuple(path[step - 1])
             else:
+                line.append(curr)
                 step += 1
 
-        # Return the impact point
-        return impact_point
+        # Return the impact point and the path to it
+        return impact_point, line
 
     def move_cursor(self, direction, mod):
         """Move the cursor in a particular direction;
@@ -186,12 +191,16 @@ class RangeState(TargetState):
 
         # Highlight each tile
         for tile in tiles:
-            self.highlight_tile(tile[0], tile[1], console)
+            self.highlight_tile(tile[0], tile[1], console, C["RADIUS"])
 
     def render_cursor(self, console):
 
         # Work out where the item will hit
-        self.impact = self.calculate_impact_point()
+        self.impact, line = self.calculate_projectile_path()
+
+        # Highlight the steps along the path
+        for step in line:
+            self.highlight_tile(step[0], step[1], console)
 
         # If the projectile will affect an area
         if hasattr(self.projectile, "impact_radius"):
@@ -200,11 +209,11 @@ class RangeState(TargetState):
             self.render_impact_radius(console)
 
         # Highlight the impact tile
-        self.highlight_tile(self.impact[0], self.impact[1], console, True)
+        self.highlight_tile(self.impact[0], self.impact[1],
+                            console, C["TARGET"])
 
-    def highlight_tile(self, x, y, console, impact=False):
+    def highlight_tile(self, x, y, console, colour=C["PATH"]):
         """Highlight a tile."""
-        colour = C["PLAN"] if not impact else C["TARGET"]
         console.tiles_rgb["bg"][x, y] = colour
         console.tiles_rgb["fg"][x, y] = C["BLACK"]
 
