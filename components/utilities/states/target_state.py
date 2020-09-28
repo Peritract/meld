@@ -113,21 +113,59 @@ class LookState(TargetState):
         return None
 
 
-class ThrowState(TargetState):
+class RangeState(TargetState):
+    """Allows the user to a select a tile within a range in a direct line
+    from the player entity."""
 
-    def __init__(self, engine, parent, thrower, item):
+    def __init__(self, engine, parent, actor, projectile, range):
         super().__init__(engine, parent)
-        self.thrower = thrower
-        self.item = item
+        self.actor = actor
+        self.projectile = projectile
+        self.range = range
 
     @property
     def target(self):
-        """On confirmation, return to the game."""
-        return Throw(self.item, self.impact)
+        """The selected choice."""
+        raise NotImplementedError()
+
+    def calculate_impact_point(self):
+        """Identify the point of impact, based on the range."""
+
+        if self.actor.loc == self.cursor:
+            return self.cursor
+
+        # Get the direct route to the target
+        path = self.actor.area.get_direct_path_to(self.actor.loc,
+                                                  self.cursor)[1:]
+
+        # Move the item along the path as far as the range
+        # or until it hits something
+        in_motion = True
+        impact_point = self.actor.loc
+        step = 0
+
+        while in_motion:
+            curr = tuple(path[step])
+            impact_point = curr
+            dist = self.engine.world.area.distance_between(self.actor.loc,
+                                                           curr)
+            # If it's travelled as far as strength or has hit something
+            if dist >= self.range or not self.actor.area.is_passable(*curr) \
+                    or self.actor.area.get_blocker_at_location(*curr) or \
+                    len(path) - 1 <= step:
+                in_motion = False
+                # If it has hit a wall, go back one to avoid weird edge cases
+                if not self.engine.world.area.is_passable(*curr):
+                    impact_point = tuple(path[step - 1])
+            else:
+                step += 1
+
+        # Return the impact point
+        return impact_point
 
     def move_cursor(self, direction, mod):
         """Move the cursor in a particular direction;
-        bound by the map and the thrower's strength"""
+        bound by the map and the range"""
         x, y = self.cursor
         dx = DIRECTIONS[direction][0] * 5 if mod else DIRECTIONS[direction][0]
         dy = DIRECTIONS[direction][1] * 5 if mod else DIRECTIONS[direction][1]
@@ -137,71 +175,47 @@ class ThrowState(TargetState):
         if self.engine.world.area.in_bounds(nx, ny):
             self.set_cursor(nx, ny)
 
-    def calculate_impact_point(self):
-        """Identify the point of impact, based on the thrower's strength."""
-
-        if self.thrower.loc == self.cursor:
-            return self.cursor
-
-        # Get the direct route to the target
-        path = self.thrower.area.get_direct_path_to(self.thrower.loc,
-                                                    self.cursor)[1:]
-
-        # Move the item along the path as far as the thrower's strength
-        # or until it hits something
-        in_motion = True
-        impact_point = self.thrower.loc
-        step = 0
-
-        while in_motion:
-            curr = tuple(path[step])
-            impact_point = curr
-            dist = self.thrower.area.distance_between(self.thrower.loc,
-                                                      curr)
-            # If it's travelled as far as strength or has hit something
-            if dist >= self.thrower.body.strength or \
-                not self.thrower.area.is_passable(*curr) or \
-                    self.thrower.area.get_blocker_at_location(*curr) or \
-                    len(path) - 1 <= step:
-                in_motion = False
-                # If it has hit a wall, go back one to avoid weird edge cases
-                if not self.thrower.area.is_passable(*curr):
-                    impact_point = tuple(path[step - 1])
-            else:
-                step += 1
-
-        # Return the impact point
-        return impact_point
-
     def render_impact_radius(self, console):
         """Highlight the tiles that would be affected by the impact."""
 
         # Get the tiles in the area
-        tiles = self.thrower.area.get_tiles_in_range(self.impact[0],
-                                                     self.impact[1],
-                                                     self.item.impact_radius)
-
-        # Remove the impact tile from the highlighting
-        tiles.remove(self.impact)
+        radius = self.projectile.impact_radius
+        tiles = self.engine.world.area.get_tiles_in_range(self.impact[0],
+                                                          self.impact[1],
+                                                          radius)
 
         # Highlight each tile
         for tile in tiles:
-            console.tiles_rgb["bg"][tile[0],
-                                    tile[1]] = C["TEMP"]
-            console.tiles_rgb["fg"][tile[0],
-                                    tile[1]] = C["BLACK"]
+            self.highlight_tile(tile[0], tile[1], console)
 
     def render_cursor(self, console):
 
         # Work out where the item will hit
         self.impact = self.calculate_impact_point()
 
-        # Highlight that tile
-        console.tiles_rgb["bg"][self.impact[0],
-                                self.impact[1]] = C["WHITE"]
-        console.tiles_rgb["fg"][self.impact[0],
-                                self.impact[1]] = C["BLACK"]
+        # If the projectile will affect an area
+        if hasattr(self.projectile, "impact_radius"):
 
-        # If necessary, highlight the area around it
-        if hasattr(self.item, "impact_radius"):
+            # Highlight the area
             self.render_impact_radius(console)
+
+        # Highlight the impact tile
+        self.highlight_tile(self.impact[0], self.impact[1], console, True)
+
+    def highlight_tile(self, x, y, console, impact=False):
+        """Highlight a tile."""
+        colour = C["PLAN"] if not impact else C["TARGET"]
+        console.tiles_rgb["bg"][x, y] = colour
+        console.tiles_rgb["fg"][x, y] = C["BLACK"]
+
+
+class ThrowState(RangeState):
+
+    def __init__(self, engine, parent, actor, item):
+        super().__init__(engine, parent, actor, item,
+                         actor.body.throw_range)
+
+    @property
+    def target(self):
+        """The selected choice."""
+        return Throw(self.projectile, self.impact)

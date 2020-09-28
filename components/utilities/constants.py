@@ -20,6 +20,8 @@ COLOURS = {
     "BLACK": tcod.black,
     "GREEN": tcod.green,
     "PURPLE": tcod.purple,
+    "PLAN": (153, 153, 255),
+    "TARGET": (102, 0, 255),
     "TEMP": tcod.chartreuse
 }
 

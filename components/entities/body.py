@@ -22,6 +22,10 @@ class Body:
         return 2 + self.strength // 2
 
     @property
+    def throw_range(self):
+        return self.strength + 2
+
+    @property
     def dead(self):
         if self.health <= 0:
             return True

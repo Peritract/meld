@@ -5,12 +5,14 @@ This is the game's player character.
 
 from .entity import Entity
 from .actions import (Surge, Wait, PickUp, OpenInventory, Throw, Interact,
-                      Drop, Use, Equip, Unequip, Handle, Look, OpenMenu)
+                      Drop, Use, Equip, Unequip, Handle, Look, OpenMenu,
+                      Activate)
 from ..utilities.messages import ItemMessage, WorldMessage, DeathMessage
 from ..items.corpse import Corpse
 from ..entities.body import Body
 from ..utilities.exceptions import Impossible
-from ..utilities.states.item_selection_menu import ItemSelectionMenu
+from ..utilities.states.selection_menus import (ItemSelectionMenu,
+                                                AbilitySelectionMenu)
 from ..utilities.states.target_state import LookState
 from ..utilities.states.inventory_menu import InventoryMenu
 from ..utilities.states.in_game_menu import InGameMenu
@@ -69,6 +71,12 @@ class Player(Entity):
 
         elif isinstance(instruction, Wait):
             self.wait()
+
+        elif isinstance(instruction, Activate):
+            if instruction.ability:
+                self.activate_ability(instruction.ability)
+            else:
+                self.select_ability()
 
         # trigger conditions
         self.process_conditions()
@@ -247,6 +255,20 @@ class Player(Entity):
         else:
             raise Impossible("Nothing to pick up.")
 
+    def select_ability(self):
+        """Choose an ability to use."""
+
+        # If the user possesses no abilities, cancel
+        if len(self.abilities) <= 0:
+            raise Impossible("You have no special abilities.")
+
+        # Create an ability selection menu
+        state = AbilitySelectionMenu(self.area.world.engine,
+                                     self.area.world.engine.state,
+                                     self.abilities)
+
+        self.area.world.engine.set_state(state)
+
     def change_area(self, target):
         """Move from one area to another."""
 
@@ -273,3 +295,6 @@ class Player(Entity):
 
         # Otherwise,
         super().interact()
+
+    def activate_ability(self, ability):
+        print(ability.name)

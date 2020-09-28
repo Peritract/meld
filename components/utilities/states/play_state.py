@@ -4,7 +4,8 @@ This is the "game" bit - it manages turn-taking and level/unit display.
 """
 
 from ...entities.actions import (Surge, Wait, PickUp, Interact,
-                                 OpenMenu, OpenInventory, Look)
+                                 OpenMenu, OpenInventory, Look,
+                                 Activate)
 from ...entities.entity import Entity
 from .state import State
 from .in_game_menu import InGameMenu
@@ -62,6 +63,10 @@ class Play(State):
         # Interact with objects
         elif key == tcod.event.K_RETURN or key == tcod.event.K_u:
             action = Interact()
+
+        # Activate an ability
+        elif key == tcod.event.K_a:
+            action = Activate()
 
         return action
 

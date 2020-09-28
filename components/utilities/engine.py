@@ -25,6 +25,7 @@ from ..items.consumables import Bandage, AcidFlask
 from ..items.equippables import Cudgel, Robe, VenomDagger
 from ..utilities.states.play_state import Play
 from ..environments.features import Stairs
+from ..entities.abilities import AcidSpit
 
 # -- /HACK -- #
 
@@ -159,6 +160,7 @@ class Engine:
         enemy.pick_up(F)
         player.pick_up(AcidFlask())
         player.pick_up(VenomDagger())
+        player.add_ability(AcidSpit())
         area.tiles[30:33, 22] = basic_wall
         self.message_log.add(WorldMessage("Your journey begins."
                                           "You are unlikely to survive"))

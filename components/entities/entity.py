@@ -44,6 +44,9 @@ class Entity(Object):
         # Empty conditions by default
         self.conditions = set()
 
+        # Empty abilities by default
+        self.abilities = set()
+
     @property
     def phrase(self):
         return f"the {self.name}"
@@ -246,3 +249,8 @@ class Entity(Object):
         """Allow each condition a chance to act."""
         for condition in self.conditions:
             condition.apply()
+
+    def add_ability(self, ability):
+        """Gain a new ability."""
+
+        self.abilities.add(ability)

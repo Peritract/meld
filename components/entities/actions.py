@@ -101,3 +101,11 @@ class OpenInventory(Action):
 
 class Look(Action):
     """Look around the area."""
+
+
+class Activate(Action):
+    """Activate an ability."""
+
+    def __init__(self, ability=None):
+        super().__init__()
+        self.ability = ability
