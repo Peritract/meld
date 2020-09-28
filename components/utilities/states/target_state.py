@@ -169,7 +169,7 @@ class RangeState(TargetState):
         return impact_point, line
 
     def move_cursor(self, direction, mod):
-        """Move the cursor in a particular direction;
+        """Move the cursor in a particular direction with the keys;
         bound by the map and the range"""
         x, y = self.cursor
         dx = DIRECTIONS[direction][0] * 5 if mod else DIRECTIONS[direction][0]

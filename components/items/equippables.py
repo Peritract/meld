@@ -36,8 +36,8 @@ class VenomDagger(Weapon):
 
         super().attack(agg, vic)
 
+        # Check the chance of poison
         x = random()
-        print(x)
         if x <= self.poison_chance:
             vic.add_condition(Poison(self.poison_duration,
                                      self.poison_damage))
