@@ -24,6 +24,11 @@ class TargetState(State):
     def cursor(self):
         return self.engine.m_loc
 
+    @property
+    def target(self):
+        """Generate the target object."""
+        raise NotImplementedError()
+
     def set_cursor(self, x, y):
         """Change the cursor position."""
         self.engine.m_loc = (x, y)
@@ -47,15 +52,8 @@ class TargetState(State):
 
     def render_cursor(self, console):
         """Highlight the currently-selected tile."""
-        console.tiles_rgb["bg"][self.cursor[0],
-                                self.cursor[1]] = C["WHITE"]
-        console.tiles_rgb["fg"][self.cursor[0],
-                                self.cursor[1]] = C["BLACK"]
-
-    @property
-    def target(self):
-        """Generate the target object."""
-        raise NotImplementedError()
+        self.highlight_tile(self.cursor[0], self.cursor[1],
+                            console, C["TARGET"])
 
     def resume(self):
         """Return control to the parent state."""
@@ -100,6 +98,11 @@ class TargetState(State):
         """Selects on mouse click."""
         if self.engine.world.area.in_bounds(*self.cursor):
             self.resume_with_selection()
+
+    def highlight_tile(self, x, y, console, colour=C["PATH"]):
+        """Highlight a tile."""
+        console.tiles_rgb["bg"][x, y] = colour
+        console.tiles_rgb["fg"][x, y] = C["BLACK"]
 
 
 class LookState(TargetState):
@@ -211,11 +214,6 @@ class RangeState(TargetState):
         # Highlight the impact tile
         self.highlight_tile(self.impact[0], self.impact[1],
                             console, C["TARGET"])
-
-    def highlight_tile(self, x, y, console, colour=C["PATH"]):
-        """Highlight a tile."""
-        console.tiles_rgb["bg"][x, y] = colour
-        console.tiles_rgb["fg"][x, y] = C["BLACK"]
 
 
 class ThrowState(RangeState):
