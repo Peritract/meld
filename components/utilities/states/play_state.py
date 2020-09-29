@@ -97,10 +97,15 @@ class Play(State):
 
         # If the state hasn't changed,
         if self.engine.state == self:
+
+            # Update the player state
+            self.engine.world.player.update()
+
             # Let all other entities take turns
             for entity in self.engine.world.entities - \
                     {self.engine.world.player}:
                 entity.take_action()
+                entity.update()
 
     def render(self, console):
         """Display the current state of the game world."""

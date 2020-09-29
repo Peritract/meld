@@ -54,5 +54,5 @@ class Poison(Condition):
 
         verb = "is" if self.target.faction != "player" else "are"
         text = f"{self.target.phrase} {verb} damaged by poison."
-        self.target.area.post_message(AlertMessage(text))
+        self.target.area.post(AlertMessage(text))
         self.target.body.take_damage(self.damage)

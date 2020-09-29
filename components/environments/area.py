@@ -168,14 +168,14 @@ class Area:
             if thing.blocks:
                 return thing
 
-    def get_feature_at_location(self, x, y):
+    def get_interactable_feature_at_location(self, x, y):
         """Returns the feature in a particular tile."""
 
         # Get all objects on the tile
         present = self.at_location(x, y)
 
         for thing in present:
-            if isinstance(thing, Feature):
+            if isinstance(thing, Feature) and thing.interactable:
                 return thing
 
     def calculate_fov(self, entity):
@@ -246,6 +246,6 @@ class Area:
 
     # Utility functions
 
-    def post_message(self, message):
+    def post(self, message):
         """Adds a message to the associated message log."""
         self.world.engine.message_log.add(message)

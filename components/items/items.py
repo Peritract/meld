@@ -52,7 +52,7 @@ class Weapon(Equippable):
 
         if entity and entity.body:
             text = f"The {self.name} {self.verb} the {entity.name}."
-            self.area.post_message(CombatMessage(text))
+            self.area.post(CombatMessage(text))
             entity.body.take_damage(self.damage)
 
     def attack(self, agg, vic):
@@ -60,7 +60,7 @@ class Weapon(Equippable):
 
         verb = self.verb if agg.faction != "player" else self.verb[:-1]
         report = f"{agg.phrase} {verb} at the {vic.phrase}!"
-        agg.area.post_message(CombatMessage(report))
+        agg.area.post(CombatMessage(report))
         vic.body.take_damage(self.damage)
 
 

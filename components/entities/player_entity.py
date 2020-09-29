@@ -82,9 +82,6 @@ class Player(Entity):
         elif isinstance(instruction, Fire):
             self.fire(instruction.projectile, instruction.target)
 
-        # trigger conditions
-        self.process_conditions()
-
     def interpret_surge(self, instruction):
         """Interprets an action with a direction based on context."""
 
@@ -156,16 +153,16 @@ class Player(Entity):
 
         # Log the death
         text = f"{self.phrase} die in agony.".capitalize()
-        self.area.post_message(DeathMessage(text))
+        self.area.post(DeathMessage(text))
 
-        self.area.post_message(WorldMessage("You have failed in your quest."))
+        self.area.post(WorldMessage("You have failed in your quest."))
         self.area.world.engine.game_over()
 
     def pick_up(self, item):
         """Adds an item to the inventory."""
 
         text = f"You pick up the {item.name}."
-        self.area.post_message(ItemMessage(text))
+        self.area.post(ItemMessage(text))
 
         super().pick_up(item)
 
@@ -173,27 +170,27 @@ class Player(Entity):
         """Removes an item from the inventory and adds it to the area."""
 
         text = f"You discard the {item.name}."
-        self.area.post_message(ItemMessage(text))
+        self.area.post(ItemMessage(text))
 
         super().drop(item)
 
     def equip(self, item):
         """Equips an item, unequipping any item of the same type."""
 
-        self.area.post_message(ItemMessage(f"You equip the {item.name}."))
+        self.area.post(ItemMessage(f"You equip the {item.name}."))
 
         super().equip(item)
 
     def unequip(self, item):
         """Unequip an item."""
-        self.area.post_message(ItemMessage(f"You unequip the {item.name}."))
+        self.area.post(ItemMessage(f"You unequip the {item.name}."))
 
         super().unequip(item)
 
     def use(self, item):
         """Uses an item on the entity."""
         text = f"You {item.verb} the {item.name}."
-        self.area.post_message(ItemMessage(text))
+        self.area.post(ItemMessage(text))
 
         super().use(item)
 
@@ -220,7 +217,7 @@ class Player(Entity):
         """Throw an object towards a location."""
 
         text = f"You throw the {item.name}."
-        self.area.post_message(ItemMessage(text))
+        self.area.post(ItemMessage(text))
 
         super().throw(item, target)
 
@@ -285,7 +282,7 @@ class Player(Entity):
                if target.area_id < self.area.area_id \
                else f"{self.phrase.capitalize()} descend."
 
-        self.area.post_message(WorldMessage(text))
+        self.area.post(WorldMessage(text))
 
         # Call the superclass method
         super().change_area(target)
@@ -297,7 +294,7 @@ class Player(Entity):
         """Interact with a feature."""
 
         # If there is no feature, do nothing.
-        if not self.area.get_feature_at_location(*self.loc):
+        if not self.area.get_interactable_feature_at_location(*self.loc):
             raise Impossible("There is nothing to interact with here.")
 
         # Otherwise,
@@ -306,7 +303,11 @@ class Player(Entity):
     def activate_ability(self, ability):
         """Use a special ability."""
 
+        if not ability.ready:
+            raise Impossible("That ability still needs to recharge!")
+
         if isinstance(ability, TargetAbility):
+            ability.activate()
             state = FireState(self.area.world.engine,
                               self.area.world.engine.state,
                               self, ability.projectile, ability.range)

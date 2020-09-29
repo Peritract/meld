@@ -43,7 +43,7 @@ class AcidFlask(Consumable):
         """When thrown, splashes acid over the nearby area."""
 
         text = f"The {self.name} shatters on impact!"
-        self.area.post_message(AlertMessage(text))
+        self.area.post(AlertMessage(text))
 
         # Get the affected tiles
         tiles = self.area.get_tiles_in_range(self.x,
@@ -55,7 +55,7 @@ class AcidFlask(Consumable):
             entity = self.area.get_blocker_at_location(*tile)
             if entity:
                 report = f"Acid splashes over the {entity.name}!"
-                self.area.post_message(CombatMessage(report))
+                self.area.post(CombatMessage(report))
                 entity.body.take_damage(2)
 
         # Destroy the flask

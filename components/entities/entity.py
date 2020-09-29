@@ -90,9 +90,6 @@ class Entity(Object):
         elif isinstance(decision, PickUp):
             self.pick_up()
 
-        # Deal with status conditions
-        self.process_conditions()
-
     def pick_up(self, item):
         """Adds an item to the inventory."""
         self.inventory.add(item)
@@ -164,7 +161,7 @@ class Entity(Object):
 
         # Log the death
         text = f"{self.phrase} dies in agony.".capitalize()
-        self.area.post_message(DeathMessage(text))
+        self.area.post(DeathMessage(text))
 
     def wait(self):
         """Passes the turn."""
@@ -245,11 +242,6 @@ class Entity(Object):
         self.conditions.add(condition)
         condition.attach(self)
 
-    def process_conditions(self):
-        """Allow each condition a chance to act."""
-        for condition in self.conditions:
-            condition.apply()
-
     def add_ability(self, ability):
         """Gain a new ability."""
 
@@ -265,3 +257,14 @@ class Entity(Object):
         projectile.x, projectile.y = target
 
         projectile.impact()
+
+    def update(self):
+        """Carry out regular checks and actions."""
+
+        # Apply each condition
+        for condition in self.conditions:
+            condition.apply()
+
+        # Update abilities
+        for ability in self.abilities:
+            ability.update()

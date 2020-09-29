@@ -74,7 +74,7 @@ class AcidBlob(TemporaryFeature):
 
         if entity:
             report = f"Acid burns the {entity.name}!"
-            self.area.post_message(CombatMessage(report))
+            self.area.post(CombatMessage(report))
             entity.body.take_damage(self.damage)
 
             # Destroy self

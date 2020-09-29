@@ -44,7 +44,7 @@ class VenomDagger(Weapon):
 
             verb = "has" if vic.faction != "player" else "have"
             report = f"{vic.phrase} {verb} been poisoned!"
-            agg.area.post_message(AlertMessage(report))
+            agg.area.post(AlertMessage(report))
 
 
 class Robe(Armour):

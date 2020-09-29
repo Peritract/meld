@@ -48,6 +48,6 @@ class Body:
         verb = "flails" if self.owner.faction != "player" else "flail"
         report = f"{self.owner.phrase} {verb} at {other.phrase}!"
         report = report.capitalize()
-        self.owner.area.post_message(CombatMessage(report))
+        self.owner.area.post(CombatMessage(report))
 
         other.body.take_damage(1)
