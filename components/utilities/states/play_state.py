@@ -165,8 +165,8 @@ class Play(State):
             # If there is anything to display
             if contents:
                 rows = 0
-                # Display it (entities first, alphabetical)
-                for thing in sorted(sorted(contents, key=lambda x: x.name),
+                # Display it (entities first)
+                for thing in sorted(contents,
                                     key=lambda x: not isinstance(x, Entity)):
                     console.print(x, y, thing.name, thing.colour)
                     y += 2

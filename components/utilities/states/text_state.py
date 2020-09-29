@@ -4,38 +4,60 @@ is dismissed on input.
 """
 
 from .state import State
-from ..messages import Message
-from ..constants import COLOURS as C
+from textwrap import wrap
 from .main_menu_state import MainMenu
+from ..constants import COLOURS as C
 
 
 class TextState(State):
     """Displays text and dismisses on keyboard input."""
-    def __init__(self, engine, target, lines):
+    def __init__(self, engine, target, text, center=False):
         super().__init__(engine)
+        self.center = center
 
         # The state to be returned to
         self.target = target
 
-        # The lines of text to display
-        self.lines = lines
+        # The text to display
+        self.text = text
+
+        self.lines = self.wrap_text(text)
 
     @property
     def height(self):
-        return len(self.lines)
+        return len(self.lines) + 4
 
     @property
     def width(self):
-        return max([len(x.text) for x in self.lines])
+        return min([40, max([len(x) for x in self.text.split("\n")]) + 4])
 
-    def wrap_text(self, text):
+    def center_text(self, text):
         """Return a centered string based on the menu width."""
 
         # Subtract 2 for the margins
         return text.center(self.width - 2)
 
+    def wrap_text(self, text):
+        """Wrap the text to a given width."""
+
+        # Split lines at \n
+        lines = [wrap(x, self.width) for x in text.split("\n")]
+
+        # Flatten lists of lines
+        lines = [y for x in lines for y in x]
+
+        # Center text if required
+        if self.center:
+            lines = [self.center_text(x) for x in lines]
+
+        return lines
+
     def ev_keydown(self, event):
         """Take keyboard input."""
+        self.engine.set_state(self.target)
+
+    def ev_mousebuttondown(self, event):
+        """Selects on mouse click."""
         self.engine.set_state(self.target)
 
     def render(self, console):
@@ -51,7 +73,7 @@ class TextState(State):
 
         # Display each line
         for line in self.lines:
-            console.print(x, y, self.wrap_text(line.text), line.colour)
+            console.print(x, y, line, C["WHITE"])
             y += 2
 
 
@@ -60,12 +82,38 @@ class Credits(TextState):
 
     def __init__(self, engine):
 
-        lines = [Message("Designed & created by"),
-                 Message("Dan Keefe"),
-                 Message("Special thanks to:"),
-                 Message("Tom Keefe"),
-                 Message("Tyler Standridge"),
-                 Message("Press any key to return to the main menu",
-                         C["GOLD"])]
+        text = ("Designed and created by\nDan Keefe.\nSpecial thanks to"
+                "\nTom Keefe\nTyle Standridge.")
 
-        super().__init__(engine, MainMenu(engine), lines)
+        super().__init__(engine, MainMenu(engine), text, True)
+
+
+class OverlayText(TextState):
+    """Displays text over another state's rendering."""
+
+    def __init__(self, engine, target, parent, text, center=False):
+        super().__init__(engine, target, text, center)
+        self.parent = parent
+
+    def render(self, console):
+        """Display the text over another menu."""
+
+        self.parent.render(console)
+
+        # Calculate the starting y
+        # halfway point - half height
+        y = self.engine.screen_height // 2 - self.height // 2
+
+        # Calculate the starting x
+        # half way point - half width
+        x = self.engine.screen_width // 2 - self.width // 2
+
+        # Draw a black panel as a frame
+        console.draw_frame(x, y, self.width, self.height,
+                           bg=C["BLACK"])
+
+        # Write out the text
+        for line in self.lines:
+            if line != "BLANK":
+                console.print(x + 2, y + 2, line, C["WHITE"])
+            y += 1

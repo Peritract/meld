@@ -7,6 +7,7 @@ from .state import State
 from ..constants import DIRECTIONS, COLOURS as C
 from ...entities.actions import Throw, Fire
 import tcod
+from .text_state import OverlayText
 
 
 class TargetState(State):
@@ -110,10 +111,60 @@ class LookState(TargetState):
     def __init__(self, engine, parent):
         super().__init__(engine, parent)
 
-    @property
-    def target(self):
-        """On confirmation, return to the game."""
-        return None
+    def get_tile_details(self):
+        """Get the descriptions of tile contents."""
+
+        # Get tile contents at the cursor
+        contents = self.engine.world.area.at_location(*self.cursor)
+
+        # Extract the interesting bits
+        if contents:
+            contents = [x.description for x in contents]
+
+        return contents
+
+    def create_pop_up(self):
+        """Create a pop-up of descriptions at the cursor."""
+
+        if self.engine.world.area.is_visible(*self.cursor):
+            descriptions = self.get_tile_details()
+
+            # Join the descriptions into a solid block of text
+            text = "\nBLANK\n".join(descriptions)
+
+            # Create and display the pop-up
+            state = OverlayText(self.engine, self, self.parent, text)
+            self.engine.set_state(state)
+
+    def ev_keydown(self, event):
+        """Take keyboard input."""
+
+        # Get event information
+        key = event.sym
+        mod = True if event.mod and tcod.event.KMOD_LSHIFT else False
+
+        if key == tcod.event.K_UP:
+            self.move_cursor("UP", mod)
+
+        elif key == tcod.event.K_DOWN:
+            self.move_cursor("DOWN", mod)
+
+        elif key == tcod.event.K_LEFT:
+            self.move_cursor("LEFT", mod)
+
+        elif key == tcod.event.K_RIGHT:
+            self.move_cursor("RIGHT", mod)
+
+        elif key == tcod.event.K_RETURN:
+            self.create_pop_up()
+
+        elif key == tcod.event.K_ESCAPE:
+            self.resume()
+
+    def ev_mousebuttondown(self, event):
+        """Selects on mouse click."""
+        if self.engine.world.area.in_bounds(*self.cursor):
+            self.create_pop_up()
 
 
 class RangeState(TargetState):

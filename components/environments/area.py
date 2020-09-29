@@ -85,8 +85,12 @@ class Area:
     def at_location(self, x, y):
         """Returns a set of objects at the given location."""
         if self.in_bounds(x, y):
-            return set([thing for thing in self.contents
-                        if thing.x == x and thing.y == y])
+            contents = set([thing for thing in self.contents
+                            if thing.x == x and thing.y == y])
+
+        return sorted(sorted(contents, key=lambda x: x.name), 
+                      key=lambda x: x.render_order.value,
+                      reverse=True)
 
     def distance_between(self, a, b):
         """Gets the absolute difference between two tile locations."""
