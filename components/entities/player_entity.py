@@ -18,7 +18,7 @@ from ..utilities.states.inventory_menu import InventoryMenu
 from ..utilities.states.in_game_menu import InGameMenu
 from ..entities.abilities import TargetAbility
 from ..utilities.states.target_state import FireState
-import tcod
+from ..utilities.constants import COLOURS as C
 
 
 class Player(Entity):
@@ -33,7 +33,7 @@ class Player(Entity):
                  mind=None,
                  body=Body,
                  char="@",
-                 colour=tcod.white,
+                 colour=C["WHITE"],
                  blocks=True,
                  area=None):
         super().__init__(name, description, x, y, faction, mind, body,

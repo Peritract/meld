@@ -5,7 +5,7 @@ equippable items.
 from .items import Weapon, Armour
 from ..utilities.constants import COLOURS as C
 from ..entities.conditions import Poison
-from ..utilities.messages import AlertMessage
+from ..utilities.messages import AlertMessage, CombatMessage
 from random import random
 
 
@@ -34,7 +34,9 @@ class VenomDagger(Weapon):
     def attack(self, agg, vic):
         """Make an attack."""
 
-        super().attack(agg, vic)
+        verb = self.verb if agg.faction != "player" else self.verb[:-1]
+        report = f"{agg.phrase} {verb} at the {vic.phrase}!"
+        agg.area.post(CombatMessage(report))
 
         # Check the chance of poison
         x = random()
@@ -45,6 +47,8 @@ class VenomDagger(Weapon):
             verb = "has" if vic.faction != "player" else "have"
             report = f"{vic.phrase} {verb} been poisoned!"
             agg.area.post(AlertMessage(report))
+
+        vic.body.take_damage(self.damage)
 
 
 class Robe(Armour):

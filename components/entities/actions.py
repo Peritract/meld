@@ -95,6 +95,9 @@ class OpenMenu(Action):
     """Open the menu."""
 
 
+class ViewLog(Action):
+    """View the message log."""
+
 class OpenInventory(Action):
     """Open the inventory."""
 

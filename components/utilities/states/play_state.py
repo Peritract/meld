@@ -5,11 +5,12 @@ This is the "game" bit - it manages turn-taking and level/unit display.
 
 from ...entities.actions import (Surge, Wait, PickUp, Interact,
                                  OpenMenu, OpenInventory, Look,
-                                 Activate)
+                                 Activate, ViewLog)
 from ...entities.entity import Entity
 from .state import State
 from .in_game_menu import InGameMenu
-from ..constants import DIRECTIONS
+from .text_states import MessageScroller
+from ..constants import DIRECTIONS, COLOURS as C
 from ..messages import SystemMessage
 from ..exceptions import Impossible
 import tcod
@@ -56,8 +57,12 @@ class Play(State):
         elif key == tcod.event.K_ESCAPE:
             action = OpenMenu()
 
+        # View the message log
+        elif key == tcod.event.K_m or key == tcod.event.K_v:
+            action = ViewLog()
+
         # Look around
-        elif key == tcod.event.K_l:
+        elif key == tcod.event.K_l or key == tcod.event.K_k:
             action = Look()
 
         # Interact with objects
@@ -82,6 +87,14 @@ class Play(State):
 
             # Set the temporary state
             self.engine.set_state(InGameMenu(self.engine, self))
+
+            # Return so the new state can work
+            return
+
+        elif isinstance(action, ViewLog):
+
+            # Set the temporary state
+            self.engine.set_state(MessageScroller(self.engine, self))
 
             # Return so the new state can work
             return
@@ -181,20 +194,20 @@ class Play(State):
            the area & player."""
 
         # Show key details
-        console.print(x, y, self.engine.world.area.name, tcod.white)
+        console.print(x, y, self.engine.world.area.name, C["WHITE"])
 
         # Show the health bar
         self.render_bar(console, x, y + 2, width,
                         self.engine.world.player.body.health,
                         self.engine.world.player.body.max_health,
-                        tcod.dark_gray, tcod.dark_green, "Health",
-                        tcod.white)
+                        C["GREY"], C["GREEN"], "Health",
+                        C["WHITE"])
 
     def render_bar(self, console, x, y, max_width,
                    value=0, max_value=10,
                    background_colour=tcod.dark_gray,
                    colour=tcod.dark_blue,
-                   caption="", caption_colour=tcod.white):
+                   caption="", caption_colour=C["WHITE"]):
         """Renders a stat bar with a numeric overlay."""
 
         # Calculate the width
@@ -215,8 +228,8 @@ class Play(State):
         """Render the latest messages from the message log."""
 
         # Get the message lines
-        messages = log.get_recent_wrapped_message_lines(width=width,
-                                                        max_lines=height)
+        messages = log.get_message_lines(width=width,
+                                         max_lines=height)
 
         offset = height - 1
 

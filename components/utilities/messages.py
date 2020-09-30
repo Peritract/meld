@@ -68,6 +68,10 @@ class MessageLog:
     def __init__(self):
         self.messages = []
 
+    @property
+    def length(self):
+        return len(self.messages)
+
     def add(self, message):
         """Log a message."""
 
@@ -80,8 +84,8 @@ class MessageLog:
             # Add the message to the stack
             self.messages.append(message)
 
-    def get_recent_wrapped_message_lines(self, reverse=True, width=20,
-                                         max_lines=10):
+    def get_message_lines(self, reverse=True, width=20,
+                          max_lines=10):
         """Returns a list of message lines, wrapped to the log width."""
 
         lines = []
@@ -98,7 +102,7 @@ class MessageLog:
                 lines.append((line, message.colour))
 
                 # If the line-length has been hit
-                if max_lines <= len(lines):
+                if max_lines != -1 and max_lines <= len(lines):
 
                     # Return the set
                     return lines

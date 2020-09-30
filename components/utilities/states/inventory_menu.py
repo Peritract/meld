@@ -181,7 +181,8 @@ class InventoryMenu(OverlayMenu):
         # half way point - half width
         x = self.engine.screen_width // 2 - self.width // 2
 
-        console.draw_frame(x, y, self.width, self.height, bg=C["BLACK"])
+        console.draw_frame(x, y, self.width, self.height,
+                           bg=C["BLACK"], fg=C["WHITE"])
 
         for option in self.options:
             colour = C["GOLD"] if option == self.selected else C["WHITE"]

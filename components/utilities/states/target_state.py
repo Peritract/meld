@@ -7,7 +7,7 @@ from .state import State
 from ..constants import DIRECTIONS, COLOURS as C
 from ...entities.actions import Throw, Fire
 import tcod
-from .text_state import OverlayText
+from .text_states import OverlayText
 
 
 class TargetState(State):

@@ -6,7 +6,7 @@ the only valid options.
 
 from .menus import OverlayMenu, MenuOption
 from .main_menu_state import MainMenu
-from .text_state import Credits
+from .text_states import Credits
 import tcod
 
 
