@@ -128,7 +128,14 @@ class MessageScroller(State):
         self.width = 60
         self.height = 10
         self.messages = self.get_messages()
-        self.cursor = max([len(self.messages) - self.height - 4, 0])
+
+        # if there are fewer messages than fill the screen, start at zero
+        if len(self.messages) < self.height - 4:
+            self.cursor = 0
+        # Otherwise
+        else:
+            # Start the cursor so the latest message is the last line
+            self.cursor = len(self.messages) - (self.height - 4)
 
     def get_messages(self):
         """Get the list of messages wrapped to the width."""
@@ -141,15 +148,22 @@ class MessageScroller(State):
         """Take keyboard input."""
 
         key = event.sym
+        # Move faster with shift
+        mod = 5 if event.mod and tcod.event.KMOD_LSHIFT else 1
 
         if key == tcod.event.K_UP:
             if self.cursor > 0:
-                self.cursor -= 1
+                self.cursor = max([0, self.cursor - 1 * mod])
         elif key == tcod.event.K_DOWN:
-            if self.cursor <= len(self.messages):
-                self.cursor += 1
-        else:
+            if self.cursor < len(self.messages) - (self.height - 4):
+                self.cursor = min([self.cursor + 1 * mod,
+                                   len(self.messages) - (self.height - 4)])
+        elif key == tcod.event.K_ESCAPE or key == tcod.event.K_RETURN:
             self.engine.set_state(self.parent)
+
+    def ev_mousebuttondown(self, event):
+        """Selects on mouse click."""
+        self.engine.set_state(self.parent)
 
     def render(self, console):
         """Display the messages over the parent state."""
@@ -181,8 +195,8 @@ class MessageScroller(State):
         offset = 2
 
         for message in to_display:
-            console.print(x + 2, y + offset, message[0])
+            console.print(x + 2, y + offset, message[0], message[1])
             offset += 1
 
-            if offset >= self.height - 4:
+            if offset >= self.height - 2:
                 return
