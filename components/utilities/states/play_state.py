@@ -120,6 +120,10 @@ class Play(State):
                 entity.take_action()
                 entity.update()
 
+            # Update all the features
+            for feature in self.engine.world.features:
+                feature.act()
+
     def render(self, console):
         """Display the current state of the game world."""
 

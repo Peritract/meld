@@ -128,14 +128,13 @@ class MessageScroller(State):
         self.width = 60
         self.height = 10
         self.messages = self.get_messages()
-        self.cursor = len(self.messages) if len(self.messages) <= self.height else len(self.messages) - self.height
+        self.cursor = max([len(self.messages) - self.height - 4, 0])
 
     def get_messages(self):
         """Get the list of messages wrapped to the width."""
         messages = self.engine.message_log.get_message_lines(False,
                                                              self.width - 4,
                                                              -1)
-
         return messages
 
     def ev_keydown(self, event):
@@ -147,7 +146,7 @@ class MessageScroller(State):
             if self.cursor > 0:
                 self.cursor -= 1
         elif key == tcod.event.K_DOWN:
-            if self.cursor < len(self.messages) - 4:
+            if self.cursor <= len(self.messages):
                 self.cursor += 1
         else:
             self.engine.set_state(self.parent)
@@ -176,17 +175,14 @@ class MessageScroller(State):
     def render_messages(self, console, x, y):
         """Display a list of messages."""
 
+        # Get the messages that need displaying
+        to_display = self.messages[self.cursor:]
+
         offset = 2
-        print(self.cursor)
 
-        # Loop through the messages,
-        for message in self.messages[self.cursor:]:
-            # Display the message
-            console.print(x + 2, y + offset, message[0], message[1])
-
-            # Up the offset
+        for message in to_display:
+            console.print(x + 2, y + offset, message[0])
             offset += 1
 
-            # Don't draw off the page
-            if offset >= self.height - 2:
+            if offset >= self.height - 4:
                 return

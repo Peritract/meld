@@ -232,7 +232,7 @@ class Entity(Object):
         """Interact with a feature."""
 
         # If a feature is present
-        feature = self.area.get_feature_at_location(*self.loc)
+        feature = self.area.get_interactable_feature_at_location(*self.loc)
         if feature:
             feature.interact(self)
 

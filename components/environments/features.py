@@ -12,9 +12,10 @@ class Feature(Object):
 
     def __init__(self, name="feature", description="An object in the world",
                  x=0, y=0, char="£", colour=C["TEMP"], blocks=False,
-                 area=None):
+                 interactable=True, area=None):
         super().__init__(name, description, x, y, char, colour, blocks,
                          area, RenderOrder.FEATURE)
+        self.interactable = interactable
 
     def interact(self, entity):
         """Respond to an entity's action."""
@@ -30,10 +31,11 @@ class TemporaryFeature(Feature):
 
     def __init__(self, name="temporary feature",
                  description="A temporary object in the world.",
-                 x=0, y=0, char="_",
-                 colour=C["WHITE"], area=None, duration=0):
+                 x=0, y=0, char="_", colour=C["WHITE"],
+                 interactable=False, area=None, duration=0):
         super().__init__(name, description, x, y, char, colour,
-                         blocks=False, area=area)
+                         blocks=False, interactable=interactable,
+                         area=area)
         self.duration = duration
 
 
@@ -50,7 +52,7 @@ class Stairs(Feature):
         char = "<" if name == "stairs down" else ">"
 
         super().__init__(name, description, x, y, char, colour=C["GREY"],
-                         blocks=False, area=area)
+                         blocks=False, interactable=True, area=area)
 
     def interact(self, entity):
         """Move an entity between areas."""
@@ -62,7 +64,7 @@ class AcidBlob(TemporaryFeature):
 
     def __init__(self, x=0, y=0, damage=5, duration=3, area=None):
         super().__init__("acid blob", "a blob of corrosive acid",
-                         x, y, "_", C["GREEN"], area,
+                         x, y, "_", C["GREEN"], False, area,
                          duration)
         self.damage = damage
 
