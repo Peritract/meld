@@ -88,7 +88,7 @@ class Area:
             contents = set([thing for thing in self.contents
                             if thing.x == x and thing.y == y])
 
-        return sorted(sorted(contents, key=lambda x: x.name), 
+        return sorted(sorted(contents, key=lambda x: x.name),
                       key=lambda x: x.render_order.value,
                       reverse=True)
 

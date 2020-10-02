@@ -200,3 +200,70 @@ class MessageScroller(State):
 
             if offset >= self.height - 2:
                 return
+
+
+class DescriptionScroller(State):
+    """Allows the user to scroll through descriptions;
+       this state overlays on top of another one."""
+
+    def __init__(self, engine, parent, objects):
+        super().__init__(engine)
+        self.parent = parent
+        self.objects = objects
+        self.cursor = 0
+        self.height = 10
+        self.width = 20
+
+    def render(self, console):
+        """Render one description on a panel."""
+
+        self.parent.render(console)
+
+        # Calculate the starting y
+        # halfway point - half height
+        y = self.engine.screen_height // 2 - self.height // 2
+
+        # Calculate the starting x
+        # half way point - half width
+        x = self.engine.screen_width // 2 - self.width // 2
+
+        # Draw a black panel as a frame
+        console.draw_frame(x, y, self.width, self.height,
+                           bg=C["BLACK"], fg=C["WHITE"])
+
+        # Get the current object to describe
+        obj = self.objects[self.cursor]
+
+        # Display the object name
+        console.print(x + 2, y + 2, obj.name, obj.colour)
+
+        # Leave a line, and display the description
+        lines = wrap(obj.description, self.width - 4)
+        offset = 4
+
+        for line in lines:
+            console.print(x + 2, y + offset, line, C["WHITE"])
+            offset += 1
+
+        # Display controls at the bottom right of the panel
+        left_cursor = C["WHITE"] if self.cursor > 0 else C["GREY"]
+        right_cursor = C["WHITE"] if self.cursor < len(self.objects) - 1 \
+            else C["GREY"]
+        console.print(x + (self.width - 4), y + (self.height - 2),
+                      "<", left_cursor)
+        console.print(x + (self.width - 2), y + (self.height - 2),
+                      ">", right_cursor)
+
+    def ev_keydown(self, event):
+        """Take keyboard input."""
+
+        key = event.sym
+
+        if key == tcod.event.K_LEFT:
+            if self.cursor > 0:
+                self.cursor -= 1
+        elif key == tcod.event.K_RIGHT:
+            if self.cursor < len(self.objects) - 1:
+                self.cursor += 1
+        else:
+            self.engine.set_state(self.parent)

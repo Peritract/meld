@@ -7,7 +7,7 @@ from .state import State
 from ..constants import DIRECTIONS, COLOURS as C
 from ...entities.actions import Throw, Fire
 import tcod
-from .text_states import OverlayText
+from .text_states import DescriptionScroller
 
 
 class TargetState(State):
@@ -117,23 +117,16 @@ class LookState(TargetState):
         # Get tile contents at the cursor
         contents = self.engine.world.area.at_location(*self.cursor)
 
-        # Extract the interesting bits
-        if contents:
-            contents = [x.description for x in contents]
-
         return contents
 
     def create_pop_up(self):
         """Create a pop-up of descriptions at the cursor."""
 
         if self.engine.world.area.is_visible(*self.cursor):
-            descriptions = self.get_tile_details()
-
-            # Join the descriptions into a solid block of text
-            text = "\nBLANK\n".join(descriptions)
+            contents = self.get_tile_details()
 
             # Create and display the pop-up
-            state = OverlayText(self.engine, self, self.parent, text)
+            state = DescriptionScroller(self.engine, self, contents)
             self.engine.set_state(state)
 
     def ev_keydown(self, event):
