@@ -171,8 +171,8 @@ class Engine:
         player.pick_up(VenomDagger())
         player.add_ability(AcidSpit())
         h = []
-        for x in range(10, 20):
-            for y in range(10, 20):
+        for x in range(10, 30):
+            for y in range(10, 30):
                 h.append(Entity("other", "Not you.", x, y, mind=Wanderer))
         area2.add_contents(h)
 
