@@ -125,8 +125,8 @@ class MessageScroller(State):
     def __init__(self, engine, parent):
         super().__init__(engine)
         self.parent = parent
-        self.width = 60
-        self.height = 10
+        self.width = 50
+        self.height = 50
         self.messages = self.get_messages()
 
         # if there are fewer messages than fill the screen, start at zero

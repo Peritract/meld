@@ -149,18 +149,13 @@ class Engine:
         self.world = world
         area = Area(80, 50, world, "surface")
         area2 = Area(80, 50, world, "caverns", 1)
-        player = Player("Player", "A person", 5, 5, area=area)
+        player = Player("Player", "A person", 5, 5)
         world.player = player
-        other = Entity("other", "Not you.", 10, 10, mind=Wanderer, area=area)
-        enemy = Entity('enemy', "A horror", 15, 15, mind=Brawler, area=area)
+        other = Entity("other", "Not you.", 10, 10, mind=Wanderer)
+        enemy = Entity('enemy', "A horror", 15, 15, mind=Brawler)
         A, B, C = Corpse("A", 1, 1), Corpse("B", 1, 1), Corpse("C", 2, 2)
         D, E, F = Bandage(3, 3), Cudgel(4, 4), Robe(6, 6)
         G = AcidFlask(7, 7)
-        other.pick_up(G)
-        enemy.pick_up(F)
-        player.pick_up(AcidFlask())
-        player.pick_up(VenomDagger())
-        player.add_ability(AcidSpit())
         area.tiles[30:33, 22] = basic_wall
         self.message_log.add(WorldMessage("Your journey begins."
                                           "You are unlikely to survive"))
@@ -170,6 +165,15 @@ class Engine:
                                  A, B, C, D, E])
         area2.add_contents(Stairs(6, 6, area2, area))
         area.add_contents(Stairs(10, 10, area, area2))
-
+        other.pick_up(G)
+        enemy.pick_up(F)
+        player.pick_up(AcidFlask())
+        player.pick_up(VenomDagger())
+        player.add_ability(AcidSpit())
+        h = []
+        for x in range(10, 20):
+            for y in range(10, 20):
+                h.append(Entity("other", "Not you.", x, y, mind=Wanderer))
+        area2.add_contents(h)
 
 # -- /HACK -- #
