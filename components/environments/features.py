@@ -25,6 +25,10 @@ class Feature(Object):
         """Act without prompting."""
         pass
 
+    def update(self):
+        """Runs every turn."""
+        pass
+
 
 class TemporaryFeature(Feature):
     """A feature with an expiry date."""
@@ -37,6 +41,12 @@ class TemporaryFeature(Feature):
                          blocks=False, interactable=interactable,
                          area=area)
         self.duration = duration
+
+    def update(self):
+        """Runs every turn."""
+        self.duration -= 1
+        if self.duration <= 0:
+            self.destroy()
 
 
 class Stairs(Feature):
@@ -62,7 +72,7 @@ class Stairs(Feature):
 class AcidBlob(TemporaryFeature):
     """A blob of corrosive acid."""
 
-    def __init__(self, x=0, y=0, damage=5, duration=3, area=None):
+    def __init__(self, x=0, y=0, damage=3, duration=3, area=None):
         super().__init__("acid blob", "a blob of corrosive acid",
                          x, y, "_", C["GREEN"], False, area,
                          duration)
@@ -87,3 +97,10 @@ class AcidBlob(TemporaryFeature):
 
         # Check for an entity to damage
         self.act()
+
+    def update(self):
+        """Runs every turn."""
+
+        self.act()
+
+        super().update()
