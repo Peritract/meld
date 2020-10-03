@@ -11,10 +11,12 @@ class Body:
     def __init__(self,
                  health=5,
                  strength=5,
+                 speed=10,
                  view_radius=8):
         self.health = health
         self.max_health = health
         self.strength = strength
+        self.speed = speed
         self.view_radius = view_radius
 
     @property
@@ -27,15 +29,14 @@ class Body:
 
     @property
     def dead(self):
-        if self.health <= 0:
-            return True
+        return self.health <= 0
 
     def heal(self, amount):
-        """Replenishes health."""
+        """Replenish health."""
         self.health = min(self.max_health, self.health + amount)
 
     def take_damage(self, amount):
-        """Takes damage."""
+        """Take damage."""
         self.health = max(0, self.health - amount)
 
         # Check for permanent consequences

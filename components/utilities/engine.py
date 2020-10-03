@@ -150,6 +150,7 @@ class Engine:
         area = Area(80, 50, world, "surface")
         area2 = Area(80, 50, world, "caverns", 1)
         player = Player("Player", "A person", 5, 5)
+        player.body.speed = 1
         world.player = player
         other = Entity("other", "Not you.", 10, 10, mind=Wanderer)
         enemy = Entity('enemy', "A horror", 15, 15, mind=Brawler)
@@ -171,9 +172,9 @@ class Engine:
         player.pick_up(VenomDagger())
         player.add_ability(AcidSpit())
         h = []
-        for x in range(10, 30):
-            for y in range(10, 30):
-                h.append(Entity("other", "Not you.", x, y, mind=Wanderer))
+        for x in range(15, 30):
+            for y in range(15, 30):
+                h.append(Entity("other", "Not you.", x, y, mind=Brawler))
         area2.add_contents(h)
 
 # -- /HACK -- #

@@ -34,6 +34,7 @@ class Entity(Object):
         self.faction = faction
         self.body = body()
         self.body.owner = self
+        self.readiness = 100
         if mind:
             self.mind = mind()
             self.mind.owner = self
@@ -73,6 +74,19 @@ class Entity(Object):
         for item in self.equipment:
             if item.equipped and isinstance(item, Armour):
                 return item
+
+    @property
+    def ready(self):
+        """Is the entity ready for action?"""
+        return self.readiness >= 100
+
+    def consider_action(self):
+        """Either act or prepare for action."""
+        if self.ready:
+            self.take_action()
+            self.readiness = 0
+        else:
+            self.readiness += self.body.speed
 
     def take_action(self):
         """Acts in the game world."""

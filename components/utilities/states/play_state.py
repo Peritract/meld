@@ -108,21 +108,24 @@ class Play(State):
             self.engine.message_log.add(SystemMessage(ex.args[0]))
             return
 
-        # If the state hasn't changed,
+        # If the state hasn't changed (turns passing as normal),
         if self.engine.state == self:
 
             # Update the player state
+            self.engine.world.player.readiness = 0
             self.engine.world.player.update()
 
             # Let all other entities take turns
-            for entity in self.engine.world.entities - \
-                    {self.engine.world.player}:
-                entity.take_action()
-                entity.update()
+            while not self.engine.world.player.ready:
+                self.engine.world.player.prepare()
+                for entity in self.engine.world.entities - \
+                        {self.engine.world.player}:
+                    entity.consider_action()
+                    entity.update()
 
-            # Update all the features
-            for feature in self.engine.world.area.features:
-                feature.update()
+                # Update all the features
+                for feature in self.engine.world.area.features:
+                    feature.update()
 
     def render(self, console):
         """Display the current state of the game world."""

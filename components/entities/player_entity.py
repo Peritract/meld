@@ -82,6 +82,10 @@ class Player(Entity):
         elif isinstance(instruction, Fire):
             self.fire(instruction.projectile, instruction.target)
 
+    def prepare(self):
+        """Increase readiness for action."""
+        self.readiness += self.body.speed
+
     def interpret_surge(self, instruction):
         """Interprets an action with a direction based on context."""
 
