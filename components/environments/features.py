@@ -12,10 +12,12 @@ class Feature(Object):
 
     def __init__(self, name="feature", description="An object in the world",
                  x=0, y=0, char="£", colour=C["TEMP"], blocks=False,
-                 interactable=True, area=None):
+                 interactable=True, area=None, update_speed=10):
         super().__init__(name, description, x, y, char, colour, blocks,
                          area, RenderOrder.FEATURE)
         self.interactable = interactable
+        self.readiness = 100
+        self.update_speed = update_speed
 
     def interact(self, entity):
         """Respond to an entity's action."""
@@ -25,9 +27,13 @@ class Feature(Object):
         """Act without prompting."""
         pass
 
-    def update(self):
-        """Runs every turn."""
-        pass
+    def check_update(self):
+        """Runs updates regularly"""
+        if self.readiness >= 100:
+            self.update()
+            self.readiness = 0
+        else:
+            self.readiness += self.update_speed
 
 
 class TemporaryFeature(Feature):
@@ -36,10 +42,10 @@ class TemporaryFeature(Feature):
     def __init__(self, name="temporary feature",
                  description="A temporary object in the world.",
                  x=0, y=0, char="_", colour=C["WHITE"],
-                 interactable=False, area=None, duration=0):
+                 interactable=False, area=None, duration=0, update_speed=10):
         super().__init__(name, description, x, y, char, colour,
                          blocks=False, interactable=interactable,
-                         area=area)
+                         area=area, update_speed=update_speed)
         self.duration = duration
 
     def update(self):
@@ -72,10 +78,11 @@ class Stairs(Feature):
 class AcidBlob(TemporaryFeature):
     """A blob of corrosive acid."""
 
-    def __init__(self, x=0, y=0, damage=3, duration=3, area=None):
+    def __init__(self, x=0, y=0, damage=3, duration=3, area=None,
+                 update_speed=10):
         super().__init__("acid blob", "a blob of corrosive acid",
                          x, y, "_", C["GREEN"], False, area,
-                         duration)
+                         duration, update_speed)
         self.damage = damage
 
     def act(self):
