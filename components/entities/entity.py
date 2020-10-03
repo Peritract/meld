@@ -84,7 +84,7 @@ class Entity(Object):
         """Either act or prepare for action."""
         if self.ready:
             self.take_action()
-            self.readiness = 0
+            self.readiness -= 100
         else:
             self.readiness += self.body.speed
 

@@ -35,7 +35,7 @@ class Feature(Object):
         """Runs updates regularly"""
         if self.readiness >= 100:
             self.update()
-            self.readiness = 0
+            self.readiness -= 100
         else:
             self.readiness += self.update_speed
 
