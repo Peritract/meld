@@ -27,6 +27,10 @@ class Feature(Object):
         """Act without prompting."""
         pass
 
+    def update(self):
+        """Change state in response to time."""
+        pass
+
     def check_update(self):
         """Runs updates regularly"""
         if self.readiness >= 100:

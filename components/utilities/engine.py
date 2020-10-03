@@ -152,6 +152,7 @@ class Engine:
         player = Player("Player", "A person", 5, 5)
         player.body.speed = 1
         world.player = player
+        player.body.speed = 5
         other = Entity("other", "Not you.", 10, 10, mind=Wanderer)
         enemy = Entity('enemy', "A horror", 15, 15, mind=Brawler)
         A, B, C = Corpse("A", 1, 1), Corpse("B", 1, 1), Corpse("C", 2, 2)

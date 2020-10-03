@@ -127,6 +127,10 @@ class Play(State):
                 for feature in self.engine.world.area.features:
                     feature.check_update()
 
+                # Render current state
+                self.engine.console.clear()
+                self.render(self.engine.console)
+
     def render(self, console):
         """Display the current state of the game world."""
 
