@@ -170,18 +170,25 @@ class RangeState(TargetState):
         self.actor = actor
         self.weapon = weapon
         self.range = aim_range
+        self.impact = None
+        self.path = []
+
+        self.calculate_path()
 
     @property
     def target(self):
         """The selected choice."""
         raise NotImplementedError()
 
-    def calculate_projectile_path(self):
+    def calculate_path(self):
         """Identify the point of impact, based on the range."""
 
         if self.actor.loc == self.cursor:
-            # Return the actor's location and an empty path
-            return self.cursor, []
+            # Set the defaults
+
+            self.impact = self.actor.loc
+            self.path = []
+            return
 
         # Get the range
         limit = self.range if self.range else self.weapon.range
@@ -217,8 +224,9 @@ class RangeState(TargetState):
                 line.append(curr)
                 step += 1
 
-        # Return the impact point and the path to it
-        return impact_point, line
+        # set the impact point and path
+        self.impact = impact_point
+        self.path = line
 
     def move_cursor(self, direction, mod):
         """Move the cursor in a particular direction with the keys;
@@ -227,9 +235,9 @@ class RangeState(TargetState):
         dx = DIRECTIONS[direction][0] * 5 if mod else DIRECTIONS[direction][0]
         dy = DIRECTIONS[direction][1] * 5 if mod else DIRECTIONS[direction][1]
         nx, ny = x + dx, y + dy
-
-        # If the tile is valid
-        if self.engine.world.area.in_bounds(nx, ny):
+        dist = self.engine.world.area.distance_between(self.actor.loc,
+                                                       (nx, ny))
+        if self.engine.world.area.in_bounds(nx, ny) and dist <= self.range:
             self.set_cursor(nx, ny)
 
     def render_impact_radius(self, console, effect):
@@ -248,10 +256,10 @@ class RangeState(TargetState):
     def render_cursor(self, console):
 
         # Work out where the item will hit
-        self.impact, line = self.calculate_projectile_path()
+        self.calculate_path()
 
         # Highlight the steps along the path
-        for step in line:
+        for step in self.path:
             self.highlight_tile(step[0], step[1], console)
 
         effect = self.weapon.projectile if hasattr(self.weapon, "projectile") \
