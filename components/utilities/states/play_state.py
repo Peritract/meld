@@ -112,7 +112,7 @@ class Play(State):
         if self.engine.state == self:
 
             # Update the player state
-            self.engine.world.player.readiness -= 100
+            self.engine.world.player.readiness -= 10
             self.engine.world.player.update()
 
             # Let all other entities take turns
