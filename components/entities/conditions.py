@@ -30,7 +30,7 @@ class Condition:
         """Affect the target."""
         pass
 
-    def act(self):
+    def update(self):
         """Count down, applying any turn-based effect."""
 
         # Have an effect
@@ -66,15 +66,22 @@ class Lure(Condition):
     """Move towards danger."""
 
     def __init__(self, duration, target, goal):
+        self.goal = goal
+        self.mind = Seeker(self.goal)
         super().__init__(duration, target)
-        self.goal
 
     def attach(self):
         """Replace target mind with Seeker mind."""
 
+        text = f"{self.target.phrase} is entranced!"
+        self.target.area.post(AlertMessage(text))
         self.normal_state = self.target.mind
-        self.target.mind = Seeker(self.goal)
+        self.target.mind = self.mind
+        self.target.mind.owner = self.target
 
     def remove(self):
+        text = f"{self.target.phrase} is no longer entranced!"
+        self.target.area.post(AlertMessage(text))
         self.target.mind = self.normal_state
+        self.mind.owner = None
         super().remove()

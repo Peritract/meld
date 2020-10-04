@@ -98,6 +98,7 @@ class OpenMenu(Action):
 class ViewLog(Action):
     """View the message log."""
 
+
 class OpenInventory(Action):
     """Open the inventory."""
 
@@ -120,4 +121,13 @@ class Fire(Action):
     def __init__(self, projectile=None, target=None):
         super().__init__()
         self.projectile = projectile
+        self.target = target
+
+
+class Evoke(Action):
+    """Trigger a spell-like ability."""
+
+    def __init__(self, ability=None, target=None):
+        super().__init__()
+        self.ability = ability
         self.target = target

@@ -9,7 +9,7 @@ from ..utilities.messages import CombatMessage
 class Body:
 
     def __init__(self,
-                 health=5,
+                 health=20,
                  strength=5,
                  speed=10,
                  view_radius=8):

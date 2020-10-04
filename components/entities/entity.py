@@ -85,6 +85,7 @@ class Entity(Object):
         if self.ready:
             self.take_action()
             self.readiness -= 100
+            self.update()
         else:
             self.readiness += self.body.speed
 
@@ -254,7 +255,6 @@ class Entity(Object):
         """Add a condition to the entity."""
 
         self.conditions.add(condition)
-        condition.attach(self)
 
     def add_ability(self, ability):
         """Gain a new ability."""
@@ -276,13 +276,19 @@ class Entity(Object):
 
         projectile.impact()
 
+    def evoke(self, ability, target):
+        """Trigger a spell-like ability."""
+
+        ability.activate()
+
+        ability.apply(self, target)
+
     def update(self):
         """Carry out regular checks and actions."""
-
         # Apply each condition
-        for condition in self.conditions:
-            condition.apply()
+        for condition in list(self.conditions):
+            condition.update()
 
         # Update abilities
-        for ability in self.abilities:
+        for ability in list(self.abilities):
             ability.update()

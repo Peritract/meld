@@ -4,8 +4,9 @@ in-game tile.
 """
 
 from .state import State
+from ...entities.abilities import FireAbility, SpellAbility
 from ..constants import DIRECTIONS, COLOURS as C
-from ...entities.actions import Throw, Fire
+from ...entities.actions import Throw, Fire, Evoke
 import tcod
 from .text_states import DescriptionScroller
 
@@ -279,7 +280,7 @@ class ThrowState(RangeState):
 
 
 class FireState(RangeState):
-    """Fire a projectile."""
+    """Fire a projectile/targetted ability."""
 
     def __init__(self, engine, parent, actor, weapon):
         super().__init__(engine, parent, actor, weapon)
@@ -287,4 +288,8 @@ class FireState(RangeState):
     @property
     def target(self):
         """The selected choice."""
-        return Fire(self.weapon, self.impact)
+
+        if isinstance(self.weapon, FireAbility):
+            return Fire(self.weapon, self.impact)
+        elif isinstance(self.weapon, SpellAbility):
+            return Evoke(self.weapon, self.impact)

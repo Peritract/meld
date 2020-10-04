@@ -4,6 +4,7 @@ and the entity can use them to affect the world"""
 
 from ..environments.features import AcidBlob
 from ..entities.conditions import Lure
+from ..utilities.messages import AlertMessage
 
 
 class Ability:
@@ -82,4 +83,13 @@ class LurePrey(SpellAbility):
 
     def apply(self, source, target):
         """Overpower the entity's normal AI."""
-        target.conditions.add(Lure(5, target, source))
+
+        # Get the entity at the location
+        entity = source.area.get_blocker_at_location(*target)
+        if entity:
+            report = f"{entity.phrase} is dazzled."
+            source.area.post(AlertMessage(report))
+            entity.conditions.add(Lure(5, entity, source))
+        else:
+            report = "Nothing happens."
+            source.area.post(AlertMessage(report))

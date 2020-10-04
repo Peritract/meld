@@ -25,7 +25,7 @@ from ..items.consumables import Bandage, AcidFlask
 from ..items.equippables import Cudgel, Robe, VenomDagger
 from ..utilities.states.play_state import Play
 from ..environments.features import Stairs
-from ..entities.abilities import AcidSpit
+from ..entities.abilities import AcidSpit, LurePrey
 
 # -- /HACK -- #
 
@@ -152,7 +152,6 @@ class Engine:
         player = Player("Player", "A person", 5, 5)
         player.body.speed = 1
         world.player = player
-        player.body.speed = 5
         other = Entity("other", "Not you.", 10, 10, mind=Wanderer)
         enemy = Entity('enemy', "A horror", 15, 15, mind=Brawler)
         A, B, C = Corpse("A", 1, 1), Corpse("B", 1, 1), Corpse("C", 2, 2)
@@ -172,6 +171,7 @@ class Engine:
         player.pick_up(AcidFlask())
         player.pick_up(VenomDagger())
         player.add_ability(AcidSpit())
+        player.add_ability(LurePrey())
         h = []
         for x in range(15, 30):
             for y in range(15, 30):

@@ -121,7 +121,6 @@ class Play(State):
                 for entity in self.engine.world.entities - \
                         {self.engine.world.player}:
                     entity.consider_action()
-                    entity.update()
 
                 # Update all the features
                 for feature in self.engine.world.area.features:

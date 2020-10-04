@@ -6,7 +6,7 @@ This is the game's player character.
 from .entity import Entity
 from .actions import (Surge, Wait, PickUp, OpenInventory, Throw, Interact,
                       Drop, Use, Equip, Unequip, Handle, Look, OpenMenu,
-                      Activate, Fire)
+                      Activate, Fire, Evoke)
 from ..utilities.messages import ItemMessage, WorldMessage, DeathMessage
 from ..items.corpse import Corpse
 from ..entities.body import Body
@@ -81,6 +81,9 @@ class Player(Entity):
 
         elif isinstance(instruction, Fire):
             self.fire(instruction.projectile, instruction.target)
+
+        elif isinstance(instruction, Evoke):
+            self.evoke(instruction.ability, instruction.target)
 
     def prepare(self):
         """Increase readiness for action."""
