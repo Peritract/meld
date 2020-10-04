@@ -3,17 +3,21 @@ conditions, such as poison."""
 
 
 from ..utilities.messages import AlertMessage
+from ..entities.minds.seeker_mind import Seeker
 
 
 class Condition:
     """A temporary status condition."""
 
-    def __init__(self, duration):
+    def __init__(self, duration, target):
         self.duration = duration
-
-    def attach(self, target):
-        """Change the target when attached."""
         self.target = target
+
+        self.attach()
+
+    def attach(self):
+        """Change the target when attached."""
+        pass
 
     def remove(self):
         """Undo changes when removed."""
@@ -45,8 +49,8 @@ class Condition:
 class Poison(Condition):
     """Reduce health each turn."""
 
-    def __init__(self, duration, damage):
-        super().__init__(duration)
+    def __init__(self, duration, damage, target):
+        super().__init__(duration, target)
         self.damage = damage
 
     def apply(self):
@@ -56,3 +60,21 @@ class Poison(Condition):
         text = f"{self.target.phrase} {verb} damaged by poison."
         self.target.area.post(AlertMessage(text))
         self.target.body.take_damage(self.damage)
+
+
+class Lure(Condition):
+    """Move towards danger."""
+
+    def __init__(self, duration, target, goal):
+        super().__init__(duration, target)
+        self.goal
+
+    def attach(self):
+        """Replace target mind with Seeker mind."""
+
+        self.normal_state = self.target.mind
+        self.target.mind = Seeker(self.goal)
+
+    def remove(self):
+        self.target.mind = self.normal_state
+        super().remove()

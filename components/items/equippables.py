@@ -42,7 +42,8 @@ class VenomDagger(Weapon):
         x = random()
         if x <= self.poison_chance:
             vic.add_condition(Poison(self.poison_duration,
-                                     self.poison_damage))
+                                     self.poison_damage,
+                                     vic))
 
             verb = "has" if vic.faction != "player" else "have"
             report = f"{vic.phrase} {verb} been poisoned!"

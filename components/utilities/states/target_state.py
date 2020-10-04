@@ -164,11 +164,11 @@ class RangeState(TargetState):
     """Allows the user to a select a tile within a range in a direct line
     from the player entity."""
 
-    def __init__(self, engine, parent, actor, projectile, range):
+    def __init__(self, engine, parent, actor, weapon, aim_range=None):
         super().__init__(engine, parent)
         self.actor = actor
-        self.projectile = projectile
-        self.range = range
+        self.weapon = weapon
+        self.range = aim_range
 
     @property
     def target(self):
@@ -181,6 +181,9 @@ class RangeState(TargetState):
         if self.actor.loc == self.cursor:
             # Return the actor's location and an empty path
             return self.cursor, []
+
+        # Get the range
+        limit = self.range if self.range else self.weapon.range
 
         # Get the direct route to the target
         path = self.actor.area.get_direct_path_to(self.actor.loc,
@@ -201,7 +204,8 @@ class RangeState(TargetState):
             dist = self.engine.world.area.distance_between(self.actor.loc,
                                                            curr)
             # If it's travelled as far as strength or has hit something
-            if dist >= self.range or not self.actor.area.is_passable(*curr) \
+            if dist >= limit or \
+                    not self.actor.area.is_passable(*curr) \
                     or self.actor.area.get_blocker_at_location(*curr) or \
                     len(path) - 1 <= step:
                 in_motion = False
@@ -227,11 +231,11 @@ class RangeState(TargetState):
         if self.engine.world.area.in_bounds(nx, ny):
             self.set_cursor(nx, ny)
 
-    def render_impact_radius(self, console):
+    def render_impact_radius(self, console, effect):
         """Highlight the tiles that would be affected by the impact."""
 
         # Get the tiles in the area
-        radius = self.projectile.impact_radius
+        radius = effect.impact_radius
         tiles = self.engine.world.area.get_tiles_in_range(self.impact[0],
                                                           self.impact[1],
                                                           radius)
@@ -249,11 +253,13 @@ class RangeState(TargetState):
         for step in line:
             self.highlight_tile(step[0], step[1], console)
 
-        # If the projectile will affect an area
-        if hasattr(self.projectile, "impact_radius"):
+        effect = self.weapon.projectile if hasattr(self.weapon, "projectile") \
+            else self.weapon
+        # If the effect will affect an area
+        if hasattr(effect, "impact_radius"):
 
             # Highlight the area
-            self.render_impact_radius(console)
+            self.render_impact_radius(console, effect)
 
         # Highlight the impact tile
         self.highlight_tile(self.impact[0], self.impact[1],
@@ -264,22 +270,21 @@ class ThrowState(RangeState):
     """Throw an object."""
 
     def __init__(self, engine, parent, actor, item):
-        super().__init__(engine, parent, actor, item,
-                         actor.body.throw_range)
+        super().__init__(engine, parent, actor, item, actor.body.throw_range)
 
     @property
     def target(self):
         """The selected choice."""
-        return Throw(self.projectile, self.impact)
+        return Throw(self.weapon, self.impact)
 
 
 class FireState(RangeState):
     """Fire a projectile."""
 
-    def __init__(self, engine, parent, actor, projectile, fire_range):
-        super().__init__(engine, parent, actor, projectile, fire_range)
+    def __init__(self, engine, parent, actor, weapon):
+        super().__init__(engine, parent, actor, weapon)
 
     @property
     def target(self):
         """The selected choice."""
-        return Fire(self.projectile, self.impact)
+        return Fire(self.weapon, self.impact)

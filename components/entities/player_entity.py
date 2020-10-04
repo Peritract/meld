@@ -311,8 +311,7 @@ class Player(Entity):
             raise Impossible("That ability still needs to recharge!")
 
         if isinstance(ability, TargetAbility):
-            ability.activate()
             state = FireState(self.area.world.engine,
                               self.area.world.engine.state,
-                              self, ability.projectile, ability.range)
+                              self, ability)
             self.area.world.engine.set_state(state)

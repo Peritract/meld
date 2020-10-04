@@ -3,6 +3,7 @@ related subclasses. Abilities can be added and removed from an entity,
 and the entity can use them to affect the world"""
 
 from ..environments.features import AcidBlob
+from ..entities.conditions import Lure
 
 
 class Ability:
@@ -32,11 +33,18 @@ class Ability:
 
 
 class TargetAbility(Ability):
-    """An ability that can be directed."""
-    def __init__(self, name, ammunition, range, cooldown):
+    """An ability that needs targetting."""
+
+    def __init__(self, name, aim_range, cooldown=0):
         super().__init__(name, cooldown)
+        self.range = aim_range
+
+
+class FireAbility(TargetAbility):
+    """An ability that can fire a projectile."""
+    def __init__(self, name, ammunition, aim_range, cooldown):
+        super().__init__(name, aim_range, cooldown)
         self.ammunition = ammunition
-        self.range = range
 
     @property
     def projectile(self):
@@ -44,11 +52,34 @@ class TargetAbility(Ability):
         return self.ammunition()
 
 
-class AcidSpit(TargetAbility):
+class SpellAbility(TargetAbility):
+    """A range ability with no projectile."""
+    def __init__(self, name, aim_range, cooldown):
+        super().__init__(name, aim_range, cooldown)
+
+    def apply(self):
+        """The actual effect."""
+        raise NotImplementedError()
+
+
+class AcidSpit(FireAbility):
     """Spit corrosive acid."""
 
     def __init__(self):
         super().__init__(name="acid spit",
                          ammunition=AcidBlob,
-                         range=3,
+                         aim_range=3,
                          cooldown=3)
+
+
+class LurePrey(SpellAbility):
+    """Lure an entity towards you."""
+
+    def __init__(self):
+        super().__init__(name="lure prey",
+                         aim_range=6,
+                         cooldown=8)
+
+    def apply(self, source, target):
+        """Overpower the entity's normal AI."""
+        target.conditions.add(Lure(5, target, source))

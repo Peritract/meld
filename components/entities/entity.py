@@ -261,10 +261,14 @@ class Entity(Object):
 
         self.abilities.add(ability)
 
-    def fire(self, projectile, target):
+    def fire(self, weapon, target):
         """Fire a projectile."""
 
+        # Trigger the weapon
+        weapon.activate()
+
         # Add it to the area
+        projectile = weapon.projectile
         self.area.add_contents(projectile)
 
         # Move it to the right tile

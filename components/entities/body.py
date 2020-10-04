@@ -57,7 +57,7 @@ class Body:
 
         # Process any skin contact effects.
         self.on_contact(other)
-        other.on_contact(self)
+        other.body.on_contact(self)
 
         # Apply damage
         other.body.take_damage(1)
