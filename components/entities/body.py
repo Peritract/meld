@@ -43,6 +43,10 @@ class Body:
         if self.dead:
             self.owner.die()
 
+    def on_contact(self, other):
+        """Skin-to-skin contact."""
+        pass
+
     def attack(self, other):
         """Attack another entity physically."""
 
@@ -51,4 +55,9 @@ class Body:
         report = report.capitalize()
         self.owner.area.post(CombatMessage(report))
 
+        # Process any skin contact effects.
+        self.on_contact(other)
+        other.on_contact(self)
+
+        # Apply damage
         other.body.take_damage(1)
