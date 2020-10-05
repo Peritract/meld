@@ -9,7 +9,7 @@ from .actions import (Surge, Wait, PickUp, OpenInventory, Throw, Interact,
                       Activate, Fire, Evoke)
 from ..utilities.messages import ItemMessage, WorldMessage, DeathMessage
 from ..items.corpse import Corpse
-from ..entities.body import Body
+from ..entities.bodies.body import Body
 from ..utilities.exceptions import Impossible
 from ..utilities.states.selection_menus import (ItemSelectionMenu,
                                                 AbilitySelectionMenu)

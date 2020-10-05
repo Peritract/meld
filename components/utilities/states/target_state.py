@@ -169,7 +169,7 @@ class RangeState(TargetState):
         super().__init__(engine, parent)
         self.actor = actor
         self.weapon = weapon
-        self.range = aim_range
+        self.range = aim_range if aim_range else weapon.range
         self.impact = None
         self.path = []
 

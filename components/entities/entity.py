@@ -5,7 +5,7 @@ An entity is any object with a mind.
 from ..utilities.object import Object
 from ..utilities.constants import COLOURS as C, RenderOrder
 from ..utilities.messages import DeathMessage
-from .body import Body
+from .bodies.body import Body
 from .minds.mind import Mind
 from .actions import Wait, Move, Attack, PickUp
 import numpy as np

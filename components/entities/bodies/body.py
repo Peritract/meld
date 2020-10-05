@@ -3,7 +3,7 @@ This file contains the implementation of the Body class.
 This class stores physical information about in-game entities.
 """
 
-from ..utilities.messages import CombatMessage
+from ...utilities.messages import CombatMessage
 
 
 class Body:

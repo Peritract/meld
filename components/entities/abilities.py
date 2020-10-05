@@ -87,9 +87,7 @@ class LurePrey(SpellAbility):
         # Get the entity at the location
         entity = source.area.get_blocker_at_location(*target)
         if entity:
-            report = f"{entity.phrase} is dazzled."
-            source.area.post(AlertMessage(report))
             entity.conditions.add(Lure(5, entity, source))
         else:
-            report = "Nothing happens."
+            report = "There is no effect."
             source.area.post(AlertMessage(report))
