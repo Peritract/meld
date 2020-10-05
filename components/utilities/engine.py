@@ -26,6 +26,8 @@ from ..items.equippables import Cudgel, Robe, VenomDagger
 from ..utilities.states.play_state import Play
 from ..environments.features import Stairs
 from ..entities.abilities import AcidSpit, LurePrey
+from ..entities.bodies.body_parts import Eyestalks
+from ..entities.bodies.body import Body
 
 # -- /HACK -- #
 
@@ -149,7 +151,7 @@ class Engine:
         self.world = world
         area = Area(80, 50, world, "surface")
         area2 = Area(80, 50, world, "caverns", 1)
-        player = Player("Player", "A person", 5, 5)
+        player = Player("Player", "A person", 5, 5, body=Body(eyes=Eyestalks()))
         player.body.speed = 1
         world.player = player
         other = Entity("other", "Not you.", 10, 10, mind=Wanderer)

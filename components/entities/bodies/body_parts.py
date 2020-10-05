@@ -6,47 +6,28 @@ Each organ/limb has different stat effects or grants different abilities.
 class Part:
     """A generic body part."""
 
-    def __init__(self, name):
+    def __init__(self, name, desc):
         self.name = name
+        self.desc = desc
 
 
-class Manipulator(Part):
-    """An arm, tentacle, or otherwise, used for interaction."""
-
-    def __init__(self, name):
-        super().__init__(name)
-
-
-class Transporter(Part):
-    """A leg/tail/tentacle used for movement."""
-
-    def __init__(self, name):
-        super().__init__(name)
-
-
-class Skin(Part):
-    """The thing covering everything else."""
-
-    def __init__(self, name):
-        super().__init__(name)
-
-
-class Mouth(Part):
-    """Mostly for biting."""
-
-    def __init__(self, name):
-        super().__init__(name)
-
-
-class Trunk(Part):
-    """The central part of the body."""
-
-    def __init__(self, name):
-        super().__init__(name)
-
-
-class Eye(Part):
+class Eyes(Part):
     """Sensory organ."""
 
-    def __init__(self, name):
-        super().__init__(name)
+    def __init__(self, name, desc, view_radius):
+        super().__init__(name, desc)
+        self.view_radius = view_radius
+
+
+class HumanEyes(Eyes):
+    """Totally normal human eyes."""
+
+    def __init__(self):
+        super().__init__("eyes", "normal human eyes", 5)
+
+
+class Eyestalks(Eyes):
+    """Snail eyes on tentacles."""
+
+    def __init__(self):
+        super().__init__("eyestalks", "soft eye-tipped tentacles", 3)

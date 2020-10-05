@@ -24,7 +24,7 @@ class Entity(Object):
                  y=0,
                  faction="neutral",
                  mind=Mind,
-                 body=Body,
+                 body=Body(),
                  char="&",
                  colour=C["TEMP"],
                  blocks=True,
@@ -32,7 +32,7 @@ class Entity(Object):
         super().__init__(name, description, x, y, char, colour,
                          blocks, area, RenderOrder.ENTITY)
         self.faction = faction
-        self.body = body()
+        self.body = body
         self.body.owner = self
         self.readiness = 100
         if mind:

@@ -4,6 +4,7 @@ This class stores physical information about in-game entities.
 """
 
 from ...utilities.messages import CombatMessage
+from .body_parts import HumanEyes
 
 
 class Body:
@@ -12,12 +13,22 @@ class Body:
                  health=20,
                  strength=5,
                  speed=10,
-                 view_radius=8):
+                 eyes=HumanEyes()):
         self.health = health
         self.max_health = health
         self.strength = strength
         self.speed = speed
-        self.view_radius = view_radius
+
+        # The various body parts
+        self.eyes = eyes
+
+    # Properties derived from body parts
+
+    @property
+    def view_radius(self):
+        return self.eyes.view_radius
+
+    # Other properties
 
     @property
     def carry_capacity(self):
