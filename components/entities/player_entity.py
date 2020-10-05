@@ -31,7 +31,7 @@ class Player(Entity):
                  y=0,
                  faction="player",
                  mind=None,
-                 body=Body(),
+                 body=Body,
                  char="@",
                  colour=C["WHITE"],
                  blocks=True,

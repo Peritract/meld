@@ -10,17 +10,17 @@ from .body_parts import HumanEyes
 class Body:
 
     def __init__(self,
-                 health=20,
+                 base_health=20,
                  strength=5,
                  speed=10,
-                 eyes=HumanEyes()):
-        self.health = health
-        self.max_health = health
+                 eyes=HumanEyes):
+        self.health = base_health
+        self.max_health = base_health
         self.strength = strength
         self.speed = speed
 
         # The various body parts
-        self.eyes = eyes
+        self.eyes = eyes()
 
     # Properties derived from body parts
 
@@ -72,3 +72,19 @@ class Body:
 
         # Apply damage
         other.body.take_damage(1)
+
+
+class Part:
+    """A generic body part."""
+
+    def __init__(self, name, desc):
+        self.name = name
+        self.desc = desc
+
+
+class Eyes(Part):
+    """Sensory organ."""
+
+    def __init__(self, name, desc, view_radius):
+        super().__init__(name, desc)
+        self.view_radius = view_radius
