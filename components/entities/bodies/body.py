@@ -72,19 +72,3 @@ class Body:
 
         # Apply damage
         other.body.take_damage(1)
-
-
-class Part:
-    """A generic body part."""
-
-    def __init__(self, name, desc):
-        self.name = name
-        self.desc = desc
-
-
-class Eyes(Part):
-    """Sensory organ."""
-
-    def __init__(self, name, desc, view_radius):
-        super().__init__(name, desc)
-        self.view_radius = view_radius

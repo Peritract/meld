@@ -76,7 +76,7 @@ class TargetState(State):
 
         # Get event information
         key = event.sym
-        mod = True if event.mod and tcod.event.KMOD_LSHIFT else False
+        mod = event.mod & tcod.event.Modifier.SHIFT  # Is shift being held?
 
         if key == tcod.event.K_UP:
             self.move_cursor("UP", mod)
@@ -135,7 +135,7 @@ class LookState(TargetState):
 
         # Get event information
         key = event.sym
-        mod = True if event.mod and tcod.event.KMOD_LSHIFT else False
+        mod = event.mod & tcod.event.Modifier.SHIFT  # Is shift being held?
 
         if key == tcod.event.K_UP:
             self.move_cursor("UP", mod)
