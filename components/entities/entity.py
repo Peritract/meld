@@ -167,7 +167,6 @@ class Entity(Object):
         """Removes the entity from the game, replacing it with a corpse."""
 
         # Replace the entity with a corpse
-        self.area.contents.remove(self)
         self.area.contents.add(Corpse(self.name, self.x, self.y))
 
         # Drop the entity's inventory
@@ -177,6 +176,9 @@ class Entity(Object):
         # Log the death
         text = f"{self.phrase} dies in agony.".capitalize()
         self.area.post(DeathMessage(text))
+
+        # Remove the entity itself from the area
+        self.area.remove_contents(self)
 
     def wait(self):
         """Passes the turn."""
