@@ -191,25 +191,26 @@ class Play(State):
     def render_info_pane(self, console, x, y, height):
         """Displays information about the tile under the mouse."""
 
-        # If the mouse is over a visible tile
-        if self.engine.world.area.is_visible(*self.engine.m_loc):
+        # Get the tile contents
+        contents = self.engine.world.area.at_location(*self.engine.m_loc)
 
-            # Get the tile contents
-            contents = self.engine.world.area.at_location(*self.engine.m_loc)
+        # Decide which ones to display
+        visible = self.engine.world.area.is_visible(*self.engine.m_loc)
+        contents = [x for x in contents if (hasattr(x, 'discovered') and x.discovered) or visible]
 
-            # If there is anything to display
-            if contents:
-                rows = 0
-                # Display it (entities first)
-                for thing in sorted(contents,
-                                    key=lambda x: not isinstance(x, Entity)):
-                    console.print(x, y, thing.name, thing.colour)
-                    y += 2
-                    rows += 2
+        # If there is anything to display
+        if len(contents) > 0:
+            rows = 0
+            # Display it (entities first)
+            for thing in sorted(contents,
+                                key=lambda x: not isinstance(x, Entity)):
+                console.print(x, y, thing.name, thing.colour)
+                y += 2
+                rows += 2
 
-                    # Only display rows up until the height
-                    if rows >= height:
-                        return
+                # Only display rows up until the height
+                if rows >= height:
+                    return
 
     def render_status_pane(self, console, x, y, width):
         """Displays a status panel with key information about
