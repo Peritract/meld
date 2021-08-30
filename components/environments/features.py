@@ -12,12 +12,13 @@ class Feature(Object):
 
     def __init__(self, name="feature", description="An object in the world",
                  x=0, y=0, char="£", colour=C["TEMP"], blocks=False,
-                 interactable=True, area=None, update_speed=10):
+                 interactable=True, area=None, update_speed=10, mappable=False):
         super().__init__(name, description, x, y, char, colour, blocks,
                          area, RenderOrder.FEATURE)
         self.interactable = interactable
         self.readiness = 100
         self.update_speed = update_speed
+        self.mappable = True
 
     def interact(self, entity):
         """Respond to an entity's action."""
@@ -40,12 +41,25 @@ class Feature(Object):
             self.readiness += self.update_speed
 
 
+class MappedFeature(Feature):
+    """A feature that appears on the map once discovered."""
+
+    def __init__(self, name="mapped feature",
+                 description="An object worth remembering.",
+                 x=0, y=0, char="_", colour=C["TEMP"],
+                 blocks=False, interactable=False, area=None, duration=0, update_speed=10,
+                 discovered=False):
+        self.discovered = discovered
+        super().__init__(name, description, x, y, char, colour=colour,
+                    blocks=blocks, interactable=interactable, area=area, mappable=True)
+
+
 class TemporaryFeature(Feature):
     """A feature with an expiry date."""
 
     def __init__(self, name="temporary feature",
                  description="A temporary object in the world.",
-                 x=0, y=0, char="_", colour=C["WHITE"],
+                 x=0, y=0, char="_", colour=C["TEMP"], blocks=False,
                  interactable=False, area=None, duration=0, update_speed=10):
         super().__init__(name, description, x, y, char, colour,
                          blocks=False, interactable=interactable,
@@ -59,7 +73,7 @@ class TemporaryFeature(Feature):
             self.destroy()
 
 
-class Stairs(Feature):
+class Stairs(MappedFeature):
     """A path between areas of the dungeon."""
 
     def __init__(self, x, y, area, target):
@@ -85,7 +99,7 @@ class AcidBlob(TemporaryFeature):
     def __init__(self, x=0, y=0, damage=3, duration=3, area=None,
                  update_speed=10):
         super().__init__("acid blob", "a blob of corrosive acid",
-                         x, y, "_", C["GREEN"], False, area,
+                         x, y, "_", C["GREEN"], False, False, area,
                          duration, update_speed)
         self.damage = damage
 

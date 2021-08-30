@@ -126,6 +126,11 @@ class Play(State):
                 for feature in self.engine.world.area.features:
                     feature.check_update()
 
+                    # If the feature is visible and mappable, mark it as discovered.
+                    if hasattr(feature, "discovered") and not feature.discovered:
+                        if self.engine.world.area.is_visible(feature.x, feature.y):
+                            feature.discovered = True
+
                 # Render current state
                 self.engine.console.clear()
                 self.render(self.engine.console)
@@ -171,10 +176,17 @@ class Play(State):
                           key=lambda x: x.render_order.value)
 
         for thing in contents:
+
+            # If the play can see it
             if self.engine.world.area.is_visible(thing.x, thing.y):
-                # Show the entity
+                # Show the thing
                 console.print(thing.x, thing.y, thing.char,
                               thing.colour)
+            # Or if it has been mapped
+            elif (hasattr(thing, "discovered") and thing.discovered):
+                # Show the thing
+                console.print(thing.x, thing.y, thing.char,
+                              C["GREY"])
 
     def render_info_pane(self, console, x, y, height):
         """Displays information about the tile under the mouse."""
