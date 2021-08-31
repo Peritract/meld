@@ -4,8 +4,7 @@ This class stores physical information about in-game entities.
 """
 
 from ...utilities.messages import CombatMessage
-from .body_parts import HumanEyes
-
+from .body_parts import *
 
 class Body:
 
@@ -13,7 +12,8 @@ class Body:
                  base_health=20,
                  strength=5,
                  speed=10,
-                 eyes=HumanEyes):
+                 eyes=HumanEyes,
+                 manipulators=HumanHands):
         self.health = base_health
         self.max_health = base_health
         self.strength = strength
@@ -21,12 +21,17 @@ class Body:
 
         # The various body parts
         self.eyes = eyes()
+        self.manipulators = manipulators()
 
     # Properties derived from body parts
 
     @property
     def view_radius(self):
         return self.eyes.view_radius
+
+    @property
+    def can_equip_weapons(self):
+        return self.manipulators.can_equip
 
     # Other properties
 
@@ -61,8 +66,8 @@ class Body:
     def attack(self, other):
         """Attack another entity physically."""
 
-        verb = "flails" if self.owner.faction != "player" else "flail"
-        report = f"{self.owner.phrase} {verb} at {other.phrase}!"
+        verb = "flail"
+        report = f"{self.owner.phrase} {verb + self.owner.verb_addition} at {other.phrase}!"
         report = report.capitalize()
         self.owner.area.post(CombatMessage(report))
 

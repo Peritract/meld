@@ -2,6 +2,7 @@
 An entity is any object with a mind.
 """
 
+from components.utilities.exceptions import Impossible
 from ..utilities.object import Object
 from ..utilities.constants import COLOURS as C, RenderOrder
 from ..utilities.messages import DeathMessage
@@ -47,6 +48,10 @@ class Entity(Object):
 
         # Empty abilities by default
         self.abilities = set()
+
+        # Annoying empty property for grammar
+        # Will fix at some point
+        self.verb_addition = "s"
 
     @property
     def phrase(self):

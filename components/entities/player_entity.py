@@ -3,6 +3,7 @@ This file contains the implementation of the Player class.
 This is the game's player character.
 """
 
+from components.items.items import Weapon
 from .entity import Entity
 from .actions import (Surge, Wait, PickUp, OpenInventory, Throw, Interact,
                       Drop, Use, Equip, Unequip, Handle, Look, OpenMenu,
@@ -38,6 +39,8 @@ class Player(Entity):
                  area=None):
         super().__init__(name, description, x, y, faction, mind, body,
                          char, colour, blocks, area)
+
+        self.verb_addition = ""
 
     @property
     def phrase(self):
@@ -131,6 +134,7 @@ class Player(Entity):
                 self.use(instruction.item)
 
             elif isinstance(instruction, Equip):
+
                 self.equip(instruction.item)
 
             elif isinstance(instruction, Unequip):
@@ -183,6 +187,9 @@ class Player(Entity):
 
     def equip(self, item):
         """Equips an item, unequipping any item of the same type."""
+
+        if isinstance(item, Weapon) and not self.body.can_equip_weapons:
+            raise Impossible("You aren't capable of equipping that.")
 
         self.area.post(ItemMessage(f"You equip the {item.name}."))
 

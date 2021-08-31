@@ -30,3 +30,18 @@ class Eyestalks(Eyes):
 
     def __init__(self):
         super().__init__("eyestalks", "soft eye-tipped tentacles", 3)
+
+
+class Manipulator(Part):
+    """Grasping limbs/pseudopods/similar"""
+
+    def __init__(self, name, desc, can_equip):
+        super().__init__(name, desc)
+        self.can_equip = can_equip
+
+
+class HumanHands(Manipulator):
+    """Normal human arms and hands."""
+
+    def __init__(self):
+        super().__init__("hands", "normal human arms and hands", can_equip=True)
