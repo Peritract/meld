@@ -10,6 +10,7 @@ from .states.game_over_state import GameOver
 from .messages import WorldMessage, MessageLog
 import pickle
 import lzma
+from os import remove
 
 # -- HACK -- #
 
@@ -112,6 +113,10 @@ class Engine:
 
     def game_over(self):
         """Ends the game."""
+
+        # Wipe the save file - this is permadeath.
+        remove('./savefile.sav')
+
         self.state = GameOver(self, self.state)
 
     def clean_up(self):
