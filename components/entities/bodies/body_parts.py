@@ -35,13 +35,15 @@ class Eyestalks(Eyes):
 class Manipulator(Part):
     """Grasping limbs/pseudopods/similar"""
 
-    def __init__(self, name, desc, can_equip):
+    def __init__(self, name, desc, can_equip, verb='flail', damage=1):
         super().__init__(name, desc)
         self.can_equip = can_equip
+        self.verb = verb
+        self.damage = damage
 
 
 class HumanHands(Manipulator):
     """Normal human arms and hands."""
 
     def __init__(self):
-        super().__init__("hands", "normal human arms and hands", can_equip=True)
+        super().__init__("hands", "normal human arms and hands", can_equip=True, verb='strike')

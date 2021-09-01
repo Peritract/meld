@@ -66,7 +66,7 @@ class Body:
     def attack(self, other):
         """Attack another entity physically."""
 
-        verb = "flail"
+        verb = self.manipulators.verb
         report = f"{self.owner.phrase} {verb + self.owner.verb_addition} at {other.phrase}!"
         report = report.capitalize()
         self.owner.area.post(CombatMessage(report))
@@ -76,4 +76,4 @@ class Body:
         other.body.on_contact(self)
 
         # Apply damage
-        other.body.take_damage(1)
+        other.body.take_damage(self.manipulators.damage)
