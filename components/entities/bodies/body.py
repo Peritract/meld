@@ -13,15 +13,16 @@ class Body:
                  strength=5,
                  speed=10,
                  eyes=HumanEyes,
-                 manipulators=HumanHands):
+                 manipulators=HumanHands,
+                 propulsors=HumanLegs):
         self.health = base_health
         self.max_health = base_health
         self.strength = strength
-        self.speed = speed
 
         # The various body parts
         self.eyes = eyes()
         self.manipulators = manipulators()
+        self.propulsors = propulsors()
 
     # Properties derived from body parts
 
@@ -32,6 +33,10 @@ class Body:
     @property
     def can_equip_weapons(self):
         return self.manipulators.can_equip
+
+    @property
+    def speed(self):
+        return self.propulsors.speed
 
     # Other properties
 

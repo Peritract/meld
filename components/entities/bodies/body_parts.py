@@ -32,7 +32,7 @@ class Eyestalks(Eyes):
         super().__init__("eyestalks", "soft eye-tipped tentacles", 3)
 
 
-class Manipulator(Part):
+class Manipulators(Part):
     """Grasping limbs/pseudopods/similar"""
 
     def __init__(self, name, desc, can_equip, verb='flail', damage=1):
@@ -42,8 +42,23 @@ class Manipulator(Part):
         self.damage = damage
 
 
-class HumanHands(Manipulator):
+class HumanHands(Manipulators):
     """Normal human arms and hands."""
 
     def __init__(self):
         super().__init__("hands", "normal human arms and hands", can_equip=True, verb='strike')
+
+
+class Propulsors(Part):
+    """Limbs and such for locomotion."""
+
+    def __init__(self, name, desc, speed):
+        super().__init__(name, desc)
+        self.speed = speed
+
+
+class HumanLegs(Propulsors):
+    """Normal human legs and feet."""
+
+    def __init__(self):
+        super().__init__("legs", "normal human legs and feet", speed=10)
