@@ -46,7 +46,14 @@ class HumanHands(Manipulators):
     """Normal human arms and hands."""
 
     def __init__(self):
-        super().__init__("hands", "normal human arms and hands", can_equip=True, verb='strike')
+        super().__init__("hands", "normal human arms and hands", can_equip=True, verb="strike", damage=1)
+
+
+class SmallCrabClaws(Manipulators):
+    """Small, clutching claws."""
+
+    def __init__(self):
+        super().__init__("small crab claws", "small clutching claws", can_equip=False, verb="snip", damage=1)
 
 
 class Propulsors(Part):
