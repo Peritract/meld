@@ -149,7 +149,7 @@ class MessageScroller(State):
 
         key = event.sym
         # Move faster with shift
-        mod = 5 if event.mod and tcod.event.KMOD_LSHIFT else 1
+        mod = 5 if event.mod == 1 else 1
 
         if key == tcod.event.K_UP:
             if self.cursor > 0:
