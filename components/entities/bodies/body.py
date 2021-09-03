@@ -10,14 +10,11 @@ class Body:
 
     def __init__(self,
                  base_health=20,
-                 strength=5,
-                 speed=10,
                  eyes=HumanEyes,
                  manipulators=HumanHands,
                  propulsors=HumanLegs):
         self.health = base_health
         self.max_health = base_health
-        self.strength = strength
 
         # The various body parts
         self.eyes = eyes()
@@ -33,6 +30,10 @@ class Body:
     @property
     def can_equip_weapons(self):
         return self.manipulators.can_equip
+
+    @property
+    def strength(self):
+        return self.manipulators.strength
 
     @property
     def speed(self):

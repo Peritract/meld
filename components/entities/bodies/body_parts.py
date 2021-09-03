@@ -35,31 +35,32 @@ class Eyestalks(Eyes):
 class Manipulators(Part):
     """Grasping limbs/pseudopods/similar"""
 
-    def __init__(self, name, desc, can_equip, verb='flail', damage=1):
+    def __init__(self, name, desc, can_equip, verb='flail', damage=1, strength=5):
         super().__init__(name, desc)
         self.can_equip = can_equip
         self.verb = verb
         self.damage = damage
+        self.strength = strength
 
 
 class HumanHands(Manipulators):
     """Normal human arms and hands."""
 
     def __init__(self):
-        super().__init__("hands", "normal human arms and hands", can_equip=True, verb="strike", damage=1)
+        super().__init__("hands", "normal human arms and hands", can_equip=True, verb="strike", damage=1, strength=5)
 
 
 class SmallCrabClaws(Manipulators):
     """Small, clutching claws."""
 
     def __init__(self):
-        super().__init__("small crab claws", "small clutching claws", can_equip=False, verb="snip", damage=1)
+        super().__init__("small crab claws", "small clutching claws", can_equip=False, verb="snip", damage=1, strength=4)
 
 
 class Propulsors(Part):
     """Limbs and such for locomotion."""
 
-    def __init__(self, name, desc, speed):
+    def __init__(self, name, desc, speed=10):
         super().__init__(name, desc)
         self.speed = speed
 
