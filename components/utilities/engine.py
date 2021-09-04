@@ -22,7 +22,7 @@ from ..environments.tiles import basic_wall
 from ..entities.minds.wanderer_mind import Wanderer
 from ..entities.minds.brawler_mind import Brawler
 from ..items.corpse import Corpse
-from ..items.consumables import Bandage, AcidFlask
+from ..items.consumables import Bandage, AcidFlask, StrangeMoss
 from ..items.equippables import Cudgel, Robe, VenomDagger
 from ..utilities.states.play_state import Play
 from ..environments.features import Stairs
@@ -165,14 +165,14 @@ class Engine:
         enemy = Entity('enemy', "A horror", 15, 15, mind=Brawler)
         A, B, C = Corpse("A", 1, 1), Corpse("B", 1, 1), Corpse("C", 2, 2)
         D, E, F = Bandage(3, 3), Cudgel(4, 4), Robe(6, 6)
-        G = AcidFlask(7, 7)
+        G, H = AcidFlask(7, 7), StrangeMoss(7, 7)
         area.tiles[30:33, 22] = basic_wall
         self.message_log.add(WorldMessage("Your journey begins."
                                           "You are unlikely to survive"))
         world.areas.append(area)
         world.areas.append(area2)
         world.area.add_contents([player, other, enemy,
-                                 A, B, C, D, E])
+                                 A, B, C, D, E, H])
         area2.add_contents(Stairs(6, 6, area2, area))
         area.add_contents(Stairs(10, 10, area, area2))
         other.pick_up(G)

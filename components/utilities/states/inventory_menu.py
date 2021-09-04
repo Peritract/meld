@@ -23,6 +23,9 @@ class InventoryOption(MenuOption):
         self.equip = Equip(item) if isinstance(item, Equippable) else None
         self.unequip = Unequip(item) if isinstance(item, Equippable) else None
 
+        if self.use:
+            self.verb = item.verb
+
     @property
     def display_text(self):
         """Get the text to display."""
@@ -137,10 +140,11 @@ class InventoryMenu(OverlayMenu):
     def render_controls(self, x, y, console):
         """Displays the appropriate controls of the current item."""
         if self.selected.use:
-            console.print(x, y, "[U]se", C["WHITE"])
+            console.print(x, y, f"[U]se", C["WHITE"])
+            x += 6
         else:
             console.print(x, y, "[U]se", C["GREY"])
-        x += 6
+            x += 6
 
         if self.selected.equip and not self.selected.item.equipped:
             console.print(x, y, "[E]quip", C["WHITE"])

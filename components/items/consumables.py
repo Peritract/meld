@@ -26,6 +26,23 @@ class Bandage(Consumable):
             raise Impossible("You are already at full health.")
 
 
+class StrangeMoss(Consumable):
+    """A single-use health boost"""
+
+    def __init__(self, x=0, y=0, area=None):
+        super().__init__(name="Strange moss",
+                         description="A lump of edible moss.",
+                         verb="eat",
+                         uses=1, x=x, y=y, colour=C["RED"],
+                         char="?", area=area)
+
+    def affect(self, target):
+        """Boosts the target's health"."""
+        target.body.bonus_health += 2
+        if target.body.health < target.body.max_health:
+            target.body.health = target.body.max_health
+
+
 class AcidFlask(Consumable):
     """A container of strong acid."""
 
