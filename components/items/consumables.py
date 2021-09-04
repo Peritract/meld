@@ -22,15 +22,23 @@ class Bandage(Consumable):
         """Heals the target."""
         if target.body.health < target.body.max_health:
             target.body.heal(self.power)
+            if target.faction == 'player':
+                text = "You are revitalised!"
+            else:
+                text = f"{target.phrase} is revitalised!"
+            target.area.post(AlertMessage(text))
         else:
-            raise Impossible("You are already at full health.")
+            if target.faction == 'player':
+                raise Impossible("You are already at full health.")
+            else:
+                raise Impossible(f"{target.phrase} is already at full health.")
 
 
 class StrangeMoss(Consumable):
     """A single-use health boost"""
 
     def __init__(self, x=0, y=0, area=None):
-        super().__init__(name="Strange moss",
+        super().__init__(name="Moss lump",
                          description="A lump of edible moss.",
                          verb="eat",
                          uses=1, x=x, y=y, colour=C["RED"],
@@ -41,6 +49,11 @@ class StrangeMoss(Consumable):
         target.body.bonus_health += 2
         if target.body.health < target.body.max_health:
             target.body.health = target.body.max_health
+        if target.faction == 'player':
+            text = "You feel more vital and healthy."
+        else:
+            text = f"{target.phrase} is strengthened!"
+        target.area.post(AlertMessage(text))
 
 
 class AcidFlask(Consumable):
