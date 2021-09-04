@@ -2,6 +2,7 @@
 Each organ/limb has different stat effects or grants different abilities.
 """
 
+
 class Part:
     """A generic body part."""
 
@@ -9,6 +10,7 @@ class Part:
         self.name = name
         self.desc = desc
 
+## Eyes
 
 class Eyes(Part):
     """Sensory organ."""
@@ -31,6 +33,7 @@ class Eyestalks(Eyes):
     def __init__(self):
         super().__init__("eyestalks", "soft eye-tipped tentacles", 3)
 
+## Arms
 
 class Manipulators(Part):
     """Grasping limbs/pseudopods/similar"""
@@ -56,6 +59,7 @@ class SmallCrabClaws(Manipulators):
     def __init__(self):
         super().__init__("small crab claws", "small clutching claws", can_equip=False, verb="snip", damage=1, strength=4)
 
+## Legs
 
 class Propulsors(Part):
     """Limbs and such for locomotion."""
@@ -70,3 +74,24 @@ class HumanLegs(Propulsors):
 
     def __init__(self):
         super().__init__("legs", "normal human legs and feet", speed=10)
+
+## Skin
+
+class Exterior(Part):
+    """"""
+
+    def __init__(self, name, desc, max_health=10):
+        super().__init__(name, desc)
+        self.max_health = max_health
+
+    def on_contact(self, other):
+        pass
+
+
+class HumanSkin(Exterior):
+    """Normal human skin."""
+
+    def __init__(self):
+        super().__init__("skin", "normal human skin", max_health=10)
+
+

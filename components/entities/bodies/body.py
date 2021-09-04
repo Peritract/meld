@@ -9,17 +9,19 @@ from .body_parts import *
 class Body:
 
     def __init__(self,
-                 base_health=20,
                  eyes=HumanEyes,
                  manipulators=HumanHands,
-                 propulsors=HumanLegs):
-        self.health = base_health
-        self.max_health = base_health
+                 propulsors=HumanLegs,
+                 exterior=HumanSkin):
 
         # The various body parts
         self.eyes = eyes()
         self.manipulators = manipulators()
         self.propulsors = propulsors()
+        self.exterior = exterior()
+
+        # Health
+        self.health = self.max_health
 
     # Properties derived from body parts
 
@@ -38,6 +40,10 @@ class Body:
     @property
     def speed(self):
         return self.propulsors.speed
+
+    @property
+    def max_health(self):
+        return self.exterior.max_health
 
     # Other properties
 
