@@ -67,6 +67,11 @@ class AcidFlask(Consumable):
 
     def affect(self, target):
         """Burns the consumer's insides."""
+        if target.faction == 'player':
+            text = "The acid burns your insides!"
+        else:
+            text = f"{target.phrase} is burnt by the acid!"
+        target.area.post(CombatMessage(text))
         target.body.take_damage(10)
 
     def impact(self):
