@@ -21,8 +21,9 @@ class Body:
         self.exterior = exterior()
 
         # Health
+        self.bonus_health = 0
         self.health = self.max_health
-
+        
     # Properties derived from body parts
 
     @property
@@ -43,7 +44,7 @@ class Body:
 
     @property
     def max_health(self):
-        return self.exterior.max_health
+        return self.exterior.max_health + self.bonus_health
 
     # Other properties
 
