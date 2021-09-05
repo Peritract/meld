@@ -16,12 +16,12 @@ class Bandage(Consumable):
                          "A tattered scrap of cloth to bind a wound.",
                          "use",
                          1, x, y, "+", C["RED"], area)
-        self.power = 3
+        self.health = 3
 
     def affect(self, target):
         """Heals the target."""
         if target.body.health < target.body.max_health:
-            target.body.heal(self.power)
+            target.body.heal(self.health)
             if target.faction == 'player':
                 text = "You are revitalised!"
             else:
