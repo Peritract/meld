@@ -10,7 +10,6 @@ from .bodies.body import Body
 from .minds.mind import Mind
 from .actions import Wait, Move, Attack, PickUp
 import numpy as np
-from ..items.corpse import Corpse
 from ..environments.features import Stairs
 from ..items.items import Equippable, Weapon, Armour
 
@@ -172,7 +171,8 @@ class Entity(Object):
         """Removes the entity from the game, replacing it with a corpse."""
 
         # Replace the entity with a corpse
-        self.area.contents.add(Corpse(self.name, self.x, self.y))
+        corpse = self.body.become_corpse()
+        self.area.contents.add(corpse)
 
         # Drop the entity's inventory
         for item in list(self.inventory):

@@ -5,6 +5,8 @@ This class stores physical information about in-game entities.
 
 from ...utilities.messages import CombatMessage
 from .body_parts import *
+from ...items.corpse import Corpse
+from collections import defaultdict
 
 class Body:
 
@@ -20,9 +22,16 @@ class Body:
         self.propulsors = propulsors()
         self.exterior = exterior()
 
+        # Container for all body parts
+        self.parts = [self.eyes, self.manipulators, self.propulsors, self.exterior]
+
         # Health
         self.bonus_health = 0
         self.health = self.max_health
+
+        # Instability and mutation
+        self.affinities = defaultdict(lambda: 0)
+        self.instability = 0
         
     # Properties derived from body parts
 
@@ -60,6 +69,11 @@ class Body:
     def dead(self):
         return self.health <= 0
 
+    def become_corpse(self):
+
+        types = {x['type'] for x in self.parts}
+        return Corpse(self.owner.name, self.owner.x, self.owner.y, types)
+
     def heal(self, amount):
         """Replenish health."""
         self.health = min(self.max_health, self.health + amount)
@@ -90,3 +104,8 @@ class Body:
 
         # Apply damage
         other.body.take_damage(self.manipulators.damage)
+
+    def increase_affinities(self, types):
+        """Become more attuned to different types of creature."""
+        for thing in types:
+            self.affinities[thing] += 10

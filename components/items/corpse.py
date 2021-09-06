@@ -7,18 +7,24 @@ from ..utilities.messages import AlertMessage
 
 class Corpse(Consumable):
 
-    def __init__(self, name="body", x=0, y=0, area=None, health=2):
+    def __init__(self, name="body", x=0, y=0, area=None, health=2, types={}):
         super().__init__(name="Corpse", 
                          description=f"A dead {name}.",
                          verb='consume', uses=1,
                          x=x, y=y, char="%",
                          colour=C["GREY"], area=area)
         self.health = health
+        self.types = types
 
     def affect(self, target):
         """Heals the target."""
         if target.body.health < target.body.max_health:
             target.body.heal(self.health)
+            
+            # Eating corpses of specific types makes you more likely to mutate into those types.
+            target.body.increase_affinities(self.types)
+
+            target.body.instability += 10
             if target.faction == 'player':
                 text = "You are revitalised!"
             else:
