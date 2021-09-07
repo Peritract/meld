@@ -171,7 +171,7 @@ class Entity(Object):
         """Removes the entity from the game, replacing it with a corpse."""
 
         # Replace the entity with a corpse
-        corpse = self.body.become_corpse()
+        corpse = self.body.create_corpse()
         self.area.contents.add(corpse)
 
         # Drop the entity's inventory
@@ -299,3 +299,6 @@ class Entity(Object):
         # Update abilities
         for ability in list(self.abilities):
             ability.update()
+
+        # Check possible mutations
+        self.body.update()

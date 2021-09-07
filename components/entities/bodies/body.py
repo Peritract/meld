@@ -69,10 +69,10 @@ class Body:
     def dead(self):
         return self.health <= 0
 
-    def become_corpse(self):
-
-        types = {x['type'] for x in self.parts}
-        return Corpse(self.owner.name, self.owner.x, self.owner.y, types)
+    def create_corpse(self):
+        """Create an appropriate corpse."""
+        types = {x.type for x in self.parts}
+        return Corpse(name=self.owner.name, x=self.owner.x, y=self.owner.y, types=types)
 
     def heal(self, amount):
         """Replenish health."""
@@ -109,3 +109,9 @@ class Body:
         """Become more attuned to different types of creature."""
         for thing in types:
             self.affinities[thing] += 10
+
+    def update(self):
+        print(self.owner.name)
+        if self.instability >= 100:
+            print('Here we go!')
+            self.instability /= 2
