@@ -10,6 +10,17 @@ class Part:
         self.name = name
         self.desc = desc
         self.type = type
+        self.prerequisites = None
+
+    def meets_prerequisites(self, types, current_parts):
+        """Checks if this part is a valid mutation."""
+        print(types, current_parts)
+
+        if self.prerequisites:
+            print(types, current_parts)
+            return True
+        else:
+            return True
 
 ## Eyes
 
@@ -98,3 +109,7 @@ class HumanSkin(Exterior):
         super().__init__("skin", "normal human skin", max_health=10, type='human')
 
 
+# Collection of all possible parts
+
+parts = [HumanEyes, HumanHands, HumanLegs, HumanSkin,
+         Eyestalks, SmallCrabClaws]

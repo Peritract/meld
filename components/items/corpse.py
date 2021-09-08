@@ -16,22 +16,23 @@ class Corpse(Consumable):
         self.health = health
         self.types = types
 
+    @property
+    def description_text(self):
+        return self.description
+
     def affect(self, target):
         """Heals the target."""
         if target.body.health < target.body.max_health:
             target.body.heal(self.health)
             
-            # Eating corpses of specific types makes you more likely to mutate into those types.
-            target.body.increase_affinities(self.types)
-
-            target.body.instability += 10
             if target.faction == 'player':
                 text = "You are revitalised!"
             else:
                 text = f"{target.phrase} is revitalised!"
             target.area.post(AlertMessage(text))
-        else:
-            if target.faction == 'player':
-                raise Impossible("You are already at full health.")
-            else:
-                raise Impossible(f"{target.phrase} is already at full health.")
+            
+        # Eating corpses of specific types makes you more likely to mutate into those types.
+        target.body.increase_affinities(self.types)
+
+        # Consuming tainted flesh makes you more likely to mutate.
+        target.body.instability += 10

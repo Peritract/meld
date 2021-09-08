@@ -3,6 +3,7 @@ This file contains the implementation of the Body class.
 This class stores physical information about in-game entities.
 """
 
+from random import choice
 from ...utilities.messages import CombatMessage
 from .body_parts import *
 from ...items.corpse import Corpse
@@ -31,7 +32,7 @@ class Body:
 
         # Instability and mutation
         self.affinities = defaultdict(lambda: 0)
-        self.instability = 0
+        self.instability = 90
         
     # Properties derived from body parts
 
@@ -111,7 +112,19 @@ class Body:
             self.affinities[thing] += 10
 
     def update(self):
-        print(self.owner.name)
+        """Runs every turn, checking for changes."""
         if self.instability >= 100:
-            print('Here we go!')
+            mutation = self.select_mutation()
+            print(mutation)
             self.instability /= 2
+
+    def select_mutation(self):
+        """Chooses a possible mutation from the list."""
+        
+        # Get the current body parts & affinities
+        current_parts = self.parts
+        current_types = self.affinities
+
+        valid_parts = [print(part, part.meets_prerequisites(1, 1)) for part in parts]
+
+        return choice(valid_parts)
