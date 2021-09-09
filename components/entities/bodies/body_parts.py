@@ -12,16 +12,6 @@ class Part:
         self.type = type
         self.prerequisites = None
 
-    def meets_prerequisites(self, types, current_parts):
-        """Checks if this part is a valid mutation."""
-        print(types, current_parts)
-
-        if self.prerequisites:
-            print(types, current_parts)
-            return True
-        else:
-            return True
-
 ## Eyes
 
 class Eyes(Part):
@@ -92,7 +82,7 @@ class HumanLegs(Propulsors):
 ## Skin
 
 class Exterior(Part):
-    """"""
+    """Flesh and carapaces."""
 
     def __init__(self, name, desc, max_health=10, type='human'):
         super().__init__(name, desc, type)

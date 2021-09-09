@@ -118,6 +118,15 @@ class Body:
             print(mutation)
             self.instability /= 2
 
+    def can_mutate(self, part):
+        """Checks if a mutation is possible with current attributes."""
+
+        # Disallow any duplicates.
+        if any([isinstance(x, part) for x in self.parts]):
+            return False
+        else:
+            return True
+
     def select_mutation(self):
         """Chooses a possible mutation from the list."""
         
@@ -125,6 +134,9 @@ class Body:
         current_parts = self.parts
         current_types = self.affinities
 
-        valid_parts = [print(part, part.meets_prerequisites(1, 1)) for part in parts]
+        for part in parts:
+            print(part, self.can_mutate(part))
+
+        valid_parts = []
 
         return choice(valid_parts)

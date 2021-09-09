@@ -158,7 +158,6 @@ class Engine:
         area = Area(80, 50, world, "surface")
         area2 = Area(80, 50, world, "caverns", 1)
         player = Player("Player", "A person", 5, 5)
-        player.body = Body(eyes=Eyestalks)
         player.body.owner = player
         world.player = player
         other = Entity("other", "Not you.", 10, 10, mind=Wanderer)
