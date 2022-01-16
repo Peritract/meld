@@ -172,6 +172,7 @@ class Engine:
         world.areas.append(area2)
         world.area.add_contents([player, other, enemy,
                                  A, B, C, D, E, H])
+        world.area.add_contents(Entity("crab", "a small crustacean", 6, 3, mind=Brawler, char="c"))
         area2.add_contents(Stairs(6, 6, area2, area))
         area.add_contents(Stairs(10, 10, area, area2))
         other.pick_up(G)
