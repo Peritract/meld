@@ -137,23 +137,15 @@ class InventoryMenu(OverlayMenu):
     def render_controls(self, x, y, console):
         """Displays the appropriate controls of the current item."""
         if self.selected.use:
-            console.print(x, y, f"[U]se", C["WHITE"])
+            console.print(x, y, "[U]se", C["WHITE"])
             x += 6
-        else:
-            console.print(x, y, "[U]se", C["GREY"])
-        x += 6
-
+        
         if self.selected.equip and not self.selected.item.equipped:
             console.print(x, y, "[E]quip", C["WHITE"])
-        else:
-            console.print(x, y, "[E]quip", C["GREY"])
-        x += 8
-
-        if self.selected.equip and self.selected.item.equipped:
+            x += 8
+        elif self.selected.equip:
             console.print(x, y, "Un[E]quip", C["WHITE"])
-        else:
-            console.print(x, y, "Un[E]quip", C["GREY"])
-        x += 10
+            x += 10
 
         # Throw and drop are always options
 
