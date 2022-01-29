@@ -45,9 +45,6 @@ class Entity(Object):
         # Empty conditions by default
         self.conditions = set()
 
-        # Empty abilities by default
-        self.abilities = set()
-
         # Annoying empty property for grammar
         # Will fix at some point
         self.verb_addition = "s"
@@ -263,11 +260,6 @@ class Entity(Object):
 
         self.conditions.add(condition)
 
-    def add_ability(self, ability):
-        """Gain a new ability."""
-
-        self.abilities.add(ability)
-
     def fire(self, weapon, target):
         """Fire a projectile."""
 
@@ -297,7 +289,7 @@ class Entity(Object):
             condition.update()
 
         # Update abilities
-        for ability in list(self.abilities):
+        for ability in list(self.body.abilities):
             ability.update()
 
         # Check possible mutations

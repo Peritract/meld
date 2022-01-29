@@ -110,7 +110,7 @@ class AcidBlob(TemporaryFeature):
         entity = self.area.get_blocker_at_location(*self.loc)
 
         if entity:
-            report = f"Acid burns the {entity.name}!"
+            report = f"Acid burns {entity.phrase}!"
             self.area.post(CombatMessage(report))
             entity.body.take_damage(self.damage)
 

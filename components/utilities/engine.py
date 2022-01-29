@@ -26,8 +26,7 @@ from ..items.consumables import Bandage, AcidFlask, StrangeMoss
 from ..items.equippables import Cudgel, Robe, VenomDagger
 from ..utilities.states.play_state import Play
 from ..environments.features import Stairs
-from ..entities.abilities import AcidSpit, LurePrey
-from ..entities.bodies.body_parts import Eyestalks
+from ..entities.bodies.body_parts import Eyestalks, AcidSpittingMouth
 from ..entities.bodies.body import Body
 
 # -- /HACK -- #
@@ -157,7 +156,8 @@ class Engine:
         self.world = world
         area = Area(80, 50, world, "surface")
         area2 = Area(80, 50, world, "caverns", 1)
-        player = Player("Player", "A person", 5, 5)
+        player = Player("You", "A person", 5, 5)
+        player.body.mouth = AcidSpittingMouth()
         player.body.owner = player
         world.player = player
         other = Entity("other", "Not you.", 10, 10, mind=Wanderer)
@@ -182,8 +182,6 @@ class Engine:
         enemy.pick_up(F)
         player.pick_up(AcidFlask())
         player.pick_up(VenomDagger())
-        player.add_ability(AcidSpit())
-        player.add_ability(LurePrey())
         h = []
         for x in range(15, 30):
             for y in range(15, 30):

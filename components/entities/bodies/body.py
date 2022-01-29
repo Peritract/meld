@@ -15,16 +15,15 @@ class Body:
                  eyes=HumanEyes,
                  manipulators=HumanHands,
                  propulsors=HumanLegs,
-                 exterior=HumanSkin):
+                 exterior=HumanSkin,
+                 mouth=HumanMouth):
 
         # The various body parts
         self.eyes = eyes()
         self.manipulators = manipulators()
         self.propulsors = propulsors()
         self.exterior = exterior()
-
-        # Container for all body parts
-        self.parts = [self.eyes, self.manipulators, self.propulsors, self.exterior]
+        self.mouth = mouth()
 
         # Health
         self.bonus_health = 0
@@ -55,6 +54,15 @@ class Body:
     @property
     def max_health(self):
         return self.exterior.max_health + self.bonus_health
+
+    @property
+    def parts(self):
+        return [self.eyes, self.mouth, self.manipulators, self.propulsors, self.exterior]
+
+    @property
+    def abilities(self):
+        # List of abilities granted by body parts
+        return [x.ability for x in self.parts if hasattr(x, "ability")]
 
     # Other properties
 

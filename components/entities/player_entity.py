@@ -276,13 +276,13 @@ class Player(Entity):
         """Choose an ability to use."""
 
         # If the user possesses no abilities, cancel
-        if len(self.abilities) <= 0:
+        if len(self.body.abilities) <= 0:
             raise Impossible("You have no special abilities.")
 
         # Create an ability selection menu
         state = AbilitySelectionMenu(self.area.world.engine,
                                      self.area.world.engine.state,
-                                     self.abilities)
+                                     self.body.abilities)
 
         self.area.world.engine.set_state(state)
 

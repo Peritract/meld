@@ -2,6 +2,7 @@
 Each organ/limb has different stat effects or grants different abilities.
 """
 
+from ..abilities import AcidSpit
 
 class Part:
     """A generic body part."""
@@ -98,6 +99,32 @@ class HumanSkin(Exterior):
     def __init__(self):
         super().__init__("skin", "normal human skin", max_health=10, type='human')
 
+
+# Mouths
+
+class Mouth(Part):
+    """Biting and spitting."""
+    def __init__(self, name, desc, type='human'):
+        super().__init__(name, desc, type)
+
+    def on_contact(self, other):
+        pass
+    
+
+class HumanMouth(Mouth):
+    """Normal human mouth."""
+    def __init__(self):
+        super().__init__(name="mouth", desc="normal human mouth", type="human")
+
+
+class AcidSpittingMouth(Mouth):
+    """Spit acid."""
+    def __init__(self, name="acid-spitting mouth", desc="acid spitting mouth", type='toad'):
+        super().__init__(name, desc, type)
+        self.ability = AcidSpit()
+
+    def on_contact(self, other):
+        pass
 
 # Collection of all possible parts
 
