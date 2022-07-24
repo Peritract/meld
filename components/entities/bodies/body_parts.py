@@ -141,5 +141,5 @@ class AcidSpittingMouth(Mouth):
 
 # Collection of all possible parts
 
-parts = [HumanEyes, HumanHands, HumanLegs, HumanSkin, HumanMouth
+parts = [HumanEyes, HumanHands, HumanLegs, HumanSkin, HumanMouth,
          Eyestalks, SmallCrabClaws, ThinCrabShell, AcidSpittingMouth, CrabLegs]

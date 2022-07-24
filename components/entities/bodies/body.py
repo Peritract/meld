@@ -27,7 +27,7 @@ class Body:
 
         # Health
         self.bonus_health = 0
-        self.health = self.max_health
+        self.health = self.exterior.max_health
 
         # Instability and mutation
         self.affinities = defaultdict(lambda: 0)
