@@ -62,7 +62,7 @@ class SmallCrabClaws(Manipulators):
 
     def __init__(self):
         super().__init__("small crab claws", "small clutching claws", can_equip=False, verb="snip",
-                         damage=1, strength=4, type='crab')
+                         damage=2, strength=4, type='crab')
 
 ## Legs
 
@@ -80,14 +80,21 @@ class HumanLegs(Propulsors):
     def __init__(self):
         super().__init__("legs", "normal human legs and feet", speed=10, type='human')
 
+class CrabLegs(Propulsors):
+    """Normal human legs and feet."""
+
+    def __init__(self):
+        super().__init__("crab legs", "six chitinous, segmented limbs", speed=10, type='crab')
+
 ## Skin
 
 class Exterior(Part):
     """Flesh and carapaces."""
 
-    def __init__(self, name, desc, max_health=10, type='human'):
+    def __init__(self, name, desc, max_health=10, defence=0, type='human'):
         super().__init__(name, desc, type)
         self.max_health = max_health
+        self.defence = defence
 
     def on_contact(self, other):
         pass
@@ -97,8 +104,14 @@ class HumanSkin(Exterior):
     """Normal human skin."""
 
     def __init__(self):
-        super().__init__("skin", "normal human skin", max_health=10, type='human')
+        super().__init__("skin", "normal human skin", max_health=10, defence=0, type='human')
 
+
+class ThinCrabShell(Exterior):
+    """Normal human skin."""
+
+    def __init__(self):
+        super().__init__("shell", "a thin exoskeleton", max_health=10, defence=5, type='crab')
 
 # Mouths
 
@@ -128,5 +141,5 @@ class AcidSpittingMouth(Mouth):
 
 # Collection of all possible parts
 
-parts = [HumanEyes, HumanHands, HumanLegs, HumanSkin,
-         Eyestalks, SmallCrabClaws]
+parts = [HumanEyes, HumanHands, HumanLegs, HumanSkin, HumanMouth
+         Eyestalks, SmallCrabClaws, ThinCrabShell, AcidSpittingMouth, CrabLegs]
