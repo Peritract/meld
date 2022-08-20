@@ -203,9 +203,10 @@ class Player(Entity):
 
     def use(self, item):
         """Uses an item on the entity."""
-        super().use(item)
         text = f"You {item.verb} the {item.name}."
         self.area.post(ItemMessage(text))
+        
+        super().use(item)
 
     def open_inventory(self):
         """Open the inventory."""
