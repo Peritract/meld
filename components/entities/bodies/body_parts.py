@@ -112,10 +112,11 @@ class HumanSkin(Exterior):
 
 
 class ThinCrabShell(Exterior):
-    """Normal human skin."""
+    """First level of crab defence."""
 
     def __init__(self):
-        super().__init__("shell", "a thin exoskeleton", max_health=10, defence=5, affinity='crab')
+        super().__init__("shell", "thin crab shell", max_health=10, defence=5, affinity='crab')
+        self.article = "a"
 
 # Mouths
 
@@ -132,12 +133,14 @@ class HumanMouth(Mouth):
     """Normal human mouth."""
     def __init__(self):
         super().__init__(name="mouth", desc="normal human mouth", affinity="human")
+        self.article = "a"
 
 
 class AcidSpittingMouth(Mouth):
     """Spit acid."""
     def __init__(self, name="acid-spitting mouth", desc="acid-spitting mouth", affinity='toad'):
         super().__init__(name, desc, affinity)
+        self.article = "an"
         self.ability = AcidSpit()
 
     def on_contact(self, other):
