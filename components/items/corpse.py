@@ -7,14 +7,14 @@ from ..utilities.messages import AlertMessage
 
 class Corpse(Consumable):
 
-    def __init__(self, name="body", x=0, y=0, area=None, health=2, types={}):
+    def __init__(self, name="body", x=0, y=0, area=None, health=2, affinities={}):
         super().__init__(name="Corpse", 
                          description=f"A dead {name}.",
                          verb='consume', uses=1,
                          x=x, y=y, char="%",
                          colour=C["GREY"], area=area)
         self.health = health
-        self.types = types
+        self.affinities = affinities
 
     @property
     def description_text(self):
@@ -31,8 +31,8 @@ class Corpse(Consumable):
                 text = f"{target.phrase} is revitalised!"
             target.area.post(AlertMessage(text))
             
-        # Eating corpses of specific types makes you more likely to mutate into those types.
-        target.body.increase_affinities(self.types)
+        # Eating corpses of specific creature affinities makes you more likely to mutate into those sorts of creature.
+        target.body.increase_affinities(self.affinities)
 
         # Consuming tainted flesh makes you more likely to mutate.
         target.body.instability += 10

@@ -4,8 +4,8 @@ This class stores physical information about in-game entities.
 """
 
 from random import choice
-from ...utilities.messages import CombatMessage
-from .body_parts import *
+from ...utilities.messages import CombatMessage, WorldMessage
+from .body_parts import parts, HumanEyes, HumanHands, HumanLegs, HumanMouth, HumanSkin
 from ...items.corpse import Corpse
 from collections import defaultdict
 
@@ -80,8 +80,8 @@ class Body:
 
     def create_corpse(self):
         """Create an appropriate corpse."""
-        types = {x.type for x in self.parts}
-        return Corpse(name=self.owner.name, x=self.owner.x, y=self.owner.y, types=types)
+        affinities = {x.affinity for x in self.parts}
+        return Corpse(name=self.owner.name, x=self.owner.x, y=self.owner.y, affinities=affinities)
 
     def heal(self, amount):
         """Replenish health."""
@@ -114,19 +114,19 @@ class Body:
         # Apply damage
         other.body.take_damage(self.manipulators.damage)
 
-    def increase_affinities(self, types):
-        """Become more attuned to different types of creature."""
-        for thing in types:
+    def increase_affinities(self, affinities):
+        """Become more attuned to different sorts of creature."""
+        for thing in affinities:
             self.affinities[thing] += 10
 
     def update(self):
         """Runs every turn, checking for changes."""
         if self.instability >= 100:
             mutation = self.select_mutation()
-            print(mutation)
+            self.mutate(mutation)
             self.instability /= 2
 
-    def can_mutate(self, part):
+    def is_valid_mutation(self, part):
         """Checks if a mutation is possible with current attributes."""
 
         # Disallow any duplicates.
@@ -137,14 +137,31 @@ class Body:
 
     def select_mutation(self):
         """Chooses a possible mutation from the list."""
-        
-        # Get the current body parts & affinities
-        current_parts = self.parts
-        current_types = self.affinities
 
-        for part in parts:
-            print(part, self.can_mutate(part))
-
-        valid_parts = []
+        valid_parts = [p for p in parts if self.is_valid_mutation(p)]
 
         return choice(valid_parts)
+
+    def mutate(self, part):
+        """Actually transforms the body."""
+        new_part = part()
+
+        if new_part.type == "mouth":
+            old_part = self.mouth
+            self.mouth = new_part
+        elif new_part.type == "eyes":
+            old_part = self.eyes
+            self.eyes = new_part
+        elif new_part.type == "exterior":
+            old_part = self.exterior
+            self.exterior = new_part
+        elif new_part.type == "manipulators":
+            old_part = self.manipulators
+            self.manipulators = new_part
+        elif new_part.type == "propulsors":
+            old_part = self.propulsors
+            self.propulsors = new_part
+
+        self.owner.area.post(WorldMessage("You are racked with pain as your form shifts."))
+        report = f"Your {old_part.desc} transforms into {new_part.desc}!"
+        self.owner.area.post(WorldMessage(report))
