@@ -54,6 +54,10 @@ class Entity(Object):
         return f"the {self.name}"
 
     @property
+    def possessive_phrase(self):
+        return f"the {self.name}'s"
+
+    @property
     def inventory_full(self):
         return self.body.carry_capacity <= len(self.inventory)
 

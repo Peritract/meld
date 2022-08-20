@@ -46,6 +46,10 @@ class Player(Entity):
     def phrase(self):
         return "you"
 
+    @property
+    def possessive_phrase(self):
+        return f"your"
+
     def take_action(self, instruction):
         """Takes an action based on player input."""
 

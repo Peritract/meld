@@ -136,7 +136,7 @@ class HumanMouth(Mouth):
 
 class AcidSpittingMouth(Mouth):
     """Spit acid."""
-    def __init__(self, name="acid-spitting mouth", desc="acid spitting mouth", affinity='toad'):
+    def __init__(self, name="acid-spitting mouth", desc="acid-spitting mouth", affinity='toad'):
         super().__init__(name, desc, affinity)
         self.ability = AcidSpit()
 

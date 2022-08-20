@@ -163,5 +163,5 @@ class Body:
             self.propulsors = new_part
 
         self.owner.area.post(WorldMessage("You are racked with pain as your form shifts."))
-        report = f"Your {old_part.desc} transforms into {new_part.desc}!"
+        report = f"{self.owner.possessive_phrase} {old_part.desc} transforms into {new_part.desc}!"
         self.owner.area.post(WorldMessage(report))
