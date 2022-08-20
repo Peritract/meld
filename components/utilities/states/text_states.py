@@ -83,7 +83,7 @@ class Credits(TextState):
     def __init__(self, engine):
 
         text = ("Designed and created by\nDan Keefe.\nSpecial thanks to"
-                "\nTom Keefe\nTyle Standridge.")
+                "\nTom Keefe\nTyler Standridge.")
 
         super().__init__(engine, MainMenu(engine), text, True)
 
