@@ -11,8 +11,8 @@ tile_appearance = np.dtype([("char", np.int32),
 
 # Struct for tile information
 
-tile_type = np.dtype([("passable", np.bool),
-                      ("transparent", np.bool),
+tile_type = np.dtype([("passable", bool),
+                      ("transparent", bool),
                       ("out_of_view", tile_appearance),
                       ("in_view", tile_appearance)])
 
